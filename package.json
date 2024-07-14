@@ -6,11 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prettier": "prettier . --write"
   },
   "dependencies": {
     "clsx": "^2.1.1",
     "framer-motion": "^11.3.2",
+    "mini-svg-data-uri": "^1.4.4",
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18",
@@ -24,6 +26,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
     "postcss": "^8",
+    "prettier": "3.3.3",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }

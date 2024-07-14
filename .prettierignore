@@ -1,0 +1,11 @@
+/.git
+/.idea
+/node_modules
+.eslintrc.json
+next.config.mjs
+next-env.d.ts
+package-lock.json
+package.json
+postcss.config.mjs
+tailwind.config.ts
+tsconfig.json
