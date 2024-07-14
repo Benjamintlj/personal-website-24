@@ -1,21 +1,8 @@
 'use client'
 
-import { useState, useEffect, lazy, Suspense } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import Loading from '@/app/loading'
 import Dots from '@/app/ui/backgrounds/dots'
-
-const DelayedComponent = () => {
-    return <h1 className="header1">Hello world</h1>
-}
-
-const LazyComponent = lazy(
-    () =>
-        new Promise((resolve) => {
-            setTimeout(() => {
-                resolve({ default: DelayedComponent })
-            }, 5000)
-        })
-)
 
 export default function Home() {
     const [key, setKey] = useState(Date.now())
@@ -38,7 +25,24 @@ export default function Home() {
                         </div>
                     }
                 >
-                    <LazyComponent key={key} />
+                    <div>
+                        <video
+                            className="w-60 h-60 object-cover"
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                        >
+                            <source
+                                src="https://rotato.netlify.app/alpha-demo/movie-hevc.mov"
+                                type='video/mp4; codecs="hvc1"'
+                            />
+                            <source
+                                src="https://rotato.netlify.app/alpha-demo/movie-webm.webm"
+                                type="video/webm"
+                            />
+                        </video>
+                    </div>
                 </Suspense>
             </Dots>
         </main>
