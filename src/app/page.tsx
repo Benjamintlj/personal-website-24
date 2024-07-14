@@ -1,49 +1,21 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
-import Loading from '@/app/loading'
+import { useState, useEffect, lazy } from 'react'
 import Dots from '@/app/ui/backgrounds/dots'
+import Memoji from '@/app/ui/title-section/memoji'
 
 export default function Home() {
-    const [key, setKey] = useState(Date.now())
-
-    useEffect(() => {
-        setKey(Date.now())
-    }, [])
-
     useEffect(() => {
         document.documentElement.classList.add('dark')
     }, [])
 
     return (
-        <main className="h-screen w-screen">
+        <main>
             <Dots>
-                <Suspense
-                    fallback={
-                        <div className="fixed bottom-20 left-20">
-                            <Loading />
-                        </div>
-                    }
-                >
-                    <div>
-                        <video
-                            className="w-60 h-60 object-cover"
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                        >
-                            <source
-                                src="https://rotato.netlify.app/alpha-demo/movie-hevc.mov"
-                                type='video/mp4; codecs="hvc1"'
-                            />
-                            <source
-                                src="https://rotato.netlify.app/alpha-demo/movie-webm.webm"
-                                type="video/webm"
-                            />
-                        </video>
-                    </div>
-                </Suspense>
+                <section className="h-screen w-screen flex flex-col items-center mt-[10vh]">
+                    <h1 className="header1">Ben Lewis-Jones</h1>
+                    <Memoji className="w-52 sm:w-64 md:w-72 lg:w-96" />
+                </section>
             </Dots>
         </main>
     )
