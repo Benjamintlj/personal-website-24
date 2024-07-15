@@ -10,3 +10,17 @@ body {
 .header1 {
     @apply text-4xl sm:text-7xl font-bold relative z-20 bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 py-8 text-center;
 }
+
+.secondary {
+    @apply mx-auto font-normal text-neutral-600 dark:text-neutral-400
+}
+
+.hide-scrollbar {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+
+.hide-scrollbar::-webkit-scrollbar { /* WebKit browsers */
+    width: 0;
+    height: 0;
+}
