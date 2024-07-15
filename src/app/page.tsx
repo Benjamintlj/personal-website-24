@@ -1,12 +1,14 @@
 'use client'
 
-import { useState, useEffect, lazy } from 'react'
+import { useState, useEffect, lazy, useRef } from 'react'
 import Dots from '@/app/ui/backgrounds/dots'
 import Memoji from '@/app/ui/title-section/memoji'
 import { VanishingWords } from '@/app/ui/title-section/vanishing-words'
 import ScrollPrompt from '@/app/ui/title-section/scroll-prompt'
 
 export default function Home() {
+    const mainRef = useRef(null)
+
     const descriptiveWords = [
         'Software Engineer',
         'Swimmer',
@@ -18,7 +20,10 @@ export default function Home() {
     }, [])
 
     return (
-        <main className="h-screen w-screen snap-mandatory overflow-scroll hide-scrollbar">
+        <main
+            className="h-screen w-screen snap-mandatory overflow-scroll hide-scrollbar"
+            ref={mainRef}
+        >
             <Dots>
                 <section className="h-screen w-screen flex flex-col items-center mt-[10vh]">
                     <h1 className="header1">Ben Lewis-Jones</h1>
@@ -31,6 +36,7 @@ export default function Home() {
                         className={`mt-auto mb-52`}
                         textSize={`text-base`}
                         displayDelayMs={2500}
+                        mainRef={mainRef}
                     />
                 </section>
                 <section className="h-screen w-screen snap-start">
