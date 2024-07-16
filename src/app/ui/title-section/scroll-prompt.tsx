@@ -1,7 +1,13 @@
 'use client'
 
 import { MdKeyboardArrowDown } from 'react-icons/md'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, {
+    MutableRefObject,
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+} from 'react'
 import { AnimatePresence, motion, LayoutGroup } from 'framer-motion'
 import { cn } from '@/app/lib/utils'
 import { clsx } from 'clsx'
@@ -11,6 +17,11 @@ export default function ScrollPrompt({
     textSize,
     displayDelayMs,
     mainRef,
+}: {
+    className: string
+    textSize: string
+    displayDelayMs: number
+    mainRef: MutableRefObject<any>
 }) {
     const [showPrompt, setShowPrompt] = useState(false)
     const [hasScrolled, setHasScrolled] = useState(false)

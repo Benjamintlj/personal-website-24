@@ -1,4 +1,4 @@
-export default function Memoji({ className }) {
+export default function Memoji({ className }: { className: string }) {
     return (
         <video
             className={`object-cover ${className}`}
