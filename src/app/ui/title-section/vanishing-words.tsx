@@ -37,9 +37,28 @@ export const VanishingWords = ({
         }
     }, [isAnimating, relativeClauseSize])
 
+    const updateSize = () => {
+        if (divRef.current) {
+            setRelativeClauseSize(divRef.current.offsetWidth);
+        }
+    };
+
     useLayoutEffect(() => {
-        setRelativeClauseSize(divRef.current.offsetWidth)
+        updateSize()
     }, [])
+
+    useEffect(() => {
+        updateSize();
+        window.addEventListener('resize', updateSize);
+
+        return () => {
+            window.removeEventListener('resize', updateSize);
+        };
+    }, []);
+
+    useEffect(() => {
+        setCenterXOffSet(relativeClauseSize / 2)
+    }, [relativeClauseSize]);
 
     const startAnimation = useCallback(() => {
         setCurrWord(words[(words.indexOf(currWord) + 1) % words.length])
@@ -48,16 +67,11 @@ export const VanishingWords = ({
     }, [currentWord])
 
     useEffect(() => {
-        if (currDiv.current && relativeClauseSize !== 0) {
+        if (currDiv.current) {
             // @prettier-ignore
-            console.log(`current size: ${currDiv.current.offsetWidth}`)
-            console.log(`clause size: ${relativeClauseSize}`)
-
-            setCenterXOffSet(relativeClauseSize / 2)
-
             setPosX((-(currDiv.current.offsetWidth + relativeClauseSize) / 2) + centerXOffSet)
         }
-    }, [currWord, relativeClauseSize])
+    }, [currWord])
 
     return (
         <div className="flex items-center justify-center relative">
@@ -80,7 +94,7 @@ export const VanishingWords = ({
             >
                 <div className={`${className} inline-block`}>
                     <p className="inline-block">{relativeClause}</p>
-                    <p className={`inline-block w-2.5`}></p>
+                    <p className={`inline-block w-4`}></p>
                 </div>
             </motion.div>
 
@@ -113,7 +127,7 @@ export const VanishingWords = ({
                         },
                     }}
                     className={cn(
-                        'z-10 inline-block relative text-left text-neutral-900 dark:text-neutral-100 px-2.5 whitespace-nowrap',
+                        'z-10 inline-block relative text-left text-neutral-900 dark:text-neutral-100 px-1 whitespace-nowrap',
                         className
                     )}
                 >
@@ -151,7 +165,7 @@ export const VanishingWords = ({
                             }}
                             className={clsx(
                                 'inline-block z-10 relative text-left text-neutral-900 dark:text-neutral-100',
-                                letter === ' ' && 'w-1'
+                                letter === ' ' && 'w-2.5'
                             )}
                         >
                             {letter}
@@ -163,7 +177,7 @@ export const VanishingWords = ({
             <div
                 style={{
                     position: 'absolute',
-                    top: '600px',
+                    top: '999999px',
                 }}
                 className={`${className}`}
             >
