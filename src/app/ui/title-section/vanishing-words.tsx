@@ -70,14 +70,17 @@ export const VanishingWords = ({
                 }}
                 transition={{
                     duration: 1,
+                    delay: 0.6,
                     ease: 'easeInOut',
-                    when: 'beforeChildren',
+                    type: 'spring',
+                    stiffness: 100,
+                    damping: 15,
                 }}
                 animate={{ x: posX }}
             >
                 <div className={`${className} inline-block`}>
                     <p className="inline-block">{relativeClause}</p>
-                    <p className={`inline-block w-1`}></p>
+                    <p className={`inline-block w-2.5`}></p>
                 </div>
             </motion.div>
 
@@ -89,36 +92,28 @@ export const VanishingWords = ({
                 <motion.div
                     key={`${currentWord}-carousel`}
                     initial={{
-                        opacity: 0,
-                        y: 10,
                         x: centerXOffSet
                     }}
                     animate={{
-                        opacity: 1,
-                        y: 0,
                         x: centerXOffSet
                     }}
                     transition={{
-                        duration: 0.4,
+                        duration: 1,
+                        delay: 0.3,
                         ease: 'easeInOut',
                         type: 'spring',
                         stiffness: 100,
                         damping: 10,
-                        delay: 1,
                     }}
                     exit={{
-                        opacity: 0,
-                        y: -40,
-                        x: 40,
-                        filter: 'blur(8px)',
-                        scale: 2,
+                        x: centerXOffSet,
                         position: 'absolute',
                         transition: {
-                            duration: 0.5,
+                            duration: 0.6,
                         },
                     }}
                     className={cn(
-                        'z-10 inline-block relative text-left text-neutral-900 dark:text-neutral-100 px-2',
+                        'z-10 inline-block relative text-left text-neutral-900 dark:text-neutral-100 px-2.5 whitespace-nowrap',
                         className
                     )}
                 >
@@ -128,6 +123,7 @@ export const VanishingWords = ({
                             initial={{
                                 opacity: 0,
                                 y: 10,
+                                x: -5,
                                 filter: 'blur(8px)',
                             }}
                             animate={{
@@ -136,8 +132,22 @@ export const VanishingWords = ({
                                 filter: 'blur(0px)',
                             }}
                             transition={{
-                                delay: index * 0.08,
-                                duration: 0.3,
+                                delay: (index * 0.08) + 1,
+                                duration: 0.2,
+                                ease: 'easeInOut',
+                                type: 'spring',
+                                stiffness: 100,
+                                damping: 10,
+                            }}
+                            exit={{
+                                opacity: 0,
+                                y: -10,
+                                x: 5,
+                                filter: 'blur(8px)',
+                                transition: {
+                                    delay: (index * 0.08),
+                                    duration: 0.2,
+                                },
                             }}
                             className={clsx(
                                 'inline-block z-10 relative text-left text-neutral-900 dark:text-neutral-100',
