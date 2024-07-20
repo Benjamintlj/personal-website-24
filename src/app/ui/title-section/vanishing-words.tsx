@@ -25,6 +25,7 @@ export const VanishingWords = ({
     const [currWord, setCurrWord] = useState(words[0])
     const [currentWord, setCurrentWord] = useState(words[0])
 
+    const [centerXOffSet, setCenterXOffSet] = useState(0)
     const [posX, setPosX] = useState(0)
 
     useEffect(() => {
@@ -50,9 +51,11 @@ export const VanishingWords = ({
         if (currDiv.current && relativeClauseSize !== 0) {
             // @prettier-ignore
             console.log(`current size: ${currDiv.current.offsetWidth}`)
-            console.log(`clause size: ${relativeClauseSize}`);
+            console.log(`clause size: ${relativeClauseSize}`)
 
-            setPosX((-(currDiv.current.offsetWidth + relativeClauseSize) / 2))
+            setCenterXOffSet(relativeClauseSize / 2)
+
+            setPosX((-(currDiv.current.offsetWidth + relativeClauseSize) / 2) + centerXOffSet)
         }
     }, [currWord, relativeClauseSize])
 
@@ -88,10 +91,12 @@ export const VanishingWords = ({
                     initial={{
                         opacity: 0,
                         y: 10,
+                        x: centerXOffSet
                     }}
                     animate={{
                         opacity: 1,
                         y: 0,
+                        x: centerXOffSet
                     }}
                     transition={{
                         duration: 0.4,
