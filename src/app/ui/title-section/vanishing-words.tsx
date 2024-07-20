@@ -1,5 +1,5 @@
 'use client'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, LayoutGroup } from 'framer-motion'
 import { cn } from '@/app/lib/utils'
 import { clsx } from 'clsx'
@@ -15,71 +15,76 @@ export const VanishingWords = ({
     relativeClause: string
     className?: string
 }) => {
+    const [relativeClauseSize, setRelativeClauseSize] = useState(0)
+
     const divRef = useRef(null)
-    const prevDiv = useRef(null)
     const currDiv = useRef(null)
 
-    const [currentWord, setCurrentWord] = useState(words[0])
     const [isAnimating, setIsAnimating] = useState<boolean>(false)
 
-    const [prevWord, setPrevWord] = useState(words[0])
-    const [currWord, setCurrWord] = useState(words[1])
+    const [currWord, setCurrWord] = useState(words[0])
+    const [currentWord, setCurrentWord] = useState(words[0])
 
-    const [prevWordSize, setPrevWordSize] = useState(0)
-    const [currWordSize, setCurrWordSize] = useState(0)
-    const [xOffSet, setXOffSet] = useState(0)
-
-    const startAnimation = useCallback(() => {
-        setPrevWord(words[(words.indexOf(prevWord) + 1) % words.length])
-        setCurrWord(words[(words.indexOf(currWord) + 1) % words.length])
-
-        const word = words[words.indexOf(currentWord) + 1] || words[0]
-        setCurrentWord(word)
-
-        setIsAnimating(true)
-    }, [currentWord, prevWord, currWord, words])
+    const [posX, setPosX] = useState(0)
 
     useEffect(() => {
-        if (prevDiv.current && currDiv.current) {
-            setPrevWordSize(prevDiv.current.offsetWidth)
-            setCurrWordSize(currDiv.current.offsetWidth)
-            setXOffSet(currWordSize / 2 - prevWordSize / 2)
-        }
-    }, [currWord])
-
-    useEffect(() => {
-        if (!isAnimating) {
+        if (!isAnimating && relativeClauseSize !== 0) {
             const timeout = setTimeout(() => {
                 startAnimation()
             }, duration)
             return () => clearTimeout(timeout)
         }
-    }, [isAnimating])
+    }, [isAnimating, relativeClauseSize])
+
+    useLayoutEffect(() => {
+        setRelativeClauseSize(divRef.current.offsetWidth)
+    }, [])
+
+    const startAnimation = useCallback(() => {
+        setCurrWord(words[(words.indexOf(currWord) + 1) % words.length])
+        setCurrentWord(words[(words.indexOf(currentWord) + 1) % words.length])
+        setIsAnimating(true)
+    }, [currentWord])
+
+    useEffect(() => {
+        if (currDiv.current && relativeClauseSize !== 0) {
+            // @prettier-ignore
+            console.log(`current size: ${currDiv.current.offsetWidth}`)
+            console.log(`clause size: ${relativeClauseSize}`);
+
+            setPosX((-(currDiv.current.offsetWidth + relativeClauseSize) / 2))
+        }
+    }, [currWord, relativeClauseSize])
 
     return (
-        <AnimatePresence
-            onExitComplete={() => {
-                console.log('exit')
-                setIsAnimating(false)
-            }}
-        >
+        <div className="flex items-center justify-center relative">
             <motion.div
-                className={`${className}`}
-                key={`${currentWord}`}
+                className={`${className} inline-block absolute transform -translate-x-1/2`}
+                key={`${currentWord}-relativeClause`}
                 ref={divRef}
                 initial={{
-                    x: xOffSet,
+                    x: posX,
                 }}
                 transition={{
                     duration: 1,
                     ease: 'easeInOut',
+                    when: 'beforeChildren',
                 }}
-                animate={{ x: 0 }}
+                animate={{ x: posX }}
             >
-                <p className="inline-block">{relativeClause}</p>
-                <p className={`inline-block w-1`}></p>
+                <div className={`${className} inline-block`}>
+                    <p className="inline-block">{relativeClause}</p>
+                    <p className={`inline-block w-1`}></p>
+                </div>
+            </motion.div>
 
+            <AnimatePresence
+                onExitComplete={() => {
+                    setIsAnimating(false)
+                }}
+            >
                 <motion.div
+                    key={`${currentWord}-carousel`}
                     initial={{
                         opacity: 0,
                         y: 10,
@@ -94,6 +99,7 @@ export const VanishingWords = ({
                         type: 'spring',
                         stiffness: 100,
                         damping: 10,
+                        delay: 1,
                     }}
                     exit={{
                         opacity: 0,
@@ -102,6 +108,9 @@ export const VanishingWords = ({
                         filter: 'blur(8px)',
                         scale: 2,
                         position: 'absolute',
+                        transition: {
+                            duration: 0.5,
+                        },
                     }}
                     className={cn(
                         'z-10 inline-block relative text-left text-neutral-900 dark:text-neutral-100 px-2',
@@ -134,48 +143,28 @@ export const VanishingWords = ({
                         </motion.span>
                     ))}
                 </motion.div>
-            </motion.div>
+            </AnimatePresence>
 
             <div
                 style={{
                     position: 'absolute',
-                    left: '-10000px',
+                    top: '600px',
                 }}
                 className={`${className}`}
             >
                 <div
                     style={{
                         display: 'flex',
-                        flexDirection: 'column',
                         alignItems: 'center',
                         justifyContent: 'center',
+                        flexShrink: 0,
                     }}
+                    ref={currDiv}
                 >
-                    <div
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            flexShrink: 0,
-                        }}
-                        ref={prevDiv}
-                    >
-                        <div>{prevWord}</div>
-                    </div>
-                    <div
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            flexShrink: 0,
-                        }}
-                        ref={currDiv}
-                    >
-                        <div>{currWord}</div>
-                    </div>
+                    <div>{currWord}</div>
                 </div>
             </div>
-        </AnimatePresence>
+        </div>
     )
 }
 
