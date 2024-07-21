@@ -7,20 +7,40 @@ body {
     @apply m-0 p-0 w-full h-full overflow-hidden;
 }
 
+/* Text size */
 .header1 {
     @apply text-4xl sm:text-7xl font-bold relative z-20 bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 py-8 text-center;
 }
 
-.secondary {
-    @apply mx-auto font-normal text-neutral-600 dark:text-neutral-400
+.header2 {
+    @apply text-2xl sm:text-4xl font-bold text-neutral-600 dark:text-white;
 }
 
+.header3 {
+    @apply text-xl font-bold text-neutral-600 dark:text-white;
+}
+
+.secondary {
+    @apply mx-auto font-normal text-neutral-600 dark:text-neutral-400;
+}
+
+.paragraph {
+    @apply text-neutral-500 text-sm max-w-sm mt-2 dark:text-neutral-300;
+}
+
+/* Images */
+.classicImage {
+    @apply w-full object-cover rounded-xl;
+}
+
+/* Scroll bar */
 .hide-scrollbar {
     scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
 }
 
-.hide-scrollbar::-webkit-scrollbar { /* WebKit browsers */
+.hide-scrollbar::-webkit-scrollbar {
+    /* WebKit browsers */
     width: 0;
     height: 0;
 }

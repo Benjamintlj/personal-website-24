@@ -1,5 +1,11 @@
 'use client'
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, {
+    useCallback,
+    useEffect,
+    useLayoutEffect,
+    useRef,
+    useState,
+} from 'react'
 import { AnimatePresence, motion, LayoutGroup } from 'framer-motion'
 import { cn } from '@/app/lib/utils'
 import { clsx } from 'clsx'
@@ -39,26 +45,26 @@ export const VanishingWords = ({
 
     const updateSize = () => {
         if (divRef.current) {
-            setRelativeClauseSize(divRef.current.offsetWidth);
+            setRelativeClauseSize(divRef.current.offsetWidth)
         }
-    };
+    }
 
     useLayoutEffect(() => {
         updateSize()
     }, [])
 
     useEffect(() => {
-        updateSize();
-        window.addEventListener('resize', updateSize);
+        updateSize()
+        window.addEventListener('resize', updateSize)
 
         return () => {
-            window.removeEventListener('resize', updateSize);
-        };
-    }, []);
+            window.removeEventListener('resize', updateSize)
+        }
+    }, [])
 
     useEffect(() => {
         setCenterXOffSet(relativeClauseSize / 2)
-    }, [relativeClauseSize]);
+    }, [relativeClauseSize])
 
     const startAnimation = useCallback(() => {
         setCurrWord(words[(words.indexOf(currWord) + 1) % words.length])
@@ -69,7 +75,10 @@ export const VanishingWords = ({
     useEffect(() => {
         if (currDiv.current) {
             // @prettier-ignore
-            setPosX((-(currDiv.current.offsetWidth + relativeClauseSize) / 2) + centerXOffSet)
+            setPosX(
+                -(currDiv.current.offsetWidth + relativeClauseSize) / 2 +
+                    centerXOffSet
+            )
         }
     }, [currWord])
 
@@ -106,10 +115,10 @@ export const VanishingWords = ({
                 <motion.div
                     key={`${currentWord}-carousel`}
                     initial={{
-                        x: centerXOffSet
+                        x: centerXOffSet,
                     }}
                     animate={{
-                        x: centerXOffSet
+                        x: centerXOffSet,
                     }}
                     transition={{
                         duration: 1,
@@ -146,7 +155,7 @@ export const VanishingWords = ({
                                 filter: 'blur(0px)',
                             }}
                             transition={{
-                                delay: (index * 0.08) + 1,
+                                delay: index * 0.08 + 1,
                                 duration: 0.2,
                                 ease: 'easeInOut',
                                 type: 'spring',
@@ -159,7 +168,7 @@ export const VanishingWords = ({
                                 x: 5,
                                 filter: 'blur(8px)',
                                 transition: {
-                                    delay: (index * 0.08),
+                                    delay: index * 0.08,
                                     duration: 0.2,
                                 },
                             }}
@@ -177,7 +186,7 @@ export const VanishingWords = ({
             <div
                 style={{
                     position: 'absolute',
-                    top: '999999px',
+                    top: '-999999px',
                 }}
                 className={`${className}`}
             >
@@ -196,79 +205,3 @@ export const VanishingWords = ({
         </div>
     )
 }
-
-/**
- * export const VanishingWords = ({
- *     words,
- *     duration = 3000,
- *     relativeClause,
- *     className,
- * }: {
- *     words: string[]
- *     duration?: number
- *     relativeClause: string
- *     className?: string
- * }) => {
- *     const [currentWord, setCurrentWord] = useState(words[0])
- *     const [isAnimating, setIsAnimating] = useState<boolean>(false)
- *
- *     const startAnimation = useCallback(() => {
- *         const word = words[words.indexOf(currentWord) + 1] || words[0]
- *         setCurrentWord(word)
- *
- *         setIsAnimating(true)
- *     }, [currentWord, words])
- *
- *     useEffect(() => {
- *         if (!isAnimating) {
- *             const timeout = setTimeout(() => {
- *                 startAnimation()
- *             }, duration)
- *             return () => clearTimeout(timeout)
- *         }
- *     }, [isAnimating, startAnimation, duration])
- *
- *     return (
- *         <AnimatePresence
- *             onExitComplete={() => {
- *                 console.log('exit')
- *                 setIsAnimating(false)
- *             }}
- *         >
- *             <motion.div
- *                 key={`${currentWord}-1`}
- *                 className={cn(
- *                     'z-10 inline-block relative text-left text-neutral-900 dark:text-neutral-100 px-2'
- *                 )}
- *             >
- *                 <p className="inline-block">{relativeClause}</p>
- *                 {currentWord.split('').map((letter, index) => (
- *                     <motion.span
- *                         key={currentWord + index}
- *                         initial={{
- *                             opacity: 0,
- *                             y: 10,
- *                             filter: 'blur(8px)',
- *                         }}
- *                         animate={{
- *                             opacity: 1,
- *                             y: 0,
- *                             filter: 'blur(0px)',
- *                         }}
- *                         transition={{
- *                             delay: index * 0.08,
- *                             duration: 0.3,
- *                         }}
- *                         className={clsx(
- *                             'inline-block',
- *                             letter === ' ' && 'w-1'
- *                         )}
- *                     >
- *                         {letter}
- *                     </motion.span>
- *                 ))}
- *             </motion.div>
- *         </AnimatePresence>
- *     )
- * }
- */
