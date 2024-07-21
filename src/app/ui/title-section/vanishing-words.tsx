@@ -7,7 +7,7 @@ import React, {
     useState,
 } from 'react'
 import { AnimatePresence, motion, LayoutGroup } from 'framer-motion'
-import { cn } from '@/app/lib/utils'
+import { cn } from '@/lib/utils'
 import { clsx } from 'clsx'
 
 export const VanishingWords = ({
