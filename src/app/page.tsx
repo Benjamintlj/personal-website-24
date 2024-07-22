@@ -7,6 +7,7 @@ import { VanishingWords } from '@/app/ui/title-section/vanishing-words'
 import ScrollPrompt from '@/app/ui/title-section/scroll-prompt'
 import { TitleCards } from '@/app/ui/title-section/title-cards'
 import { BentoGrid, BentoGridItem } from '@/app/ui/projects/bento-grid'
+import { Skills } from '@/app/ui/projects/skill-circle'
 
 export default function Home() {
     const mainRef = useRef(null)
@@ -43,6 +44,18 @@ export default function Home() {
                             width={2}
                             cardImage={'/images/lakes.png'}
                             descriptionImage={'/images/lakes.png'}
+                            skills={[
+                                Skills.AWS,
+                                Skills.DynamoDB,
+                                Skills.Lambda,
+                                Skills.S3,
+                                Skills.ECS,
+                                Skills.EC2,
+                                Skills.SQS,
+                                Skills.SES,
+                                Skills.CDK,
+                                Skills.Route53,
+                            ]}
                         >
                             <main></main>
                         </BentoGridItem>

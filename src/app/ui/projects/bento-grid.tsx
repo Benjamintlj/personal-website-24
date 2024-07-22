@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useOutsideClick } from '@/hooks/use-outside-click'
 import { GithubButton } from '@/app/ui/projects/github-button'
 import { clsx } from 'clsx'
-import { SkillCircle } from '@/app/ui/projects/skill-circle'
+import { SkillCircle, Skills } from '@/app/ui/projects/skill-circle'
 
 const gridColsClass = (numOfGridCols: number) => {
     switch (numOfGridCols) {
@@ -53,6 +53,7 @@ export const BentoGridItem = ({
     descriptionImage,
     className,
     children,
+    skills,
 }: {
     title: string
     description: string
@@ -60,6 +61,7 @@ export const BentoGridItem = ({
     cardImage?: string
     descriptionImage: string
     className?: string
+    skills?: Skills[]
     children: React.ReactNode
 }) => {
     const [active, setActive] = useState<boolean | null>(null)
@@ -94,52 +96,56 @@ export const BentoGridItem = ({
             </motion.div>
             <AnimatePresence>
                 {active && (
-                    <div className="fixed inset-0 grid place-items-center z-[100]">
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="fixed inset-0 backdrop-blur-sm h-full w-full z-10"
-                        />
-                        <motion.div
-                            layoutId={`card-${id}`}
-                            ref={ref}
-                            className="w-full max-w-[700px] h-full md:max-h-[50%] flex bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden z-[101]"
-                        >
-                            <div className="w-1/2 h-full overflow-hidden">
-                                <motion.img
-                                    src={descriptionImage}
-                                    alt="Card Image"
-                                    className="h-full w-auto object-cover"
-                                    initial={{ x: '-100%' }}
-                                    animate={{ x: '0%' }}
-                                    exit={{ x: '-100%' }}
-                                    transition={{ type: 'tween' }}
-                                />
+                    <>
+                        <div className="fixed inset-0 grid place-items-center z-[100]">
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="fixed inset-0 backdrop-blur-sm h-full w-full z-10"
+                            />
+                            <div className="fixed inset-0 z-[99]">
+                                <SkillCircle skills={skills} />
                             </div>
-                            <div className="w-1/2 p-5 flex flex-col justify-start overflow-y-auto scrollbar-hide">
-                                <h3 className="header3 mb-3">{title}</h3>
-                                <div className="break" />
-                                <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-4">
-                                    {description}
-                                </p>
-                                <div className="mt-auto">
-                                    <motion.div
-                                        initial={{ y: '100%' }}
-                                        animate={{ y: '0%' }}
-                                        exit={{ y: '100%' }}
+                            <motion.div
+                                layoutId={`card-${id}`}
+                                ref={ref}
+                                className="w-full max-w-[700px] h-full md:max-h-[50%] flex bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden z-[101]"
+                            >
+                                <div className="w-1/2 h-full overflow-hidden">
+                                    <motion.img
+                                        src={descriptionImage}
+                                        alt="Card Image"
+                                        className="h-full w-auto object-cover"
+                                        initial={{ x: '-100%' }}
+                                        animate={{ x: '0%' }}
+                                        exit={{ x: '-100%' }}
                                         transition={{ type: 'tween' }}
-                                        className="bg-white dark:bg-neutral-900 p-4 rounded-t-lg"
-                                    >
-                                        <SkillCircle></SkillCircle>
-                                        <GithubButton
-                                            link={'https://www.google.com'}
-                                        />
-                                    </motion.div>
+                                    />
                                 </div>
-                            </div>
-                        </motion.div>
-                    </div>
+                                <div className="w-1/2 p-5 flex flex-col justify-start overflow-y-auto scrollbar-hide">
+                                    <h3 className="header3 mb-3">{title}</h3>
+                                    <div className="break" />
+                                    <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-4">
+                                        {description}
+                                    </p>
+                                    <div className="mt-auto">
+                                        <motion.div
+                                            initial={{ y: '100%' }}
+                                            animate={{ y: '0%' }}
+                                            exit={{ y: '100%' }}
+                                            transition={{ type: 'tween' }}
+                                            className="bg-white dark:bg-neutral-900 p-4 rounded-t-lg"
+                                        >
+                                            <GithubButton
+                                                link={'https://www.google.com'}
+                                            />
+                                        </motion.div>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </div>
+                    </>
                 )}
             </AnimatePresence>
         </>
