@@ -8,6 +8,7 @@ import ScrollPrompt from '@/app/ui/title-section/scroll-prompt'
 import { TitleCards } from '@/app/ui/title-section/title-cards'
 import { BentoGrid, BentoGridItem } from '@/app/ui/projects/bento-grid'
 import { Skills } from '@/app/ui/projects/skill-circle'
+import { Break } from '@/app/ui/general/break'
 
 export default function Home() {
     const mainRef = useRef(null)
@@ -31,7 +32,7 @@ export default function Home() {
             <Dots>
                 <section className="h-screen w-3/5 snap-start mx-auto">
                     <h2 className="header2 mb-4">Projects</h2>
-                    <div className="break" />
+                    <Break />
 
                     <BentoGrid
                         className={`mt-5 mr-4 ml-4`}

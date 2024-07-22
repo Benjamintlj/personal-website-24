@@ -5,7 +5,13 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useOutsideClick } from '@/hooks/use-outside-click'
 import { GithubButton } from '@/app/ui/projects/github-button'
 import { clsx } from 'clsx'
-import { SkillCircle, Skills } from '@/app/ui/projects/skill-circle'
+import {
+    Categories,
+    skillCategoryMap,
+    SkillCircle,
+    Skills,
+} from '@/app/ui/projects/skill-circle'
+import { Break } from '@/app/ui/general/break'
 
 const gridColsClass = (numOfGridCols: number) => {
     switch (numOfGridCols) {
@@ -123,10 +129,10 @@ export const BentoGridItem = ({
                                         transition={{ type: 'tween' }}
                                     />
                                 </div>
-                                <div className="w-1/2 p-5 flex flex-col justify-start overflow-y-auto scrollbar-hide">
+                                <div className="w-1/2 p-5 flex flex-col justify-start">
                                     <h3 className="header3 mb-3">{title}</h3>
-                                    <div className="break" />
-                                    <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-4">
+                                    <Break />
+                                    <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-4 overflow-y-auto scrollbar-hide">
                                         {description}
                                     </p>
                                     <div className="mt-auto">
@@ -137,6 +143,20 @@ export const BentoGridItem = ({
                                             transition={{ type: 'tween' }}
                                             className="bg-white dark:bg-neutral-900 p-4 rounded-t-lg"
                                         >
+                                            <Break className={`mb-4`} />
+                                            <div className="flex flex-wrap justify-start">
+                                                {Object.entries(Skills).map(
+                                                    ([key, value]) => (
+                                                        <p
+                                                            key={key}
+                                                            className={`paragraph text-white ${skillCategoryMap[value]} rounded px-1 mr-1`}
+                                                        >
+                                                            {value}
+                                                        </p>
+                                                    )
+                                                )}
+                                            </div>
+                                            <Break className={'mt-4 mb-4'} />
                                             <GithubButton
                                                 link={'https://www.google.com'}
                                             />

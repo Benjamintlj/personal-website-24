@@ -34,6 +34,14 @@ import { GiKite } from 'react-icons/gi'
 
 import { motion } from 'framer-motion'
 
+export enum Categories {
+    CloudServices = 'bg-red-500',
+    ProgrammingLanguages = 'bg-blue-500',
+    FrontEndFrameworks = 'bg-purple-500',
+    DevOpsTools = 'bg-green-800',
+    EmbeddedSystems = 'bg-pink-700',
+}
+
 export enum Skills {
     AWS = 'AWS',
     DynamoDB = 'DynamoDB',
@@ -52,19 +60,52 @@ export enum Skills {
     JavaScript = 'JavaScript',
     React = 'React',
     Next = 'Next',
-    DotNetCore = 'DotNetCore',
+    DotNetCore = '.NET Core',
     SQL = 'SQL',
     Docker = 'Docker',
     Postman = 'Postman',
     Git = 'Git',
     Atlassian = 'Atlassian',
-    Azure = 'Azure',
+    Azure = 'Azure DevOps',
     Android = 'Android',
     FreeRTOS = 'FreeRTOS',
     Linux = 'Linux',
     Zephyr = 'Zephyr',
     JLink = 'JLink',
     I2C = 'I2C',
+}
+
+export const skillCategoryMap: { [key in Skills]: Categories } = {
+    [Skills.AWS]: Categories.CloudServices,
+    [Skills.DynamoDB]: Categories.CloudServices,
+    [Skills.Lambda]: Categories.CloudServices,
+    [Skills.S3]: Categories.CloudServices,
+    [Skills.ECS]: Categories.CloudServices,
+    [Skills.EC2]: Categories.CloudServices,
+    [Skills.SQS]: Categories.CloudServices,
+    [Skills.SES]: Categories.CloudServices,
+    [Skills.CDK]: Categories.CloudServices,
+    [Skills.Route53]: Categories.CloudServices,
+    [Skills.Java]: Categories.ProgrammingLanguages,
+    [Skills.C]: Categories.ProgrammingLanguages,
+    [Skills.Python]: Categories.ProgrammingLanguages,
+    [Skills.TypeScript]: Categories.ProgrammingLanguages,
+    [Skills.JavaScript]: Categories.ProgrammingLanguages,
+    [Skills.React]: Categories.FrontEndFrameworks,
+    [Skills.Next]: Categories.FrontEndFrameworks,
+    [Skills.DotNetCore]: Categories.ProgrammingLanguages,
+    [Skills.SQL]: Categories.ProgrammingLanguages,
+    [Skills.Docker]: Categories.DevOpsTools,
+    [Skills.Postman]: Categories.DevOpsTools,
+    [Skills.Git]: Categories.DevOpsTools,
+    [Skills.Atlassian]: Categories.DevOpsTools,
+    [Skills.Azure]: Categories.DevOpsTools,
+    [Skills.Android]: Categories.FrontEndFrameworks,
+    [Skills.FreeRTOS]: Categories.EmbeddedSystems,
+    [Skills.Linux]: Categories.EmbeddedSystems,
+    [Skills.Zephyr]: Categories.EmbeddedSystems,
+    [Skills.JLink]: Categories.EmbeddedSystems,
+    [Skills.I2C]: Categories.EmbeddedSystems,
 }
 
 const skillIcons = {
