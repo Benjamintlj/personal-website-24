@@ -30,7 +30,7 @@ export default function Home() {
             <Dots>
                 <section className="h-screen w-3/5 snap-start mx-auto">
                     <h2 className="header2 mb-4">Projects</h2>
-                    <div className="border-t-2 border-gray-500" />
+                    <div className="break" />
 
                     <BentoGrid
                         className={`mt-5 mr-4 ml-4`}
@@ -42,6 +42,7 @@ export default function Home() {
                             description={'hello'}
                             width={2}
                             cardImage={'/images/lakes.png'}
+                            descriptionImage={'/images/lakes.png'}
                         >
                             <main></main>
                         </BentoGridItem>

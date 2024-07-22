@@ -20,6 +20,10 @@ body {
     @apply text-xl font-bold text-neutral-600 dark:text-white;
 }
 
+.header4 {
+    @apply text-sm font-medium dark:text-white;
+}
+
 .secondary {
     @apply mx-auto font-normal text-neutral-600 dark:text-neutral-400;
 }
@@ -28,9 +32,18 @@ body {
     @apply text-neutral-500 text-sm max-w-sm mt-2 dark:text-neutral-300;
 }
 
+.break {
+    @apply border-t-2 border-gray-500
+}
+
 /* Images */
 .classicImage {
     @apply w-full object-cover rounded-xl;
+}
+
+/* Card colour */
+.card-bg {
+    background-color: #282828b3;
 }
 
 /* Scroll bar */
@@ -43,4 +56,12 @@ body {
     /* WebKit browsers */
     width: 0;
     height: 0;
+    display: none;
+    background: transparent;
+}
+
+/* safari being broken */
+.custom-backdrop-blur {
+    -webkit-backdrop-filter: blur(40px);
+    backdrop-filter: blur(40px);
 }

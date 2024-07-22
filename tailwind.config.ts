@@ -18,7 +18,11 @@ module.exports = {
   ],
   darkMode: "class",
   theme: {
-    extend: {},
+    extend: {
+      backdropBlur: {
+        '3xl': '40px',
+      }
+    },
   },
   plugins: [
     addVariablesForColors,
