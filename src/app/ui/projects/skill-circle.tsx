@@ -140,21 +140,22 @@ const skillIcons = {
     [Skills.I2C]: <p className="text-base">I²C</p>,
 }
 
-export const SkillCircle = ({ skills }: { skills: Skills[] }) => {
+export const SkillCircle = ({
+    skills,
+    className,
+}: {
+    skills: Skills[]
+    className: string
+}) => {
     return (
-        <div>
+        <div className={className}>
             {skills?.map((skill) => {
                 const duration = Math.random() * 7 + 12
 
                 const randomYOffsetEnd =
                     Math.random() * window.innerHeight - Math.random() * 500
 
-                const randomValue = Math.random()
-                const getRandomX =
-                    randomValue < 0.5
-                        ? randomValue * (window.innerWidth * 0.2)
-                        : window.innerWidth -
-                          randomValue * (window.innerWidth * 0.2)
+                const getRandomX = window.innerWidth * Math.random()
 
                 return skillIcons[skill] ? (
                     <motion.div

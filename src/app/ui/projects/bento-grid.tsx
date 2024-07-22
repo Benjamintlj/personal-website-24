@@ -90,7 +90,7 @@ export const BentoGridItem = ({
                 })}
             >
                 <div
-                    className={`w-full h-full bg-cover rounded-xl ${cardImage ? '' : 'bg-transparent'}`}
+                    className={`w-full h-full bg-cover bg-center rounded-xl ${cardImage ? '' : 'bg-transparent'}`}
                     style={{
                         backgroundImage: cardImage
                             ? `url(${cardImage})`
@@ -110,26 +110,39 @@ export const BentoGridItem = ({
                                 exit={{ opacity: 0 }}
                                 className="fixed inset-0 backdrop-blur-sm h-full w-full z-10"
                             />
-                            <div className="fixed inset-0 z-[99]">
-                                <SkillCircle skills={skills} />
-                            </div>
+                            <SkillCircle
+                                skills={skills}
+                                className={`fixed inset-0 z-[99] hidden lg:block`}
+                            />
                             <motion.div
                                 layoutId={`card-${id}`}
                                 ref={ref}
-                                className="w-full max-w-[700px] h-full md:max-h-[50%] flex bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden z-[101]"
+                                className="w-full max-w-[700px] h-[100vh] lg:h-[50vh] flex flex-col lg:flex-row bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden z-[101]"
                             >
-                                <div className="w-1/2 h-full overflow-hidden">
+                                <div className="w-full h-[30vh] lg:w-1/2 lg:h-full overflow-hidden flex-shrink-0 flex items-center">
                                     <motion.img
                                         src={descriptionImage}
                                         alt="Card Image"
-                                        className="h-full w-auto object-cover"
-                                        initial={{ x: '-100%' }}
-                                        animate={{ x: '0%' }}
-                                        exit={{ x: '-100%' }}
+                                        className="lg:h-full lg:w-auto w-full object-cover"
+                                        initial={
+                                            window.innerWidth >= 1024
+                                                ? { x: '-100%' }
+                                                : false
+                                        }
+                                        animate={
+                                            window.innerWidth >= 1024
+                                                ? { x: '0%' }
+                                                : false
+                                        }
+                                        exit={
+                                            window.innerWidth >= 1024
+                                                ? { x: '-100%' }
+                                                : false
+                                        }
                                         transition={{ type: 'tween' }}
                                     />
                                 </div>
-                                <div className="w-1/2 p-5 flex flex-col justify-start">
+                                <div className="w-full lg:w-1/2 h-full p-5 flex flex-col justify-start">
                                     <h3 className="header3 mb-3">{title}</h3>
                                     <Break />
                                     <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-4 overflow-y-auto scrollbar-hide">
@@ -141,11 +154,11 @@ export const BentoGridItem = ({
                                             animate={{ y: '0%' }}
                                             exit={{ y: '100%' }}
                                             transition={{ type: 'tween' }}
-                                            className="bg-white dark:bg-neutral-900 p-4 rounded-t-lg"
+                                            className="bg-white dark:bg-neutral-900 rounded-t-lg"
                                         >
                                             <Break className={`mb-4`} />
                                             <div className="flex flex-wrap justify-start">
-                                                {Object.entries(Skills).map(
+                                                {Object.entries(skills).map(
                                                     ([key, value]) => (
                                                         <p
                                                             key={key}

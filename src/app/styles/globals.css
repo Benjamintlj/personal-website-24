@@ -33,7 +33,7 @@ body {
 }
 
 .break {
-    @apply border-t-2 border-gray-500
+    @apply border-t-2 border-gray-500;
 }
 
 /* Images */
