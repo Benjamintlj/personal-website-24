@@ -12,6 +12,7 @@ import {
     Skills,
 } from '@/app/ui/projects/skill-circle'
 import { Break } from '@/app/ui/general/break'
+import { CloseButton } from '@/app/ui/projects/close-button'
 
 const gridColsClass = (numOfGridCols: number) => {
     switch (numOfGridCols) {
@@ -117,8 +118,12 @@ export const BentoGridItem = ({
                             <motion.div
                                 layoutId={`card-${id}`}
                                 ref={ref}
-                                className="w-full max-w-[700px] h-[100vh] lg:h-[50vh] flex flex-col lg:flex-row bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden z-[101]"
+                                className="relative w-full max-w-[700px] h-[100vh] lg:h-[50vh] flex flex-col lg:flex-row bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden z-[101]"
                             >
+                                <CloseButton
+                                    className="z-[102]"
+                                    onClick={() => setActive(null)}
+                                />
                                 <div className="w-full h-[30vh] lg:w-1/2 lg:h-full overflow-hidden flex-shrink-0 flex items-center">
                                     <motion.img
                                         src={descriptionImage}
