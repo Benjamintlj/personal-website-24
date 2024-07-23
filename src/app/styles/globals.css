@@ -16,6 +16,10 @@ body {
     @apply text-2xl sm:text-4xl font-bold text-neutral-600 dark:text-white;
 }
 
+.header2-gradient {
+    @apply text-2xl sm:text-4xl font-bold relative z-20 bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 py-8;
+}
+
 .header3 {
     @apply text-xl font-bold text-neutral-600 dark:text-white;
 }
