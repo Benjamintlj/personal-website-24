@@ -3,7 +3,7 @@ import React from 'react'
 import { useState, useRef, useId } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useOutsideClick } from '@/hooks/use-outside-click'
-import { GithubButton } from '@/app/ui/projects/github-button'
+import { GithubButton, YoutubeButton } from '@/app/ui/projects/content-buttons'
 import { clsx } from 'clsx'
 import {
     Categories,
@@ -58,9 +58,12 @@ export const BentoGridItem = ({
     width,
     cardImage,
     descriptionImage,
-    className,
     children,
     skills,
+    className,
+    gitHub,
+    youtube,
+    visibleOnMobile = true,
 }: {
     title: string
     description: string
@@ -70,6 +73,9 @@ export const BentoGridItem = ({
     className?: string
     skills?: Skills[]
     children: React.ReactNode
+    gitHub: string
+    youtube: string
+    visibleOnMobile: boolean
 }) => {
     const [active, setActive] = useState<boolean | null>(null)
     const ref = useRef<HTMLDivElement>(null)
@@ -80,8 +86,11 @@ export const BentoGridItem = ({
     if (width > 2)
         throw new Error('Invalid input: width should not be greater than 2.')
 
+    let visibility: string
+    if (!visibleOnMobile) visibility = 'hidden lg:block'
+
     return (
-        <>
+        <div className={`${visibility} ${className}`}>
             <motion.div
                 layoutId={`card-${id}`}
                 key={`card-${id}`}
@@ -175,9 +184,14 @@ export const BentoGridItem = ({
                                                 )}
                                             </div>
                                             <Break className={'mt-4 mb-4'} />
-                                            <GithubButton
-                                                link={'https://www.google.com'}
-                                            />
+                                            <div
+                                                className={
+                                                    'flex justify-evenly flex-row'
+                                                }
+                                            >
+                                                <GithubButton link={gitHub} />
+                                                <YoutubeButton link={youtube} />
+                                            </div>
                                         </motion.div>
                                     </div>
                                 </div>
@@ -186,6 +200,6 @@ export const BentoGridItem = ({
                     </>
                 )}
             </AnimatePresence>
-        </>
+        </div>
     )
 }

@@ -30,6 +30,7 @@ export default function Home() {
             ref={mainRef}
         >
             <Dots>
+                {/*TODO: add max width*/}
                 <section className="h-screen w-3/5 snap-start mx-auto">
                     <h2 className="header2 mb-4">Projects</h2>
                     <Break />
@@ -57,6 +58,8 @@ export default function Home() {
                                 Skills.CDK,
                                 Skills.Route53,
                             ]}
+                            gitHub={'https://www.google.com'}
+                            youtube={'https://www.youtube.com'}
                         >
                             <main></main>
                         </BentoGridItem>
