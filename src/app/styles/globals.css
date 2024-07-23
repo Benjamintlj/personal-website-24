@@ -46,6 +46,23 @@ body {
     background-color: #282828b3;
 }
 
+/* Button styles */
+@media (max-width: 1024px) {
+    .lg\:paused-spinner {
+        animation: spin 2s linear infinite !important;
+        animation-play-state: running !important;
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 /* Scroll bar */
 .hide-scrollbar {
     scrollbar-width: none; /* Firefox */

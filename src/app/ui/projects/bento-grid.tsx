@@ -183,14 +183,27 @@ export const BentoGridItem = ({
                                                     )
                                                 )}
                                             </div>
-                                            <Break className={'mt-4 mb-4'} />
+
                                             <div
                                                 className={
-                                                    'flex justify-evenly flex-row'
+                                                    gitHub || youtube
+                                                        ? ''
+                                                        : 'hidden'
                                                 }
                                             >
-                                                <GithubButton link={gitHub} />
-                                                <YoutubeButton link={youtube} />
+                                                <Break
+                                                    className={'mt-4 mb-4'}
+                                                />
+                                                <div
+                                                    className={`flex justify-evenly flex-row`}
+                                                >
+                                                    <GithubButton
+                                                        link={gitHub}
+                                                    />
+                                                    <YoutubeButton
+                                                        link={youtube}
+                                                    />
+                                                </div>
                                             </div>
                                         </motion.div>
                                     </div>

@@ -23,10 +23,9 @@ const GenericButton = ({
         >
             <button className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
                 <span
-                    className="absolute inset-[-1000%] transition-[background] duration-1000 ease-in-out"
+                    className="absolute inset-[-1000%] transition-[background] duration-1000 ease-in-out lg:paused-spinner"
                     style={{
                         background: `conic-gradient(from 90deg at 50% 50%, ${spinnerColor1} 0%, ${spinnerColor2} 50%, ${spinnerColor1} 100%)`,
-                        animationPlayState: 'paused',
                     }}
                 />
                 <span
