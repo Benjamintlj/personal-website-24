@@ -12,6 +12,8 @@
   "dependencies": {
     "@coreui/icons": "^3.0.1",
     "@coreui/icons-react": "^2.3.0",
+    "@fortawesome/fontawesome-svg-core": "^6.6.0",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "clsx": "^2.1.1",
     "framer-motion": "^11.3.2",
     "mini-svg-data-uri": "^1.4.4",

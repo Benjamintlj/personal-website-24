@@ -3,18 +3,20 @@ import { cn } from '@/lib/utils'
 import React, { useEffect, useRef, useState } from 'react'
 import { createNoise3D } from 'simplex-noise'
 
-export default function TitleBackground({
+export default function CirclesBackground({
     children,
     className,
     containerClassName,
     colors = ['#e74c3c', '#e67e22', '#f1c40f'],
     waveWidth,
-    backgroundFill,
-    circleSize = 300,
-    waveSize = 45,
-    blur = 10,
+    backgroundFill = 'transparent',
+    circleSize = 150,
+    waveSize = 25,
+    blur = 5,
     speed = 0.002,
-    waveOpacity = 0.5,
+    waveOpacity = 0.7,
+    width,
+    height,
     ...props
 }: {
     children?: any
@@ -28,6 +30,8 @@ export default function TitleBackground({
     blur?: number
     speed?: number
     waveOpacity?: number
+    width?: number
+    height?: number
     [key: string]: any
 }) {
     const noise = createNoise3D()
@@ -43,13 +47,17 @@ export default function TitleBackground({
     const init = () => {
         canvas = canvasRef.current
         ctx = canvas.getContext('2d')
-        w = ctx.canvas.width = window.innerWidth
-        h = ctx.canvas.height = window.innerHeight
+        w = width || canvas.parentElement.offsetWidth
+        h = height || canvas.parentElement.offsetHeight
+        ctx.canvas.width = w
+        ctx.canvas.height = h
         ctx.filter = `blur(${blur}px)`
         nt = 0
         window.onresize = function () {
-            w = ctx.canvas.width = window.innerWidth
-            h = ctx.canvas.height = window.innerHeight
+            w = width || canvas.parentElement.offsetWidth
+            h = height || canvas.parentElement.offsetHeight
+            ctx.canvas.width = w
+            ctx.canvas.height = h
             ctx.filter = `blur(${blur}px)`
         }
         render()
@@ -61,11 +69,17 @@ export default function TitleBackground({
         const centerY = h / 2
         for (i = 0; i < n; i++) {
             ctx.beginPath()
-            ctx.lineWidth = waveWidth || 50
+            ctx.lineWidth = waveWidth || 25
             ctx.strokeStyle = colors[i % colors.length]
             for (let angle = 0; angle < Math.PI * 2; angle += 0.05) {
-                // prettier-ignore
-                const radius = noise(Math.cos(angle) + 0.3 * i, Math.sin(angle) + 0.3 * i, nt) * waveSize + circleSize
+                const radius =
+                    noise(
+                        Math.cos(angle) + 0.3 * i,
+                        Math.sin(angle) + 0.3 * i,
+                        nt
+                    ) *
+                        waveSize +
+                    circleSize
                 const x = centerX + radius * Math.cos(angle)
                 const y = centerY + radius * Math.sin(angle)
                 if (angle === 0) {
@@ -81,7 +95,8 @@ export default function TitleBackground({
 
     let animationId: number
     const render = () => {
-        ctx.fillStyle = backgroundFill || 'black'
+        ctx.clearRect(0, 0, w, h)
+        ctx.fillStyle = backgroundFill
         ctx.globalAlpha = waveOpacity || 0.5
         ctx.fillRect(0, 0, w, h)
         drawWave(3)
@@ -93,7 +108,7 @@ export default function TitleBackground({
         return () => {
             cancelAnimationFrame(animationId)
         }
-    }, [])
+    }, [width, height])
 
     const [isSafari, setIsSafari] = useState(false)
     useEffect(() => {
@@ -107,7 +122,7 @@ export default function TitleBackground({
     return (
         <div
             className={cn(
-                'h-screen flex flex-col items-center justify-center',
+                'h-full flex flex-col items-center justify-center relative overflow-hidden',
                 containerClassName
             )}
         >

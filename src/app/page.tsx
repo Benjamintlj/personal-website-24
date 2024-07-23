@@ -9,13 +9,16 @@ import { TitleCards } from '@/app/ui/title-section/title-cards'
 import { BentoGrid, BentoGridItem } from '@/app/ui/projects/bento-grid'
 import { Skills } from '@/app/ui/projects/skill-circle'
 import { Break } from '@/app/ui/general/break'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FaDiscord } from 'react-icons/fa'
+import CirclesBackground from '@/app/ui/projects/circles-background'
 
 export default function Home() {
     const fypDivRef = useRef(null)
     const mainRef = useRef(null)
 
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
-    const [hovered, setHovered] = useState(false)
+    const [fypHovered, setFypHovered] = useState(false)
 
     const descriptiveWords = [
         'Software Engineer',
@@ -87,8 +90,8 @@ export default function Home() {
                         >
                             <main
                                 className={`h-full w-full flex flex-col justify-end relative overflow-hidden`}
-                                onMouseEnter={() => setHovered(true)}
-                                onMouseLeave={() => setHovered(false)}
+                                onMouseEnter={() => setFypHovered(true)}
+                                onMouseLeave={() => setFypHovered(false)}
                             >
                                 <div
                                     ref={fypDivRef}
@@ -101,12 +104,12 @@ export default function Home() {
                                 >
                                     <img
                                         src="/images/fyp-compete.png"
-                                        className={`transform transition-transform duration-300 rotate-180 mr-5 ${hovered ? 'translate-y-[5%]' : ''}`}
+                                        className={`transform transition-transform duration-300 rotate-180 mr-5 ${fypHovered ? 'translate-y-[5%]' : ''}`}
                                         alt="FYP Compete"
                                     />
                                     <img
                                         src="/images/fyp-homepage.png"
-                                        className={`transform transition-transform duration-300 ${hovered ? 'translate-y-[45%]' : 'translate-y-[50%]'}`}
+                                        className={`transform transition-transform duration-300 ${fypHovered ? 'translate-y-[45%]' : 'translate-y-[50%]'}`}
                                         alt="FYP Homepage"
                                     />
                                 </div>
@@ -123,7 +126,14 @@ export default function Home() {
                                     width={1}
                                     descriptionImage={'asdf'}
                                 >
-                                    <main></main>
+                                    <main className="flex flex-col justify-center items-center h-full mb-4">
+                                        <h1 className="header1 text-7xl py-0">
+                                            AI
+                                        </h1>
+                                        <p className="secondary text-center">
+                                            Chat Bot & CNN
+                                        </p>
+                                    </main>
                                 </BentoGridItem>
                                 <BentoGridItem
                                     title={'1'}
@@ -131,7 +141,13 @@ export default function Home() {
                                     width={1}
                                     descriptionImage={'asdf'}
                                 >
-                                    <main></main>
+                                    <main
+                                        className={`flex flex-col justify-center items-center h-full group`}
+                                    >
+                                        <FaDiscord
+                                            className={`text-8xl group-hover:text-blue-500 text-blue-400 transition transform duration-500 group-hover:translate-y-[5%]`}
+                                        />
+                                    </main>
                                 </BentoGridItem>
                             </BentoGrid>
                             <BentoGrid numOfGridCols={1} rowHeight={'21rem'}>
@@ -140,8 +156,23 @@ export default function Home() {
                                     description={'2'}
                                     width={1}
                                     descriptionImage={'asdf'}
+                                    style={{
+                                        position: 'relative',
+                                        overflow: 'hidden',
+                                    }}
                                 >
-                                    <main></main>
+                                    <main className="h-full w-full flex flex-col justify-end">
+                                        <CirclesBackground
+                                            circleSize={70}
+                                            waveSize={10}
+                                            blur={2}
+                                            height={250}
+                                            waveWidth={15}
+                                        />
+                                        <h2 className="header2-gradient text-center mt-auto mb-5">
+                                            Mobile Dev
+                                        </h2>
+                                    </main>
                                 </BentoGridItem>
                             </BentoGrid>
                         </BentoGrid>
