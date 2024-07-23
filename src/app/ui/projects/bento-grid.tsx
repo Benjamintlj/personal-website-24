@@ -41,7 +41,7 @@ export const BentoGrid = ({
     return (
         <div
             className={cn(
-                'grid gap-4 max-w-7xl mx-auto',
+                'grid gap-4 max-w-7xl mx-auto w-full',
                 gridColsClass(numOfGridCols),
                 className
             )}
@@ -95,9 +95,12 @@ export const BentoGridItem = ({
                 layoutId={`card-${id}`}
                 key={`card-${id}`}
                 onClick={() => setActive(true)}
-                className={clsx(`rounded-xl card-bg h-full cursor-pointer`, {
-                    [`col-span-${width}`]: width,
-                })}
+                className={clsx(
+                    `rounded-xl card-bg h-full cursor-pointer w-full`,
+                    {
+                        [`col-span-${width}`]: width,
+                    }
+                )}
             >
                 <div
                     className={`w-full h-full bg-cover bg-center rounded-xl ${cardImage ? '' : 'bg-transparent'}`}
