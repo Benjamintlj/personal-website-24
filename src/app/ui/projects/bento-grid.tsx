@@ -32,17 +32,19 @@ export const BentoGrid = ({
     children,
     numOfGridCols = 1,
     rowHeight = 'auto',
+    width = 1,
 }: {
     className?: string
     children?: React.ReactNode
     numOfGridCols?: number
     rowHeight?: string
+    width?: number
 }) => {
     return (
         <div
-            className={cn(
+            className={clsx(
                 'grid gap-4 max-w-7xl mx-auto w-full',
-                gridColsClass(numOfGridCols),
+                `grid-cols-${numOfGridCols}`,
                 className
             )}
             style={{ gridAutoRows: rowHeight }}
@@ -73,9 +75,9 @@ export const BentoGridItem = ({
     className?: string
     skills?: Skills[]
     children: React.ReactNode
-    gitHub: string
-    youtube: string
-    visibleOnMobile: boolean
+    gitHub?: string
+    youtube?: string
+    visibleOnMobile?: boolean
 }) => {
     const [active, setActive] = useState<boolean | null>(null)
     const ref = useRef<HTMLDivElement>(null)
@@ -96,11 +98,9 @@ export const BentoGridItem = ({
                 key={`card-${id}`}
                 onClick={() => setActive(true)}
                 className={clsx(
-                    `rounded-xl card-bg h-full cursor-pointer w-full`,
-                    {
-                        [`col-span-${width}`]: width,
-                    }
+                    `rounded-xl card-bg h-full cursor-pointer w-full`
                 )}
+                style={{ gridColumn: `span ${width}` }}
             >
                 <div
                     className={`w-full h-full bg-cover bg-center rounded-xl ${cardImage ? '' : 'bg-transparent'}`}
@@ -173,8 +173,10 @@ export const BentoGridItem = ({
                                             transition={{ type: 'tween' }}
                                             className="bg-white dark:bg-neutral-900 rounded-t-lg"
                                         >
+                                            {/*TODO: remove the break if no skills*/}
                                             <Break className={`mb-4`} />
                                             <div className="flex flex-wrap justify-start">
+                                                {/*TODO: make sure this can handle no skills*/}
                                                 {Object.entries(skills).map(
                                                     ([key, value]) => (
                                                         <p

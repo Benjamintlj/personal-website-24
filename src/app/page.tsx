@@ -115,6 +115,82 @@ export default function Home() {
                                 </h2>
                             </main>
                         </BentoGridItem>
+                        <BentoGrid numOfGridCols={1} rowHeight={'10rem'}>
+                            <BentoGrid numOfGridCols={2} rowHeight={'10rem'}>
+                                <BentoGridItem
+                                    title={'1'}
+                                    description={'2'}
+                                    width={1}
+                                    descriptionImage={'asdf'}
+                                >
+                                    <main></main>
+                                </BentoGridItem>
+                                <BentoGridItem
+                                    title={'1'}
+                                    description={'2'}
+                                    width={1}
+                                    descriptionImage={'asdf'}
+                                >
+                                    <main></main>
+                                </BentoGridItem>
+                            </BentoGrid>
+                            <BentoGrid numOfGridCols={1} rowHeight={'21rem'}>
+                                <BentoGridItem
+                                    title={'1'}
+                                    description={'2'}
+                                    width={1}
+                                    descriptionImage={'asdf'}
+                                >
+                                    <main></main>
+                                </BentoGridItem>
+                            </BentoGrid>
+                        </BentoGrid>
+                        <BentoGrid numOfGridCols={1} rowHeight={'15.5rem'}>
+                            <BentoGridItem
+                                title={'1'}
+                                description={'2'}
+                                width={1}
+                                descriptionImage={'asdf'}
+                            >
+                                <main></main>
+                            </BentoGridItem>
+                            <BentoGridItem
+                                title={'1'}
+                                description={'2'}
+                                width={1}
+                                descriptionImage={'asdf'}
+                            >
+                                <main></main>
+                            </BentoGridItem>
+                        </BentoGrid>
+                        <BentoGrid numOfGridCols={1} rowHeight={'10rem'}>
+                            <BentoGridItem
+                                title={'1'}
+                                description={'2'}
+                                width={1}
+                                descriptionImage={'asdf'}
+                            >
+                                <main></main>
+                            </BentoGridItem>
+                            <BentoGridItem
+                                title={'1'}
+                                description={'2'}
+                                width={1}
+                                descriptionImage={'asdf'}
+                            >
+                                <main></main>
+                            </BentoGridItem>
+                        </BentoGrid>
+                        <BentoGrid className={`col-span-2`} rowHeight={'21rem'}>
+                            <BentoGridItem
+                                title={'1'}
+                                description={'2'}
+                                width={1}
+                                descriptionImage={'asdf'}
+                            >
+                                <main></main>
+                            </BentoGridItem>
+                        </BentoGrid>
                     </BentoGrid>
                 </section>
 
