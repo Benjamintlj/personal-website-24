@@ -78,7 +78,13 @@ body {
 }
 
 /* safari being broken */
-.custom-backdrop-blur {
+.custom-backdrop-blur-40px {
     -webkit-backdrop-filter: blur(40px);
     backdrop-filter: blur(40px);
 }
+
+.custom-backdrop-blur-10px {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+

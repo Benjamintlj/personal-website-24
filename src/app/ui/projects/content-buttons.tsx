@@ -25,11 +25,11 @@ const GenericButton = ({
                 <span
                     className="absolute inset-[-1000%] transition-[background] duration-1000 ease-in-out lg:paused-spinner"
                     style={{
-                        background: `conic-gradient(from 90deg at 50% 50%, ${spinnerColor1} 0%, ${spinnerColor2} 50%, ${spinnerColor1} 100%)`,
+                        background: `conic-gradient(from 180deg at 50% 50%, ${spinnerColor1} 0%, ${spinnerColor2} 50%, ${spinnerColor1} 100%)`,
                     }}
                 />
                 <span
-                    className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 custom-backdrop-blur header4"
+                    className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 custom-backdrop-blur-40px header4"
                     style={{
                         position: 'relative',
                         zIndex: 1,
