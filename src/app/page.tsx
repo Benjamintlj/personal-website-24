@@ -11,7 +11,10 @@ import { Skills } from '@/app/ui/projects/skill-circle'
 import { Break } from '@/app/ui/general/break'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { FaDiscord } from 'react-icons/fa'
+import { SiAiohttp } from 'react-icons/si'
 import CirclesBackground from '@/app/ui/projects/circles-background'
+import { GoCircle } from 'react-icons/go'
+import { Circle, WifiCircles } from '@/app/ui/projects/circle'
 
 export default function Home() {
     const fypDivRef = useRef(null)
@@ -61,6 +64,8 @@ export default function Home() {
                 {/*TODO: handle wide screen with low height*/}
                 <section className="h-screen w-3/5 snap-start mx-auto">
                     <h2 className="header2 mb-4">Projects</h2>
+
+                    {/*TODO: fix line, since the bento grid goes out further*/}
                     <Break />
 
                     <BentoGrid
@@ -183,7 +188,32 @@ export default function Home() {
                                 width={1}
                                 descriptionImage={'asdf'}
                             >
-                                <main></main>
+                                <main
+                                    className={`h-full overflow-hidden relative flex flex-col justify-evenly`}
+                                >
+                                    <h2 className="header2-gradient text-3xl text-center">
+                                        Cloud & Distributed Systems
+                                    </h2>
+                                    <div
+                                        className={`flex flex-row justify-evenly mb-5`}
+                                    >
+                                        <img
+                                            className={`rounded-xl w-[25%] transition-transform hover:translate-y-[-5%] ease-in-out`}
+                                            src={`/images/aws/ecs.png`}
+                                            alt={'ECS icon'}
+                                        />
+                                        <img
+                                            className={`rounded-xl w-[25%] transition-transform hover:translate-y-[-5%] ease-in-out`}
+                                            src={`/images/aws/lambda.png`}
+                                            alt={'ECS icon'}
+                                        />
+                                        <img
+                                            className={`rounded-xl w-[25%] transition-transform hover:translate-y-[-5%] ease-in-out`}
+                                            src={`/images/aws/dynamodb.png`}
+                                            alt={'ECS icon'}
+                                        />
+                                    </div>
+                                </main>
                             </BentoGridItem>
                             <BentoGridItem
                                 title={'1'}
@@ -191,7 +221,7 @@ export default function Home() {
                                 width={1}
                                 descriptionImage={'asdf'}
                             >
-                                <main></main>
+                                <main className={``}></main>
                             </BentoGridItem>
                         </BentoGrid>
                         <BentoGrid numOfGridCols={1} rowHeight={'10rem'}>
@@ -201,7 +231,15 @@ export default function Home() {
                                 width={1}
                                 descriptionImage={'asdf'}
                             >
-                                <main></main>
+                                <main
+                                    className={`group h-full relative flex items-center`}
+                                >
+                                    <WifiCircles />
+
+                                    <h2 className="header2-gradient ml-5">
+                                        HTTP
+                                    </h2>
+                                </main>
                             </BentoGridItem>
                             <BentoGridItem
                                 title={'1'}

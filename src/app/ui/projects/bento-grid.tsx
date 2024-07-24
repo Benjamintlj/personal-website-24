@@ -32,13 +32,11 @@ export const BentoGrid = ({
     children,
     numOfGridCols = 1,
     rowHeight = 'auto',
-    width = 1,
 }: {
     className?: string
     children?: React.ReactNode
     numOfGridCols?: number
     rowHeight?: string
-    width?: number
 }) => {
     return (
         <div
@@ -103,7 +101,7 @@ export const BentoGridItem = ({
                 style={{ gridColumn: `span ${width}` }}
             >
                 <div
-                    className={`w-full h-full bg-cover bg-center rounded-xl ${cardImage ? '' : 'bg-transparent'}`}
+                    className={`w-full h-full bg-cover bg-center rounded-xl ${cardImage ? '' : 'bg-transparent'} border overflow-hidden border-transparent`}
                     style={{
                         backgroundImage: cardImage
                             ? `url(${cardImage})`
