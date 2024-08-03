@@ -15,6 +15,7 @@ import { SiAiohttp } from 'react-icons/si'
 import CirclesBackground from '@/app/ui/projects/circles-background'
 import { GoCircle } from 'react-icons/go'
 import { Circle, WifiCircles } from '@/app/ui/projects/circle'
+import { Wind } from '@/app/ui/projects/wind'
 
 export default function Home() {
     const fypDivRef = useRef(null)
@@ -257,7 +258,21 @@ export default function Home() {
                                 width={1}
                                 descriptionImage={'asdf'}
                             >
-                                <main></main>
+                                <main className={`h-full relative`}>
+                                    <div className={`h-full relative mt-10`}>
+                                        <img
+                                            className="absolute top-0 left-0 object-contain w-1/2 h-full z-30"
+                                            src={'images/dyson/purifier-1.png'}
+                                            alt={'Dyson Purifier'}
+                                        />
+                                        <Wind className="absolute top-0 -left-[20%] object-contain w-[130%] h-full z-20" />
+                                        <img
+                                            className="absolute top-0 left-0 object-contain w-1/2 h-full z-10"
+                                            src={'images/dyson/purifier-0.png'}
+                                            alt={'Dyson Purifier'}
+                                        />
+                                    </div>
+                                </main>
                             </BentoGridItem>
                         </BentoGrid>
                     </BentoGrid>
