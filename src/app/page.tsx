@@ -265,7 +265,7 @@ export default function Home() {
                                             src={'images/dyson/purifier-1.png'}
                                             alt={'Dyson Purifier'}
                                         />
-                                        <Wind className="absolute top-0 -left-[20%] object-contain w-[130%] h-full z-20" />
+                                        <Wind className="absolute top-0 -left-[20%] object-contain w-[140%] h-full z-20" />
                                         <img
                                             className="absolute top-0 left-0 object-contain w-1/2 h-full z-10"
                                             src={'images/dyson/purifier-0.png'}
