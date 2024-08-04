@@ -257,6 +257,7 @@ export default function Home() {
                                 description={'2'}
                                 width={1}
                                 descriptionImage={'asdf'}
+                                className={`group`}
                             >
                                 <main className={`h-full relative`}>
                                     <div className={`h-full relative mt-10`}>
@@ -265,11 +266,22 @@ export default function Home() {
                                             src={'images/dyson/purifier-1.png'}
                                             alt={'Dyson Purifier'}
                                         />
-                                        <Wind className="absolute top-0 -left-[20%] object-contain w-[140%] h-full z-20" />
+                                        <Wind className="absolute top-0 -left-[20%] object-contain w-[140%] h-full z-20 opacity-35 group-hover:opacity-100 transition-opacity duration-1000" />
                                         <img
                                             className="absolute top-0 left-0 object-contain w-1/2 h-full z-10"
                                             src={'images/dyson/purifier-0.png'}
                                             alt={'Dyson Purifier'}
+                                        />
+                                        <img
+                                            className="absolute top-[-10%] right-0 object-contain w-1/4 h-full z-30 mr-[12%] opacity-75 group-hover:opacity-100 transition-opacity duration-1000"
+                                            src={
+                                                'images/dyson/dyson-purifier-title.png'
+                                            }
+                                            alt={'Dyson Purifier'}
+                                            style={{
+                                                clipPath:
+                                                    'inset(100px 0px 100px 0px)',
+                                            }}
                                         />
                                     </div>
                                 </main>
