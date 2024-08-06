@@ -167,11 +167,7 @@ export const SkillCircle = ({
                             opacity: 0,
                         }}
                         animate={{
-                            y: [
-                                window.innerHeight,
-                                -randomYOffsetEnd + 200,
-                                -randomYOffsetEnd,
-                            ],
+                            y: [window.innerHeight, -100, -200],
                             opacity: [1, 1, 0],
                             filter: ['blur(0px)', 'blur(0px)', 'blur(10px)'],
                         }}
@@ -181,14 +177,6 @@ export const SkillCircle = ({
                             ease: 'linear',
                             repeat: Infinity,
                             delay: Math.random() * 5,
-                        }}
-                        exit={{
-                            filter: 'blur(10px)',
-                            opacity: 0,
-                            y: -window.innerHeight - 100,
-                            transition: {
-                                duration: 1,
-                            },
                         }}
                     >
                         {skillIcons[skill]}
