@@ -43,7 +43,6 @@ export default function Home() {
                 <section className="h-screen w-3/5 snap-start mx-auto">
                     <h2 className="header2 mb-4">Projects</h2>
 
-                    {/*TODO: fix line, since the bento grid goes out further*/}
                     <Break />
                     <AllProjects />
                 </section>

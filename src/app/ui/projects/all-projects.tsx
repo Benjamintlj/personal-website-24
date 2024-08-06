@@ -33,11 +33,7 @@ export const AllProjects = () => {
     }, [fypDivRef])
 
     return (
-        <BentoGrid
-            className={`mt-5 mr-4 ml-4`}
-            numOfGridCols={3}
-            rowHeight={'32rem'}
-        >
+        <BentoGrid className={`mt-5`} numOfGridCols={3} rowHeight={'32rem'}>
             <BentoGridItem
                 title={'Final Year Project'}
                 description={'hello'}
