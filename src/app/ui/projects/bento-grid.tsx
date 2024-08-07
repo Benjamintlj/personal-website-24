@@ -41,7 +41,7 @@ export const BentoGrid = ({
     return (
         <div
             className={clsx(
-                'grid gap-4 max-w-7xl mx-auto w-full',
+                'grid gap-4 mx-auto w-full',
                 `grid-cols-${numOfGridCols}`,
                 className
             )}
@@ -55,7 +55,6 @@ export const BentoGrid = ({
 export const BentoGridItem = ({
     title,
     description,
-    width,
     cardImage,
     descriptionImage,
     children,
@@ -63,11 +62,10 @@ export const BentoGridItem = ({
     className,
     gitHub,
     youtube,
-    visibleOnMobile = true,
+    visibleOnMobile = false,
 }: {
     title: string
     description: string
-    width: number
     cardImage?: string
     descriptionImage: string
     className?: string
@@ -83,11 +81,8 @@ export const BentoGridItem = ({
 
     useOutsideClick(ref, () => setActive(null))
 
-    if (width > 2)
-        throw new Error('Invalid input: width should not be greater than 2.')
-
     let visibility: string
-    if (!visibleOnMobile) visibility = 'hidden lg:block'
+    if (!visibleOnMobile) visibility = 'hidden sm:block'
 
     return (
         <div className={`${visibility} ${className}`}>
@@ -98,7 +93,6 @@ export const BentoGridItem = ({
                 className={clsx(
                     `rounded-xl card-bg h-full cursor-pointer w-full`
                 )}
-                style={{ gridColumn: `span ${width}` }}
             >
                 <div
                     className={`w-full h-full bg-cover bg-center rounded-xl ${cardImage ? '' : 'bg-transparent'} border overflow-hidden border-transparent`}

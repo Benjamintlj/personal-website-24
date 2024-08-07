@@ -37,54 +37,18 @@ export default function Home() {
             className="h-screen w-screen snap-mandatory overflow-scroll hide-scrollbar"
             ref={mainRef}
         >
-            <Dots>
-                {/*TODO: add max width*/}
+            <Dots className={`w-full flex flex-col justify-center`}>
+                {/*Projects*/}
                 {/*TODO: handle wide screen with low height*/}
-                <section className="h-screen w-3/5 snap-start mx-auto">
+                <section className="w-3/5 snap-start mx-auto">
                     <h2 className="header2 mb-4">Projects</h2>
 
                     <Break />
                     <AllProjects />
                 </section>
 
-                {/*Floating images*/}
-                {/*<section>*/}
-                {/*    <TitleCards*/}
-                {/*        title={'Lake District'}*/}
-                {/*        description={*/}
-                {/*            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'*/}
-                {/*        }*/}
-                {/*        imageSrc={'/images/lakes.png'}*/}
-                {/*        className={'absolute top-[10vw] left-[5vw]'}*/}
-                {/*    />*/}
-                {/*    <TitleCards*/}
-                {/*        title={'Graduation'}*/}
-                {/*        description={*/}
-                {/*            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'*/}
-                {/*        }*/}
-                {/*        imageSrc={'/images/lakes.png'}*/}
-                {/*        className={'absolute top-[30vw] left-[5vw]'}*/}
-                {/*    />*/}
-                {/*    <TitleCards*/}
-                {/*        title={'Cotswold'}*/}
-                {/*        description={*/}
-                {/*            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'*/}
-                {/*        }*/}
-                {/*        imageSrc={'/images/lakes.png'}*/}
-                {/*        className={'absolute top-[10vw] left-[70vw]'}*/}
-                {/*    />*/}
-                {/*    <TitleCards*/}
-                {/*        title={'Peak District'}*/}
-                {/*        description={*/}
-                {/*            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'*/}
-                {/*        }*/}
-                {/*        imageSrc={'/images/lakes.png'}*/}
-                {/*        className={'absolute top-[30vw] left-[70vw]'}*/}
-                {/*    />*/}
-                {/*</section>*/}
-
                 {/*Title page*/}
-                <section className="h-screen w-screen flex flex-col items-center mt-[10vh]">
+                <section className="h-screen w-full flex flex-col items-center mt-[10vh]">
                     <h1 className="header1">Ben Lewis-Jones</h1>
                     <Memoji className="w-52 sm:w-64 md:w-72 lg:w-96" />
                     <VanishingWords

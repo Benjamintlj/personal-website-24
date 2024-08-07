@@ -19,6 +19,9 @@ module.exports = {
   darkMode: "class",
   theme: {
     extend: {
+      screens: {
+        'desktop': '900px',
+      },
       backdropBlur: {
         '3xl': '40px',
       }

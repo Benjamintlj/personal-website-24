@@ -178,6 +178,14 @@ export const SkillCircle = ({
                             repeat: Infinity,
                             delay: Math.random() * 5,
                         }}
+                        exit={{
+                            filter: 'blur(10px)',
+                            opacity: 0,
+                            y: -window.innerHeight - 100,
+                            transition: {
+                                duration: 1,
+                            },
+                        }}
                     >
                         {skillIcons[skill]}
                     </motion.div>
