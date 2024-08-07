@@ -6,7 +6,7 @@ import { WifiCircles } from '@/app/ui/projects/circle'
 import { Wind } from '@/app/ui/projects/wind'
 import { useEffect, useRef, useState } from 'react'
 
-export const AllProjects = () => {
+const AllProjects = () => {
     const fypDivRef = useRef(null)
 
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
@@ -34,14 +34,12 @@ export const AllProjects = () => {
     }, [fypDivRef])
 
     useEffect(() => {
-        // Check the initial screen size and set the appropriate state
         const checkScreenSize = () => {
             setIsDesktop(window.innerWidth >= 900)
         }
 
-        checkScreenSize() // Check the screen size on initial render
+        checkScreenSize()
 
-        // Update the screen size when the window is resized
         window.addEventListener('resize', checkScreenSize)
 
         return () => {
@@ -55,7 +53,7 @@ export const AllProjects = () => {
             title: 'Final Year Project',
             description:
                 'With the rise of short-form content platforms such as TikTok, student attention spans have decreased. This has reached the point where the average person has an attention span shorter than a goldfish. \n' +
-                'This elearning app, offers a short-form gamified experience for learners, to improve their attention and content retention.',
+                'This e-learning app, offers a short-form gamified experience for learners, to improve their attention and content retention.',
             descriptionImage: '/images/stock/students-on-phones.jpg',
             skills: [
                 Skills.AWS,
@@ -202,7 +200,6 @@ export const AllProjects = () => {
                 Skills.Lambda,
                 Skills.S3,
                 Skills.ECS,
-                Skills.EC2,
                 Skills.SQS,
                 Skills.CDK,
                 Skills.Python,
@@ -488,23 +485,26 @@ export const AllProjects = () => {
                 </BentoGrid>
             ) : (
                 // mobile view
-                <BentoGrid className={`mt-5`} rowHeight={'16rem'}>
-                    {items.map((item, index) => (
-                        <BentoGridItem
-                            key={index}
-                            title={item.title}
-                            description={item.description}
-                            descriptionImage={item.descriptionImage}
-                            skills={item.skills}
-                            gitHub={item.github}
-                            youtube={item.youtube}
-                            visibleOnMobile={item.visibleOnMobile}
-                        >
-                            {item.content}
-                        </BentoGridItem>
-                    ))}
+                <BentoGrid className="mt-5" rowHeight="16rem">
+                    {items
+                        .filter((item) => item.visibleOnMobile !== false)
+                        .map((item, index) => (
+                            <BentoGridItem
+                                key={index}
+                                title={item.title}
+                                description={item.description}
+                                descriptionImage={item.descriptionImage}
+                                skills={item.skills}
+                                gitHub={item.github}
+                                youtube={item.youtube}
+                            >
+                                {item.content}
+                            </BentoGridItem>
+                        ))}
                 </BentoGrid>
             )}
         </main>
     )
 }
+
+export default AllProjects

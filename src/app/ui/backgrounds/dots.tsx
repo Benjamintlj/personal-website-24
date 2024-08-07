@@ -1,5 +1,6 @@
 import '@/app/styles/masks.css'
-import { ReactDOM, ReactElement, ReactNode } from 'react'
+import { ReactDOM, ReactElement, ReactNode, Suspense } from 'react'
+import LoadingSkeleton from '@/app/ui/loading/loading-skeleton'
 
 export default function Dots({
     className,
@@ -9,9 +10,17 @@ export default function Dots({
     className?: string
 }) {
     return (
-        <div className="dark:bg-black bg-white dark:bg-dot-white/[0.2] bg-dot-black/[0.2] relative flex flex-col items-center justify-start ">
-            <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white dots-mask"></div>
-            <div className={`relative z-20 ${className}`}>{children}</div>
-        </div>
+        <Suspense
+            fallback={
+                <main className="bg-black h-screen w-screen fixed top-0 left-0 flex items-center justify-center">
+                    <LoadingSkeleton />
+                </main>
+            }
+        >
+            <div className="bg-black bg-dot-white/[0.2] relative flex flex-col items-center justify-start ">
+                <div className="absolute pointer-events-none inset-0 flex items-center justify-center bg-black dots-mask"></div>
+                <div className={`relative z-20 ${className}`}>{children}</div>
+            </div>
+        </Suspense>
     )
 }

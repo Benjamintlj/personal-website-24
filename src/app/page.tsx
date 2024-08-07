@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useEffect, lazy, useRef } from 'react'
+import React, { useState, useEffect, lazy, useRef, Suspense } from 'react'
 import Dots from '@/app/ui/backgrounds/dots'
 import Memoji from '@/app/ui/title-section/memoji'
 import { VanishingWords } from '@/app/ui/title-section/vanishing-words'
 import ScrollPrompt from '@/app/ui/title-section/scroll-prompt'
 import { Break } from '@/app/ui/general/break'
-import { AllProjects } from '@/app/ui/projects/all-projects'
+const AllProjects = React.lazy(() => import('@/app/ui/projects/all-projects'))
+import LoadingSkeleton from '@/app/ui/loading/loading-skeleton'
 
 export default function Home() {
     const mainRef = useRef(null)
@@ -24,7 +25,7 @@ export default function Home() {
 
     return (
         <main
-            className="h-screen w-screen snap-mandatory overflow-scroll hide-scrollbar"
+            className="h-screen w-screen snap-mandatory overflow-scroll hide-scrollbar bg-black"
             ref={mainRef}
         >
             <Dots
@@ -52,7 +53,9 @@ export default function Home() {
                     <h2 className="header2 mb-4">Projects</h2>
 
                     <Break />
-                    <AllProjects />
+                    <Suspense fallback={<div>Loading All Projects...</div>}>
+                        <AllProjects />
+                    </Suspense>
                 </section>
             </Dots>
         </main>

@@ -8,7 +8,7 @@ const GenericButton = ({
     spinnerColor1,
     spinnerColor2,
 }: {
-    link: string
+    link?: string
     children: React.ReactNode
     className: string
     spinnerColor1: string
@@ -35,14 +35,20 @@ const GenericButton = ({
                         zIndex: 1,
                     }}
                     onMouseEnter={(e) => {
-                        e.currentTarget.previousElementSibling!.style.animation =
-                            'spin 2s linear infinite'
-                        e.currentTarget.previousElementSibling!.style.animationPlayState =
-                            'running'
+                        const prevElement = e.currentTarget
+                            .previousElementSibling as HTMLElement
+                        if (prevElement) {
+                            prevElement.style.animation =
+                                'spin 2s linear infinite'
+                            prevElement.style.animationPlayState = 'running'
+                        }
                     }}
                     onMouseLeave={(e) => {
-                        e.currentTarget.previousElementSibling!.style.animationPlayState =
-                            'paused'
+                        const prevElement = e.currentTarget
+                            .previousElementSibling as HTMLElement
+                        if (prevElement) {
+                            prevElement.style.animationPlayState = 'paused'
+                        }
                     }}
                 >
                     {children}
@@ -52,7 +58,7 @@ const GenericButton = ({
     )
 }
 
-export const GithubButton = ({ link }: { link: string }) => {
+export const GithubButton = ({ link }: { link?: string }) => {
     return (
         <GenericButton
             link={link}
@@ -65,7 +71,7 @@ export const GithubButton = ({ link }: { link: string }) => {
     )
 }
 
-export const YoutubeButton = ({ link }: { link: string }) => {
+export const YoutubeButton = ({ link }: { link?: string }) => {
     return (
         <GenericButton
             link={link}

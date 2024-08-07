@@ -67,7 +67,7 @@ export const BentoGridItem = ({
     title: string
     description: string
     cardImage?: string
-    descriptionImage: string
+    descriptionImage?: string
     className?: string
     skills?: Skills[]
     children: React.ReactNode
@@ -81,7 +81,7 @@ export const BentoGridItem = ({
 
     useOutsideClick(ref, () => setActive(null))
 
-    let visibility: string
+    let visibility: string = ''
     if (!visibleOnMobile) visibility = 'hidden desktop:block'
 
     return (
@@ -122,7 +122,7 @@ export const BentoGridItem = ({
                             <motion.div
                                 layoutId={`card-${id}`}
                                 ref={ref}
-                                className={`relative w-full max-w-[700px] h-[100vh] lg:h-[50vh] flex ${descriptionImage ? 'flex-col lg:flex-row' : 'flex-col'} bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden z-[101]`}
+                                className={`relative w-full max-w-[700px] h-[100vh] lg:h-[50vh] flex flex-col ${descriptionImage ? 'lg:flex-row' : ''} bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden z-[101]`}
                             >
                                 <CloseButton
                                     className="z-[102]"
@@ -137,17 +137,17 @@ export const BentoGridItem = ({
                                             initial={
                                                 window.innerWidth >= 1024
                                                     ? { x: '-100%' }
-                                                    : false
+                                                    : undefined
                                             }
                                             animate={
                                                 window.innerWidth >= 1024
                                                     ? { x: '0%' }
-                                                    : false
+                                                    : undefined
                                             }
                                             exit={
                                                 window.innerWidth >= 1024
                                                     ? { x: '-100%' }
-                                                    : false
+                                                    : undefined
                                             }
                                             transition={{ type: 'tween' }}
                                         />
@@ -172,17 +172,17 @@ export const BentoGridItem = ({
                                             {/*TODO: remove the break if no skills*/}
                                             <Break className={`mb-4`} />
                                             <div className="flex flex-wrap justify-start">
-                                                {/*TODO: make sure this can handle no skills*/}
-                                                {Object.entries(skills).map(
-                                                    ([key, value]) => (
-                                                        <p
-                                                            key={key}
-                                                            className={`paragraph text-white ${skillCategoryMap[value]} rounded px-1 mr-1`}
-                                                        >
-                                                            {value}
-                                                        </p>
-                                                    )
-                                                )}
+                                                {skills &&
+                                                    Object.entries(skills).map(
+                                                        ([key, value]) => (
+                                                            <p
+                                                                key={key}
+                                                                className={`paragraph text-white ${skillCategoryMap[value]} rounded px-1 mr-1`}
+                                                            >
+                                                                {value}
+                                                            </p>
+                                                        )
+                                                    )}
                                             </div>
 
                                             <div

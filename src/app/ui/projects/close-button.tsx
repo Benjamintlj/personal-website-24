@@ -2,6 +2,7 @@ import React from 'react'
 
 interface CloseButtonProps {
     onClick: () => void
+    className: string
 }
 
 export const CloseButton: React.FC<CloseButtonProps> = ({
