@@ -23,7 +23,7 @@ export const ThreeDCard = ({
     className?: string
     containerClassName?: string
 }) => {
-    const containerRef = useRef(null)
+    const containerRef = useRef<HTMLDivElement>(null)
     const [isMouseEntered, setIsMouseEntered] = useState(false)
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -118,7 +118,7 @@ export const CardItem = ({
     rotateZ?: number | string
     [key: string]: any
 }) => {
-    const ref = useRef(null)
+    const ref = useRef<HTMLDivElement>(null)
     const [isMouseEntered] = useMouseEnter()
 
     useEffect(() => {

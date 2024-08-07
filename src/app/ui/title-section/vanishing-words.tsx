@@ -23,8 +23,8 @@ export const VanishingWords = ({
 }) => {
     const [relativeClauseSize, setRelativeClauseSize] = useState(0)
 
-    const divRef = useRef(null)
-    const currDiv = useRef(null)
+    const divRef = useRef<HTMLDivElement>(null)
+    const currDiv = useRef<HTMLDivElement>(null)
 
     const [isAnimating, setIsAnimating] = useState<boolean>(false)
 
