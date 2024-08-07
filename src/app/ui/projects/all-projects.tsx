@@ -53,29 +53,35 @@ export const AllProjects = () => {
         {
             // 0
             title: 'Final Year Project',
-            description: 'hello',
-            descriptionImage: '/images/lakes.png',
+            description:
+                'With the rise of short-form content platforms such as TikTok, student attention spans have decreased. This has reached the point where the average person has an attention span shorter than a goldfish. \n' +
+                'This elearning app, offers a short-form gamified experience for learners, to improve their attention and content retention.',
+            descriptionImage: '/images/stock/students-on-phones.jpg',
             skills: [
                 Skills.AWS,
                 Skills.DynamoDB,
                 Skills.Lambda,
                 Skills.S3,
                 Skills.ECS,
-                Skills.EC2,
-                Skills.SQS,
-                Skills.SES,
                 Skills.CDK,
                 Skills.Route53,
+                Skills.Java,
+                Skills.Python,
+                Skills.TypeScript,
+                Skills.Docker,
+                Skills.Postman,
+                Skills.Git,
+                Skills.Android,
             ],
             github: 'https://www.google.com',
             youtube: 'https://www.youtube.com',
             content: (
                 <main
-                    className={`h-full w-full flex flex-col xsm:flex-row desktop:flex-row justify-end xsm:justify-evenly desktop:justify-end relative overflow-hidden`}
+                    className={`h-full w-full flex flex-col xsm:flex-row desktop:flex-row justify-end xsm:justify-evenly desktop:justify-center relative overflow-hidden`}
                     onMouseEnter={() => setFypHovered(true)}
                     onMouseLeave={() => setFypHovered(false)}
                 >
-                    <h2 className="header2-gradient text-center xsm:text-left desktop:text-center mt-auto xsm:mt-10 desktop:mt-auto mb-5">
+                    <h2 className="header2-gradient text-3xl text-center xsm:text-left desktop:text-center mt-auto xsm:mt-10 desktop:mt-auto mb-5">
                         Final Year Project
                     </h2>
                     <div
@@ -110,19 +116,15 @@ export const AllProjects = () => {
         {
             // 1
             title: 'AI',
-            description: 'hello',
-            descriptionImage: '/images/lakes.png',
+            description:
+                'This project involved creating a chatbot that handles first-order logic and answers or proves simple questions based on its knowledge base. The tone of the chatbot’s responses depends on the user’s emotional tone and adjusts accordingly. The chatbot can also accept image input, and using a CNN model with hyperparameter tuning, it identifies the image from a selection of fruits.',
             skills: [
-                Skills.AWS,
-                Skills.DynamoDB,
-                Skills.Lambda,
-                Skills.S3,
-                Skills.ECS,
-                Skills.EC2,
-                Skills.SQS,
-                Skills.SES,
-                Skills.CDK,
-                Skills.Route53,
+                Skills.Python,
+                Skills.Scikit,
+                Skills.Nltk,
+                Skills.Aiml,
+                Skills.Numpy,
+                Skills.Scipy,
             ],
             github: 'https://www.google.com',
             youtube: 'https://www.youtube.com',
@@ -137,22 +139,10 @@ export const AllProjects = () => {
         {
             // 2
             title: 'Discord',
-            description: 'hello',
-            descriptionImage: '/images/lakes.png',
-            skills: [
-                Skills.AWS,
-                Skills.DynamoDB,
-                Skills.Lambda,
-                Skills.S3,
-                Skills.ECS,
-                Skills.EC2,
-                Skills.SQS,
-                Skills.SES,
-                Skills.CDK,
-                Skills.Route53,
-            ],
+            description:
+                'This project is currently in development (besides this website), and is acting as a music player. Future developments will include voice commands from within calls, allowing users to ask for helpful functions such as clipping.',
+            skills: [Skills.AWS, Skills.ECS, Skills.TypeScript, Skills.Docker],
             github: 'https://www.google.com',
-            youtube: 'https://www.youtube.com',
             content: (
                 <main
                     className={`flex flex-row desktop:flex-col desktop:justify-center justify-evenly items-center h-full group`}
@@ -160,7 +150,7 @@ export const AllProjects = () => {
                     <FaDiscord
                         className={`text-8xl group-hover:text-blue-500 text-blue-400 transition transform duration-500 group-hover:translate-y-[5%]`}
                     />
-                    <h2 className="header2-gradient text-center desktop:hidden">
+                    <h2 className="header2-gradient text-3xl text-center desktop:hidden">
                         Discord
                     </h2>
                 </main>
@@ -169,19 +159,19 @@ export const AllProjects = () => {
         {
             // 3
             title: 'Gym NFC Scanner',
-            description: 'hello',
-            descriptionImage: '/images/lakes.png',
+            description:
+                'This Android application allows users to scan machines within gyms and stream videos. It also enables gym owners to create and manage content that can be viewed after scanning an NFC tag.',
+            descriptionImage: '/images/stock/mobile-app-ss.png',
             skills: [
                 Skills.AWS,
                 Skills.DynamoDB,
                 Skills.Lambda,
                 Skills.S3,
-                Skills.ECS,
-                Skills.EC2,
-                Skills.SQS,
-                Skills.SES,
                 Skills.CDK,
-                Skills.Route53,
+                Skills.TypeScript,
+                Skills.Python,
+                Skills.Java,
+                Skills.Android,
             ],
             github: 'https://www.google.com',
             youtube: 'https://www.youtube.com',
@@ -204,8 +194,8 @@ export const AllProjects = () => {
         {
             // 4
             title: 'Cloud & Distributed Systems',
-            description: 'hello',
-            descriptionImage: '/images/lakes.png',
+            description:
+                'Within this project, I created a trip management app. This project was heavly focused on the infrastructure and the backend, with a fully fleshed-out AWS architecture, it was designed to be serverless and highly scalable.',
             skills: [
                 Skills.AWS,
                 Skills.DynamoDB,
@@ -214,9 +204,11 @@ export const AllProjects = () => {
                 Skills.ECS,
                 Skills.EC2,
                 Skills.SQS,
-                Skills.SES,
                 Skills.CDK,
-                Skills.Route53,
+                Skills.Python,
+                Skills.TypeScript,
+                Skills.Java,
+                Skills.Postman,
             ],
             github: 'https://www.google.com',
             youtube: 'https://www.youtube.com',
@@ -252,8 +244,9 @@ export const AllProjects = () => {
         {
             // 5
             title: '360 Vis Nav',
-            description: 'hello',
-            descriptionImage: '/images/lakes.png',
+            description:
+                'During my second rotation at Dyson, I joined the Cloud Robot team, where I contributed to the development of several backend features for the (at the time) unreleased Dyson 360 Vis Nav. I took responsibility for several key components, gaining valuable experience along the way.',
+            descriptionImage: '/images/stock/dyson-vis-nav.jpeg',
             skills: [
                 Skills.AWS,
                 Skills.DynamoDB,
@@ -263,10 +256,17 @@ export const AllProjects = () => {
                 Skills.EC2,
                 Skills.SQS,
                 Skills.SES,
-                Skills.CDK,
                 Skills.Route53,
+                Skills.DotNetCore,
+                Skills.TypeScript,
+                Skills.Python,
+                Skills.SQL,
+                Skills.Git,
+                Skills.Azure,
+                Skills.Atlassian,
+                Skills.Postman,
+                Skills.Docker,
             ],
-            github: 'https://www.google.com',
             youtube: 'https://www.youtube.com',
             content: (
                 <main className="flex flex-row desktop:flex-col justify-evenly items-center h-full">
@@ -286,22 +286,10 @@ export const AllProjects = () => {
         {
             // 6
             title: 'HTTP',
-            description: 'hello',
-            descriptionImage: '/images/lakes.png',
-            skills: [
-                Skills.AWS,
-                Skills.DynamoDB,
-                Skills.Lambda,
-                Skills.S3,
-                Skills.ECS,
-                Skills.EC2,
-                Skills.SQS,
-                Skills.SES,
-                Skills.CDK,
-                Skills.Route53,
-            ],
+            description:
+                "After a challenging final year at university, I decided to unwind by brushing up on the C programming language. With a strong interest in networking and cloud computing, I took a friend's suggestion and decided to recreate HTTP 1.1, specifically focusing on the GET request method.",
+            skills: [Skills.C],
             github: 'https://www.google.com',
-            youtube: 'https://www.youtube.com',
             visibleOnMobile: false,
             content: (
                 <main className={`group h-full relative flex items-center`}>
@@ -314,7 +302,8 @@ export const AllProjects = () => {
         {
             // 7
             title: 'Projects Coming Soon',
-            description: 'hello',
+            description:
+                "That wraps up the projects I've completed over the past year. So, what's next? I have a few ideas for personal projects, and I hope to see you on the battlefield—perhaps we'll be working together soon!",
             descriptionImage: '/images/lakes.png',
             skills: [
                 Skills.AWS,
@@ -342,19 +331,19 @@ export const AllProjects = () => {
         {
             // 8
             title: 'Purifier',
-            description: 'hello',
-            descriptionImage: '/images/lakes.png',
+            description:
+                'During my first rotation at Dyson, I joined one of the embedded teams, where I worked on the next generation of purifiers, now the current generation. I was expected to learn quickly and was given considerable responsibility, ultimately implementing several key features.',
+            descriptionImage: '/images/stock/hullavington.jpg',
             skills: [
-                Skills.AWS,
-                Skills.DynamoDB,
-                Skills.Lambda,
-                Skills.S3,
-                Skills.ECS,
-                Skills.EC2,
-                Skills.SQS,
-                Skills.SES,
-                Skills.CDK,
-                Skills.Route53,
+                Skills.C,
+                Skills.Python,
+                Skills.Git,
+                Skills.Atlassian,
+                Skills.FreeRTOS,
+                Skills.Zephyr,
+                Skills.Linux,
+                Skills.JLink,
+                Skills.I2C,
             ],
             github: 'https://www.google.com',
             youtube: 'https://www.youtube.com',
@@ -374,7 +363,7 @@ export const AllProjects = () => {
                             alt={'Dyson Purifier'}
                         />
                         <img
-                            className="absolute top-[-10%] right-0 object-contain w-[140px] h-full z-30 mr-[15%] opacity-75 group-hover:opacity-100 transition-opacity duration-1000"
+                            className="absolute top-[-10%] right-0 object-contain w-[120px] desktop:w-[130px] h-full z-30 mr-[15%] opacity-100 transition-opacity duration-1000"
                             src={'images/dyson/dyson-purifier-title.png'}
                             alt={'Dyson Purifier'}
                         />

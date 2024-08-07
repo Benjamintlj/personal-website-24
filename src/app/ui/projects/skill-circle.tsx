@@ -12,7 +12,12 @@ import {
 
 import { PiFileSql } from 'react-icons/pi'
 
-import { SiAmazonroute53 } from 'react-icons/si'
+import {
+    SiAmazonroute53,
+    SiNumpy,
+    SiScikitlearn,
+    SiScipy,
+} from 'react-icons/si'
 
 import {
     SiTypescript,
@@ -40,6 +45,7 @@ export enum Categories {
     FrontEndFrameworks = 'bg-purple-500',
     DevOpsTools = 'bg-green-800',
     EmbeddedSystems = 'bg-pink-700',
+    Ai = 'bg-rose-500',
 }
 
 export enum Skills {
@@ -73,6 +79,11 @@ export enum Skills {
     Zephyr = 'Zephyr',
     JLink = 'JLink',
     I2C = 'I2C',
+    Scikit = 'Scikit learn',
+    Nltk = 'nltk',
+    Aiml = 'aiml',
+    Numpy = 'Numpy',
+    Scipy = 'Scipy',
 }
 
 export const skillCategoryMap: { [key in Skills]: Categories } = {
@@ -106,6 +117,11 @@ export const skillCategoryMap: { [key in Skills]: Categories } = {
     [Skills.Zephyr]: Categories.EmbeddedSystems,
     [Skills.JLink]: Categories.EmbeddedSystems,
     [Skills.I2C]: Categories.EmbeddedSystems,
+    [Skills.Scikit]: Categories.Ai,
+    [Skills.Nltk]: Categories.Ai,
+    [Skills.Aiml]: Categories.Ai,
+    [Skills.Numpy]: Categories.Ai,
+    [Skills.Scipy]: Categories.Ai,
 }
 
 const skillIcons = {
@@ -138,6 +154,9 @@ const skillIcons = {
     [Skills.Zephyr]: <GiKite />,
     [Skills.JLink]: <p className="text-base">jLink</p>,
     [Skills.I2C]: <p className="text-base">I²C</p>,
+    [Skills.Scikit]: <SiScikitlearn />,
+    [Skills.Numpy]: <SiNumpy />,
+    [Skills.Scipy]: <SiScipy />,
 }
 
 export const SkillCircle = ({

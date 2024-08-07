@@ -122,36 +122,40 @@ export const BentoGridItem = ({
                             <motion.div
                                 layoutId={`card-${id}`}
                                 ref={ref}
-                                className="relative w-full max-w-[700px] h-[100vh] lg:h-[50vh] flex flex-col lg:flex-row bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden z-[101]"
+                                className={`relative w-full max-w-[700px] h-[100vh] lg:h-[50vh] flex ${descriptionImage ? 'flex-col lg:flex-row' : 'flex-col'} bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden z-[101]`}
                             >
                                 <CloseButton
                                     className="z-[102]"
                                     onClick={() => setActive(null)}
                                 />
-                                <div className="w-full h-[30vh] lg:w-1/2 lg:h-full overflow-hidden flex-shrink-0 flex items-center">
-                                    <motion.img
-                                        src={descriptionImage}
-                                        alt="Card Image"
-                                        className="lg:h-full lg:w-auto w-full object-cover"
-                                        initial={
-                                            window.innerWidth >= 1024
-                                                ? { x: '-100%' }
-                                                : false
-                                        }
-                                        animate={
-                                            window.innerWidth >= 1024
-                                                ? { x: '0%' }
-                                                : false
-                                        }
-                                        exit={
-                                            window.innerWidth >= 1024
-                                                ? { x: '-100%' }
-                                                : false
-                                        }
-                                        transition={{ type: 'tween' }}
-                                    />
-                                </div>
-                                <div className="w-full lg:w-1/2 h-full p-5 flex flex-col justify-start">
+                                {descriptionImage && (
+                                    <div className="w-full h-[30vh] lg:w-1/2 lg:h-full overflow-hidden flex-shrink-0 flex items-center">
+                                        <motion.img
+                                            src={descriptionImage}
+                                            alt="Card Image"
+                                            className="lg:h-full lg:w-auto w-full object-cover"
+                                            initial={
+                                                window.innerWidth >= 1024
+                                                    ? { x: '-100%' }
+                                                    : false
+                                            }
+                                            animate={
+                                                window.innerWidth >= 1024
+                                                    ? { x: '0%' }
+                                                    : false
+                                            }
+                                            exit={
+                                                window.innerWidth >= 1024
+                                                    ? { x: '-100%' }
+                                                    : false
+                                            }
+                                            transition={{ type: 'tween' }}
+                                        />
+                                    </div>
+                                )}
+                                <div
+                                    className={`w-full ${descriptionImage ? 'lg:w-1/2' : 'w-full'} h-full p-5 flex flex-col justify-start`}
+                                >
                                     <h3 className="header3 mb-3">{title}</h3>
                                     <Break />
                                     <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-4 overflow-y-auto scrollbar-hide">
