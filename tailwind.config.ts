@@ -21,6 +21,9 @@ module.exports = {
     extend: {
       screens: {
         'desktop': '900px',
+        '700px': '700px',
+        '500px': '500px',
+        'xsm': '420px',
       },
       backdropBlur: {
         '3xl': '40px',

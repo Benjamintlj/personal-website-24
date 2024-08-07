@@ -36,7 +36,7 @@ export const AllProjects = () => {
     useEffect(() => {
         // Check the initial screen size and set the appropriate state
         const checkScreenSize = () => {
-            setIsDesktop(window.innerWidth >= 1024)
+            setIsDesktop(window.innerWidth >= 900)
         }
 
         checkScreenSize() // Check the screen size on initial render
@@ -71,13 +71,16 @@ export const AllProjects = () => {
             youtube: 'https://www.youtube.com',
             content: (
                 <main
-                    className={`h-full w-full flex flex-col justify-end relative overflow-hidden`}
+                    className={`h-full w-full flex flex-col xsm:flex-row desktop:flex-row justify-end xsm:justify-evenly desktop:justify-end relative overflow-hidden`}
                     onMouseEnter={() => setFypHovered(true)}
                     onMouseLeave={() => setFypHovered(false)}
                 >
+                    <h2 className="header2-gradient text-center xsm:text-left desktop:text-center mt-auto xsm:mt-10 desktop:mt-auto mb-5">
+                        Final Year Project
+                    </h2>
                     <div
                         ref={fypDivRef}
-                        className="absolute flex justify-between transform rotate-[315deg]"
+                        className="absolute flex justify-between transform rotate-[315deg] xsm:hidden desktop:flex"
                         style={{
                             width: '80%',
                             top: `calc(50% - ${dimensions.height / 2}px)`,
@@ -95,9 +98,12 @@ export const AllProjects = () => {
                             alt="FYP Homepage"
                         />
                     </div>
-                    <h2 className="header2-gradient text-center mt-auto mb-5">
-                        Final Year Project
-                    </h2>
+                    <img
+                        src="/images/fyp-compete.png"
+                        className={`absolute hidden xsm:block desktop:hidden -mt-16 500px:-mt-32 700px:-mt-40`}
+                        style={{ width: '110vw', maxWidth: 'none' }}
+                        alt="FYP Compete"
+                    />
                 </main>
             ),
         },
@@ -120,6 +126,7 @@ export const AllProjects = () => {
             ],
             github: 'https://www.google.com',
             youtube: 'https://www.youtube.com',
+            visibleOnMobile: false,
             content: (
                 <main className="flex flex-col justify-center items-center h-full mb-4">
                     <h1 className="header1 text-7xl py-0">AI</h1>
@@ -148,11 +155,14 @@ export const AllProjects = () => {
             youtube: 'https://www.youtube.com',
             content: (
                 <main
-                    className={`flex flex-col justify-center items-center h-full group`}
+                    className={`flex flex-row desktop:flex-col desktop:justify-center justify-evenly items-center h-full group`}
                 >
                     <FaDiscord
                         className={`text-8xl group-hover:text-blue-500 text-blue-400 transition transform duration-500 group-hover:translate-y-[5%]`}
                     />
+                    <h2 className="header2-gradient text-center desktop:hidden">
+                        Discord
+                    </h2>
                 </main>
             ),
         },
@@ -175,6 +185,7 @@ export const AllProjects = () => {
             ],
             github: 'https://www.google.com',
             youtube: 'https://www.youtube.com',
+            visibleOnMobile: false,
             content: (
                 <main className="h-full w-full flex flex-col justify-end">
                     <CirclesBackground
@@ -216,7 +227,9 @@ export const AllProjects = () => {
                     <h2 className="header2-gradient text-3xl text-center">
                         Cloud & Distributed Systems
                     </h2>
-                    <div className={`flex flex-row justify-evenly mb-5`}>
+                    <div
+                        className={`flex flex-row justify-evenly mb-5 max-w-[500px] mx-auto`}
+                    >
                         <img
                             className={`rounded-xl w-[25%] transition-transform hover:translate-y-[-5%] ease-in-out`}
                             src={`/images/aws/ecs.png`}
@@ -256,14 +269,14 @@ export const AllProjects = () => {
             github: 'https://www.google.com',
             youtube: 'https://www.youtube.com',
             content: (
-                <main className="flex flex-col justify-evenly items-center h-full">
+                <main className="flex flex-row desktop:flex-col justify-evenly items-center h-full">
                     <img
                         className="w-[210px]"
                         src="images/dyson/dyson-vis-nav-title.png"
                         alt="Dyson 360 vis nav"
                     />
                     <img
-                        className="w-2/5"
+                        className="desktop:w-2/5 w-1/5"
                         src="images/dyson/dyson-vis-nav.png"
                         alt="Dyson 360 vis nav"
                     />
@@ -289,6 +302,7 @@ export const AllProjects = () => {
             ],
             github: 'https://www.google.com',
             youtube: 'https://www.youtube.com',
+            visibleOnMobile: false,
             content: (
                 <main className={`group h-full relative flex items-center`}>
                     <WifiCircles />
@@ -316,6 +330,7 @@ export const AllProjects = () => {
             ],
             github: 'https://www.google.com',
             youtube: 'https://www.youtube.com',
+            visibleOnMobile: false,
             content: (
                 <main
                     className={`h-full relative flex items-center justify-center`}
@@ -352,7 +367,7 @@ export const AllProjects = () => {
                             src={'images/dyson/purifier-1.png'}
                             alt={'Dyson Purifier'}
                         />
-                        <Wind className="absolute top-0 -left-[20%] object-contain w-[140%] h-full z-20 opacity-35 group-hover:opacity-100 transition-opacity duration-1000" />
+                        <Wind className="hidden desktop:block absolute top-0 -left-[20%] object-contain w-[140%] h-full z-20 opacity-35 group-hover:opacity-100 transition-opacity duration-1000" />
                         <img
                             className="absolute top-0 left-0 object-contain w-1/2 h-full z-10"
                             src={'images/dyson/purifier-0.png'}
@@ -484,7 +499,7 @@ export const AllProjects = () => {
                 </BentoGrid>
             ) : (
                 // mobile view
-                <BentoGrid className={`mt-5`}>
+                <BentoGrid className={`mt-5`} rowHeight={'16rem'}>
                     {items.map((item, index) => (
                         <BentoGridItem
                             key={index}
@@ -494,6 +509,7 @@ export const AllProjects = () => {
                             skills={item.skills}
                             gitHub={item.github}
                             youtube={item.youtube}
+                            visibleOnMobile={item.visibleOnMobile}
                         >
                             {item.content}
                         </BentoGridItem>

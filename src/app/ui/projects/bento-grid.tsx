@@ -62,7 +62,7 @@ export const BentoGridItem = ({
     className,
     gitHub,
     youtube,
-    visibleOnMobile = false,
+    visibleOnMobile = true,
 }: {
     title: string
     description: string
@@ -82,7 +82,7 @@ export const BentoGridItem = ({
     useOutsideClick(ref, () => setActive(null))
 
     let visibility: string
-    if (!visibleOnMobile) visibility = 'hidden sm:block'
+    if (!visibleOnMobile) visibility = 'hidden desktop:block'
 
     return (
         <div className={`${visibility} ${className}`}>

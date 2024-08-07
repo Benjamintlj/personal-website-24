@@ -4,9 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { createNoise3D } from 'simplex-noise'
 
 export default function CirclesBackground({
-    children,
     className,
-    containerClassName,
     colors = ['#e74c3c', '#e67e22', '#f1c40f'],
     waveWidth,
     backgroundFill = 'transparent',
@@ -19,7 +17,6 @@ export default function CirclesBackground({
     height,
     ...props
 }: {
-    children?: any
     className?: string
     containerClassName?: string
     colors?: string[]
@@ -123,7 +120,7 @@ export default function CirclesBackground({
         <div
             className={cn(
                 'h-full flex flex-col items-center justify-center relative overflow-hidden',
-                containerClassName
+                className
             )}
         >
             <canvas
@@ -133,10 +130,7 @@ export default function CirclesBackground({
                 style={{
                     ...(isSafari ? { filter: `blur(${blur}px)` } : {}),
                 }}
-            ></canvas>
-            <div className={cn('relative z-10', className)} {...props}>
-                {children}
-            </div>
+            />
         </div>
     )
 }
