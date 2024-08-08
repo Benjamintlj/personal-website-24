@@ -41,7 +41,7 @@ export default function Home() {
                         words={descriptiveWords}
                     />
                     <ScrollPrompt
-                        className={`mt-auto mb-52`}
+                        className={`mt-auto mb-auto`}
                         textSize={`text-base`}
                         displayDelayMs={2500}
                         mainRef={mainRef}
