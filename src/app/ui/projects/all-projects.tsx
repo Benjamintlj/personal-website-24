@@ -71,8 +71,8 @@ const AllProjects = () => {
                 Skills.Git,
                 Skills.Android,
             ],
-            github: 'https://www.google.com',
-            youtube: 'https://www.youtube.com',
+            github: 'https://github.com/Benjamintlj/fyp-code',
+            youtube: 'https://youtu.be/Rxn_09xkCQg',
             content: (
                 <main
                     className={`h-full w-full flex flex-col xsm:flex-row desktop:flex-row justify-end xsm:justify-evenly desktop:justify-center relative overflow-hidden`}
@@ -124,8 +124,7 @@ const AllProjects = () => {
                 Skills.Numpy,
                 Skills.Scipy,
             ],
-            github: 'https://www.google.com',
-            youtube: 'https://www.youtube.com',
+            github: 'https://github.com/Benjamintlj/ai-main-submission',
             visibleOnMobile: false,
             content: (
                 <main className="flex flex-col justify-center items-center h-full mb-4">
@@ -140,7 +139,7 @@ const AllProjects = () => {
             description:
                 'This project is currently in development (besides this website), and is acting as a music player. Future developments will include voice commands from within calls, allowing users to ask for helpful functions such as clipping.',
             skills: [Skills.AWS, Skills.ECS, Skills.TypeScript, Skills.Docker],
-            github: 'https://www.google.com',
+            github: 'https://github.com/Benjamintlj/discord-bot-2',
             content: (
                 <main
                     className={`flex flex-row desktop:flex-col desktop:justify-center justify-evenly items-center h-full group`}
@@ -171,8 +170,8 @@ const AllProjects = () => {
                 Skills.Java,
                 Skills.Android,
             ],
-            github: 'https://www.google.com',
-            youtube: 'https://www.youtube.com',
+            github: 'https://github.com/Benjamintlj/mobile-applications',
+            youtube: 'https://youtu.be/n3Jthx_0URU',
             visibleOnMobile: false,
             content: (
                 <main className="h-full w-full flex flex-col justify-end">
@@ -207,8 +206,7 @@ const AllProjects = () => {
                 Skills.Java,
                 Skills.Postman,
             ],
-            github: 'https://www.google.com',
-            youtube: 'https://www.youtube.com',
+            github: 'https://github.com/Benjamintlj/cloud-course-work',
             content: (
                 <main
                     className={`h-full overflow-hidden relative flex flex-col justify-evenly`}
@@ -264,7 +262,7 @@ const AllProjects = () => {
                 Skills.Postman,
                 Skills.Docker,
             ],
-            youtube: 'https://www.youtube.com',
+            youtube: 'https://www.youtube.com/watch?v=PJb0tlHYohA',
             content: (
                 <main className="flex flex-row desktop:flex-col justify-evenly items-center h-full">
                     <img
@@ -286,7 +284,7 @@ const AllProjects = () => {
             description:
                 "After a challenging final year at university, I decided to unwind by brushing up on the C programming language. With a strong interest in networking and cloud computing, I took a friend's suggestion and decided to recreate HTTP 1.1, specifically focusing on the GET request method.",
             skills: [Skills.C],
-            github: 'https://www.google.com',
+            github: 'https://github.com/Benjamintlj/http-server',
             visibleOnMobile: false,
             content: (
                 <main className={`group h-full relative flex items-center`}>
@@ -314,8 +312,6 @@ const AllProjects = () => {
                 Skills.CDK,
                 Skills.Route53,
             ],
-            github: 'https://www.google.com',
-            youtube: 'https://www.youtube.com',
             visibleOnMobile: false,
             content: (
                 <main
@@ -342,8 +338,7 @@ const AllProjects = () => {
                 Skills.JLink,
                 Skills.I2C,
             ],
-            github: 'https://www.google.com',
-            youtube: 'https://www.youtube.com',
+            youtube: 'https://www.youtube.com/watch?v=yTc03FV4PGU',
             className: 'group',
             content: (
                 <main className={`h-full relative`}>
