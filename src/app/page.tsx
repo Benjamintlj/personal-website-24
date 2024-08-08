@@ -29,7 +29,7 @@ export default function Home() {
             ref={mainRef}
         >
             <Dots
-                className={`desktop:min-w-[1500px] desktop:max-w-[2000px] w-full flex flex-col justify-center`}
+                className={`desktop:min-w-[1500px] desktop:max-w-[2000px] w-full flex flex-col justify-center pb-[100px] desktop:pb-0`}
             >
                 {/*Title page*/}
                 <section className="h-screen w-full flex flex-col items-center mt-[10vh]">
