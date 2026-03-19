@@ -206,6 +206,9 @@ export const BentoGridItem = ({
                                                     />
                                                 </div>
                                             </div>
+                                            <div
+                                                className={`h-100 desktop:hidden`}
+                                            />
                                         </motion.div>
                                     </div>
                                 </div>

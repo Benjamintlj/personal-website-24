@@ -29,7 +29,7 @@ export default function Home() {
             ref={mainRef}
         >
             <Dots
-                className={`desktop:min-w-[1500px] desktop:max-w-[2000px] w-full flex flex-col justify-center pb-[100px] desktop:pb-0`}
+                className={`desktop:min-w-[1500px] desktop:max-w-[2000px] w-full flex flex-col justify-center`}
             >
                 {/*Title page*/}
                 <section className="h-screen w-full flex flex-col items-center mt-[10vh]">
@@ -50,13 +50,15 @@ export default function Home() {
 
                 {/*Projects*/}
                 <section className="w-4/5 desktop:w-3/5 snap-start mx-auto">
-                    <h2 className="header2 mb-4">Projects</h2>
+                    <h2 className="header2 text-3xl mb-4">Projects</h2>
 
                     <Break />
                     <Suspense fallback={<div>Loading All Projects...</div>}>
                         <AllProjects />
                     </Suspense>
                 </section>
+
+                <section className="w-4/5 desktop:w-3/5 snap-start mx-auto h-24"></section>
             </Dots>
         </main>
     )
