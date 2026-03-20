@@ -215,7 +215,7 @@ const AllProjects = () => {
                         Cloud & Distributed Systems
                     </h2>
                     <div
-                        className={`flex flex-row justify-evenly mb-5 max-w-[500px] mx-auto`}
+                        className={`flex flex-row justify-evenly items-center mb-5 max-w-[500px] mx-auto`}
                     >
                         <img
                             className={`rounded-xl w-[25%] transition-transform hover:translate-y-[-5%] ease-in-out`}
