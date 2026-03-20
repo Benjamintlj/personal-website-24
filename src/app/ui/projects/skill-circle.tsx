@@ -184,6 +184,7 @@ export const SkillCircle = ({
                             x: getRandomX,
                             y: window.innerHeight,
                             opacity: 0,
+                            filter: 'blur(0px)',
                         }}
                         animate={{
                             y: [window.innerHeight, -100, -200],
