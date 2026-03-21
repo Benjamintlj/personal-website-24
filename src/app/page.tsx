@@ -6,6 +6,7 @@ import Memoji from '@/app/ui/title-section/memoji'
 import { VanishingWords } from '@/app/ui/title-section/vanishing-words'
 import ScrollPrompt from '@/app/ui/title-section/scroll-prompt'
 import { Break } from '@/app/ui/general/break'
+import ContactButton from '@/app/ui/contact/contact-button'
 const AllProjects = React.lazy(() => import('@/app/ui/projects/all-projects'))
 import LoadingSkeleton from '@/app/ui/loading/loading-skeleton'
 
@@ -28,6 +29,7 @@ export default function Home() {
             className="h-screen w-screen snap-mandatory overflow-scroll hide-scrollbar bg-black"
             ref={mainRef}
         >
+            <ContactButton mainRef={mainRef} />
             <Dots
                 className={`desktop:min-w-[1500px] desktop:max-w-[2000px] w-full flex flex-col justify-center`}
             >

@@ -1,0 +1,181 @@
+'use client'
+
+import { useEffect, useRef, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa'
+import { useOutsideClick } from '@/hooks/use-outside-click'
+
+const satellites = [
+    {
+        href: 'https://github.com/Benjamintlj',
+        icon: FaGithub,
+        x: -80,
+        y: -20,
+        label: 'GitHub',
+    },
+    {
+        href: 'https://www.linkedin.com/in/benjamin-lewis-jones/',
+        icon: FaLinkedin,
+        x: -52,
+        y: -70,
+        label: 'LinkedIn',
+    },
+    {
+        href: 'mailto:',
+        icon: FaEnvelope,
+        x: -8,
+        y: -88,
+        label: 'Email',
+    },
+]
+
+export default function ContactButton({
+    mainRef,
+}: {
+    mainRef: React.RefObject<HTMLElement>
+}) {
+    const [visible, setVisible] = useState(false)
+    const [open, setOpen] = useState(false)
+    const containerRef = useRef<HTMLDivElement>(null)
+
+    useOutsideClick(containerRef, () => setOpen(false))
+
+    useEffect(() => {
+        const el = mainRef.current
+        if (!el) return
+
+        const handleScroll = () => {
+            setVisible(el.scrollTop > window.innerHeight * 0.5)
+        }
+
+        el.addEventListener('scroll', handleScroll, { passive: true })
+        return () => el.removeEventListener('scroll', handleScroll)
+    }, [mainRef])
+
+    return (
+        <AnimatePresence>
+            {visible && (
+                <motion.div
+                    className="fixed bottom-6 right-6 z-[200]"
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0, opacity: 0 }}
+                    transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+                >
+                    <div ref={containerRef} className="relative">
+                        {/* Bob + click wrapper */}
+                        <motion.div
+                            className="relative w-[72px] h-[72px] cursor-pointer"
+                            animate={{ y: [0, -8, 0] }}
+                            transition={{
+                                duration: 2.5,
+                                repeat: Infinity,
+                                ease: 'easeInOut',
+                            }}
+                            onClick={() => setOpen((o) => !o)}
+                        >
+                            {/* Spinning circular text */}
+                            <motion.svg
+                                viewBox="0 0 100 100"
+                                className="absolute inset-0 w-full h-full"
+                                animate={{ rotate: 360 }}
+                                transition={{
+                                    duration: 20,
+                                    repeat: Infinity,
+                                    ease: 'linear',
+                                }}
+                            >
+                                <defs>
+                                    <path
+                                        id="contact-circle-path"
+                                        d="M 50,50 m -44,0 a 44,44 0 1,1 88,0 a 44,44 0 1,1 -88,0"
+                                    />
+                                </defs>
+                                <text
+                                    fontSize="7.5"
+                                    fill="white"
+                                    letterSpacing="1"
+                                    fontWeight="500"
+                                    style={{ userSelect: 'none' }}
+                                >
+                                    <textPath href="#contact-circle-path">
+                                        Contact Me • Contact Me • Contact Me •
+                                    </textPath>
+                                </text>
+                            </motion.svg>
+
+                            {/* Memoji video circle */}
+                            <div className="absolute inset-[10px] rounded-full overflow-hidden bg-white">
+                                <video
+                                    className="w-full h-full object-cover"
+                                    autoPlay
+                                    loop
+                                    muted
+                                    playsInline
+                                >
+                                    <source
+                                        src="/videos/memoji-hevc.mov"
+                                        type='video/mp4; codecs="hvc1"'
+                                    />
+                                    <source
+                                        src="/videos/memoji.webm"
+                                        type="video/webm"
+                                    />
+                                </video>
+                            </div>
+                        </motion.div>
+
+                        {/* Satellite links */}
+                        <AnimatePresence>
+                            {open &&
+                                satellites.map((sat, i) => (
+                                    <motion.a
+                                        key={sat.label}
+                                        href={sat.href}
+                                        target={
+                                            sat.href.startsWith('mailto')
+                                                ? undefined
+                                                : '_blank'
+                                        }
+                                        rel="noopener noreferrer"
+                                        aria-label={sat.label}
+                                        className="absolute flex items-center justify-center w-10 h-10 rounded-full bg-white text-black text-lg shadow-lg hover:scale-110"
+                                        style={{
+                                            top: 'calc(50% - 20px)',
+                                            left: 'calc(50% - 20px)',
+                                        }}
+                                        initial={{
+                                            x: 0,
+                                            y: 0,
+                                            opacity: 0,
+                                            scale: 0,
+                                        }}
+                                        animate={{
+                                            x: sat.x,
+                                            y: sat.y,
+                                            opacity: 1,
+                                            scale: 1,
+                                        }}
+                                        exit={{
+                                            x: 0,
+                                            y: 0,
+                                            opacity: 0,
+                                            scale: 0,
+                                        }}
+                                        transition={{
+                                            type: 'spring',
+                                            stiffness: 300,
+                                            damping: 25,
+                                            delay: i * 0.06,
+                                        }}
+                                    >
+                                        <sat.icon />
+                                    </motion.a>
+                                ))}
+                        </AnimatePresence>
+                    </div>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    )
+}
