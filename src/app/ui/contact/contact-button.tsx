@@ -5,23 +5,24 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa'
 import { useOutsideClick } from '@/hooks/use-outside-click'
 
+// Evenly spaced at ~35° apart, all arcing left and upward so they stay in-viewport
 const satellites = [
     {
         href: 'https://github.com/Benjamintlj',
         icon: FaGithub,
-        x: -80,
-        y: -20,
+        x: -85,
+        y: -22,
         label: 'GitHub',
     },
     {
         href: 'https://www.linkedin.com/in/benjamin-lewis-jones/',
         icon: FaLinkedin,
-        x: -52,
-        y: -70,
+        x: -57,
+        y: -67,
         label: 'LinkedIn',
     },
     {
-        href: 'mailto:',
+        href: 'mailto:ben@benlewisjones.com',
         icon: FaEnvelope,
         x: -8,
         y: -88,
@@ -63,15 +64,9 @@ export default function ContactButton({
                     transition={{ type: 'spring', stiffness: 260, damping: 20 }}
                 >
                     <div ref={containerRef} className="relative">
-                        {/* Bob + click wrapper */}
-                        <motion.div
+                        {/* Click wrapper — no bob */}
+                        <div
                             className="relative w-[72px] h-[72px] cursor-pointer"
-                            animate={{ y: [0, -8, 0] }}
-                            transition={{
-                                duration: 2.5,
-                                repeat: Infinity,
-                                ease: 'easeInOut',
-                            }}
                             onClick={() => setOpen((o) => !o)}
                         >
                             {/* Spinning circular text */}
@@ -92,14 +87,14 @@ export default function ContactButton({
                                     />
                                 </defs>
                                 <text
-                                    fontSize="7.5"
+                                    fontSize="7"
                                     fill="white"
-                                    letterSpacing="1"
+                                    letterSpacing="0.5"
                                     fontWeight="500"
                                     style={{ userSelect: 'none' }}
                                 >
                                     <textPath href="#contact-circle-path">
-                                        Contact Me • Contact Me • Contact Me •
+                                        Contact Me • Contact Me • Contact Me • Contact Me • Contact Me •
                                     </textPath>
                                 </text>
                             </motion.svg>
@@ -123,7 +118,7 @@ export default function ContactButton({
                                     />
                                 </video>
                             </div>
-                        </motion.div>
+                        </div>
 
                         {/* Satellite links */}
                         <AnimatePresence>
@@ -139,7 +134,7 @@ export default function ContactButton({
                                         }
                                         rel="noopener noreferrer"
                                         aria-label={sat.label}
-                                        className="absolute flex items-center justify-center w-10 h-10 rounded-full bg-white text-black text-lg shadow-lg hover:scale-110"
+                                        className="absolute flex items-center justify-center w-10 h-10 rounded-full bg-white text-black text-lg shadow-lg"
                                         style={{
                                             top: 'calc(50% - 20px)',
                                             left: 'calc(50% - 20px)',
@@ -162,6 +157,7 @@ export default function ContactButton({
                                             opacity: 0,
                                             scale: 0,
                                         }}
+                                        whileHover={{ scale: 1.15 }}
                                         transition={{
                                             type: 'spring',
                                             stiffness: 300,
