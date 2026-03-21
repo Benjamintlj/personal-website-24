@@ -66,10 +66,10 @@ export default function ContactButton({
                     <div ref={containerRef} className="relative">
                         {/* Click wrapper — no bob */}
                         <div
-                            className="relative w-[72px] h-[72px] cursor-pointer"
+                            className="relative w-[96px] h-[96px] cursor-pointer"
                             onClick={() => setOpen((o) => !o)}
                         >
-                            {/* Spinning circular text */}
+                            {/* Spinning circular text — r=42, fontSize 10, 3 repeats fills circumference */}
                             <motion.svg
                                 viewBox="0 0 100 100"
                                 className="absolute inset-0 w-full h-full"
@@ -83,26 +83,27 @@ export default function ContactButton({
                                 <defs>
                                     <path
                                         id="contact-circle-path"
-                                        d="M 50,50 m -44,0 a 44,44 0 1,1 88,0 a 44,44 0 1,1 -88,0"
+                                        d="M 50,50 m -42,0 a 42,42 0 1,1 84,0 a 42,42 0 1,1 -84,0"
                                     />
                                 </defs>
                                 <text
-                                    fontSize="7"
+                                    fontSize="10"
                                     fill="white"
-                                    letterSpacing="0.5"
+                                    letterSpacing="1.5"
                                     fontWeight="500"
                                     style={{ userSelect: 'none' }}
                                 >
                                     <textPath href="#contact-circle-path">
-                                        Contact Me • Contact Me • Contact Me • Contact Me • Contact Me •
+                                        Contact Me • Contact Me • Contact Me •
                                     </textPath>
                                 </text>
                             </motion.svg>
 
-                            {/* Memoji video circle */}
-                            <div className="absolute inset-[10px] rounded-full overflow-hidden bg-white">
+                            {/* Memoji video circle — inset-[12px] aligns inner edge with text ring */}
+                            <div className="absolute inset-[12px] rounded-full overflow-hidden bg-white">
                                 <video
                                     className="w-full h-full object-cover"
+                                    style={{ objectPosition: 'center 15%' }}
                                     autoPlay
                                     loop
                                     muted
