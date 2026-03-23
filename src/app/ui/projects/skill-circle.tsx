@@ -187,13 +187,13 @@ export const SkillCircle = ({
                             filter: 'blur(0px)',
                         }}
                         animate={{
-                            y: [window.innerHeight, -100, -200],
-                            opacity: [1, 1, 0],
-                            filter: ['blur(0px)', 'blur(0px)', 'blur(10px)'],
+                            y: [window.innerHeight + 50, window.innerHeight, -100, -200],
+                            opacity: [0, 1, 1, 0],
+                            filter: ['blur(0px)', 'blur(0px)', 'blur(0px)', 'blur(10px)'],
                         }}
                         transition={{
                             duration: duration,
-                            times: [0, 0.9, 1],
+                            times: [0, 0.05, 0.9, 1],
                             ease: 'linear',
                             repeat: Infinity,
                             delay: Math.random() * 5,
