@@ -156,11 +156,15 @@ export const VanishingWords = ({
                             }}
                             transition={{
                                 delay: index * 0.08 + 1,
-                                duration: 0.2,
-                                ease: 'easeInOut',
                                 type: 'spring',
                                 stiffness: 100,
                                 damping: 10,
+                                filter: {
+                                    type: 'tween',
+                                    duration: 0.4,
+                                    ease: 'easeOut',
+                                    delay: index * 0.08 + 1,
+                                },
                             }}
                             exit={{
                                 opacity: 0,
