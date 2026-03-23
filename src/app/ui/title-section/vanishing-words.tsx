@@ -86,7 +86,7 @@ export const VanishingWords = ({
         <div className="flex items-center justify-center relative">
             <motion.div
                 className={`${className} inline-block absolute transform -translate-x-1/2`}
-                key={`${currentWord}-relativeClause`}
+                key="relativeClause"
                 ref={divRef}
                 initial={{
                     x: posX,

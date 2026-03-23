@@ -190,54 +190,6 @@ const AllProjects = () => {
         },
         {
             // 4
-            title: 'Cloud & Distributed Systems',
-            description:
-                'Within this project, I created a trip management app. This project was heavly focused on the infrastructure and the backend, with a fully fleshed-out AWS architecture, it was designed to be serverless and highly scalable.',
-            skills: [
-                Skills.AWS,
-                Skills.DynamoDB,
-                Skills.Lambda,
-                Skills.S3,
-                Skills.ECS,
-                Skills.SQS,
-                Skills.CDK,
-                Skills.Python,
-                Skills.TypeScript,
-                Skills.Java,
-                Skills.Postman,
-            ],
-            github: 'https://github.com/Benjamintlj/cloud-course-work',
-            content: (
-                <main
-                    className={`h-full overflow-hidden relative flex flex-col justify-evenly`}
-                >
-                    <h2 className="header2-gradient text-center">
-                        Cloud & Distributed Systems
-                    </h2>
-                    <div
-                        className={`flex flex-row justify-evenly items-center mb-5 max-w-[500px] mx-auto`}
-                    >
-                        <img
-                            className={`rounded-xl w-[25%] transition-transform hover:translate-y-[-5%] ease-in-out`}
-                            src={`/images/aws/ecs.png`}
-                            alt={'ECS icon'}
-                        />
-                        <img
-                            className={`rounded-xl w-[25%] transition-transform hover:translate-y-[-5%] ease-in-out`}
-                            src={`/images/aws/lambda.png`}
-                            alt={'ECS icon'}
-                        />
-                        <img
-                            className={`rounded-xl w-[25%] transition-transform hover:translate-y-[-5%] ease-in-out`}
-                            src={`/images/aws/dynamodb.png`}
-                            alt={'ECS icon'}
-                        />
-                    </div>
-                </main>
-            ),
-        },
-        {
-            // 5
             title: '360 Vis Nav',
             description:
                 'During my second rotation at Dyson, I joined the Cloud Robot team, where I contributed to the development of several backend features for the (at the time) unreleased Dyson 360 Vis Nav. I took responsibility for several key components, gaining valuable experience along the way.',
@@ -296,28 +248,47 @@ const AllProjects = () => {
         },
         {
             // 7
-            title: 'Projects Coming Soon',
+            title: 'Cloud & Distributed Systems',
             description:
-                "That wraps up the projects I've completed over the past year. So, what's next? I have a few ideas for personal projects, and I hope to see you on the battlefield—perhaps we'll be working together soon!",
-            descriptionImage: '/images/lakes.png',
+                'Within this project, I created a trip management app. This project was heavly focused on the infrastructure and the backend, with a fully fleshed-out AWS architecture, it was designed to be serverless and highly scalable.',
             skills: [
                 Skills.AWS,
                 Skills.DynamoDB,
                 Skills.Lambda,
                 Skills.S3,
                 Skills.ECS,
-                Skills.EC2,
                 Skills.SQS,
-                Skills.SES,
                 Skills.CDK,
-                Skills.Route53,
+                Skills.Python,
+                Skills.TypeScript,
+                Skills.Java,
+                Skills.Postman,
             ],
+            github: 'https://github.com/Benjamintlj/cloud-course-work',
             visibleOnMobile: false,
             content: (
                 <main
-                    className={`h-full relative flex items-center justify-center`}
+                    className={`h-full overflow-hidden relative flex flex-col justify-evenly`}
                 >
-                    <h2 className="header2-gradient">Coming Soon...</h2>
+                    <div
+                        className={`flex flex-row justify-evenly items-center mb-5 max-w-[500px] mx-auto`}
+                    >
+                        <img
+                            className={`rounded-xl w-[25%] transition-transform hover:translate-y-[-5%] ease-in-out`}
+                            src={`/images/aws/ecs.png`}
+                            alt={'ECS icon'}
+                        />
+                        <img
+                            className={`rounded-xl w-[25%] transition-transform hover:translate-y-[-5%] ease-in-out`}
+                            src={`/images/aws/lambda.png`}
+                            alt={'ECS icon'}
+                        />
+                        <img
+                            className={`rounded-xl w-[25%] transition-transform hover:translate-y-[-5%] ease-in-out`}
+                            src={`/images/aws/dynamodb.png`}
+                            alt={'ECS icon'}
+                        />
+                    </div>
                 </main>
             ),
         },
