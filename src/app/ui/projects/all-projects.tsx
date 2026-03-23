@@ -190,6 +190,54 @@ const AllProjects = () => {
         },
         {
             // 4
+            title: 'Cloud & Distributed Systems',
+            description:
+                'Within this project, I created a trip management app. This project was heavly focused on the infrastructure and the backend, with a fully fleshed-out AWS architecture, it was designed to be serverless and highly scalable.',
+            skills: [
+                Skills.AWS,
+                Skills.DynamoDB,
+                Skills.Lambda,
+                Skills.S3,
+                Skills.ECS,
+                Skills.SQS,
+                Skills.CDK,
+                Skills.Python,
+                Skills.TypeScript,
+                Skills.Java,
+                Skills.Postman,
+            ],
+            github: 'https://github.com/Benjamintlj/cloud-course-work',
+            content: (
+                <main
+                    className={`h-full overflow-hidden relative flex flex-col justify-evenly`}
+                >
+                    <h2 className="header2-gradient text-center">
+                        Cloud & Distributed Systems
+                    </h2>
+                    <div
+                        className={`flex flex-row justify-evenly items-center mb-5 max-w-[500px] mx-auto`}
+                    >
+                        <img
+                            className={`rounded-xl w-[25%] transition-transform hover:translate-y-[-5%] ease-in-out`}
+                            src={`/images/aws/ecs.png`}
+                            alt={'ECS icon'}
+                        />
+                        <img
+                            className={`rounded-xl w-[25%] transition-transform hover:translate-y-[-5%] ease-in-out`}
+                            src={`/images/aws/lambda.png`}
+                            alt={'ECS icon'}
+                        />
+                        <img
+                            className={`rounded-xl w-[25%] transition-transform hover:translate-y-[-5%] ease-in-out`}
+                            src={`/images/aws/dynamodb.png`}
+                            alt={'ECS icon'}
+                        />
+                    </div>
+                </main>
+            ),
+        },
+        {
+            // 5
             title: '360 Vis Nav',
             description:
                 'During my second rotation at Dyson, I joined the Cloud Robot team, where I contributed to the development of several backend features for the (at the time) unreleased Dyson 360 Vis Nav. I took responsibility for several key components, gaining valuable experience along the way.',
@@ -424,18 +472,28 @@ const AllProjects = () => {
                         >
                             {items[6].content}
                         </BentoGridItem>
-                    </BentoGrid>
-                    <BentoGrid className={`col-span-2`} rowHeight={'21rem'}>
                         <BentoGridItem
                             title={items[7].title}
                             description={items[7].description}
                             descriptionImage={items[7].descriptionImage}
                             skills={items[7].skills}
-                            className={items[7].className}
                             gitHub={items[7].github}
                             youtube={items[7].youtube}
                         >
                             {items[7].content}
+                        </BentoGridItem>
+                    </BentoGrid>
+                    <BentoGrid className={`col-span-2`} rowHeight={'21rem'}>
+                        <BentoGridItem
+                            title={items[8].title}
+                            description={items[8].description}
+                            descriptionImage={items[8].descriptionImage}
+                            skills={items[8].skills}
+                            className={items[8].className}
+                            gitHub={items[8].github}
+                            youtube={items[8].youtube}
+                        >
+                            {items[8].content}
                         </BentoGridItem>
                     </BentoGrid>
                 </BentoGrid>
