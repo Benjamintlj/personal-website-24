@@ -316,10 +316,10 @@ const AllProjects = () => {
             visibleOnMobile: false,
             content: (
                 <main
-                    className={`h-full overflow-hidden relative flex flex-col justify-evenly`}
+                    className={`h-full overflow-hidden relative flex flex-col justify-center`}
                 >
                     <div
-                        className={`flex flex-row justify-evenly items-center mb-5 max-w-[500px] mx-auto`}
+                        className={`flex flex-row justify-evenly items-center max-w-[500px] mx-auto`}
                     >
                         <img
                             className={`rounded-xl w-[25%] transition-transform hover:translate-y-[-5%] ease-in-out`}
