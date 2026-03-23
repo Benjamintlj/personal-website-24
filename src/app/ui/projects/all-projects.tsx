@@ -79,7 +79,7 @@ const AllProjects = () => {
                     onMouseEnter={() => setFypHovered(true)}
                     onMouseLeave={() => setFypHovered(false)}
                 >
-                    <h2 className="header2-gradient text-3xl text-center xsm:text-left desktop:text-center mt-auto xsm:mt-10 desktop:mt-auto mb-5">
+                    <h2 className="header2-gradient text-center xsm:text-left desktop:text-center mt-auto xsm:mt-10 desktop:mt-auto mb-5">
                         Final Year Project
                     </h2>
                     <div
@@ -147,7 +147,7 @@ const AllProjects = () => {
                     <FaDiscord
                         className={`text-8xl group-hover:text-blue-500 text-blue-400 transition transform duration-500 group-hover:translate-y-[5%]`}
                     />
-                    <h2 className="header2-gradient text-3xl text-center desktop:hidden">
+                    <h2 className="header2-gradient text-center desktop:hidden">
                         Discord
                     </h2>
                 </main>
@@ -211,7 +211,7 @@ const AllProjects = () => {
                 <main
                     className={`h-full overflow-hidden relative flex flex-col justify-evenly`}
                 >
-                    <h2 className="header2-gradient text-3xl text-center">
+                    <h2 className="header2-gradient text-center">
                         Cloud & Distributed Systems
                     </h2>
                     <div
