@@ -424,28 +424,18 @@ const AllProjects = () => {
                         >
                             {items[6].content}
                         </BentoGridItem>
+                    </BentoGrid>
+                    <BentoGrid className={`col-span-2`} rowHeight={'21rem'}>
                         <BentoGridItem
                             title={items[7].title}
                             description={items[7].description}
                             descriptionImage={items[7].descriptionImage}
                             skills={items[7].skills}
+                            className={items[7].className}
                             gitHub={items[7].github}
                             youtube={items[7].youtube}
                         >
                             {items[7].content}
-                        </BentoGridItem>
-                    </BentoGrid>
-                    <BentoGrid className={`col-span-2`} rowHeight={'21rem'}>
-                        <BentoGridItem
-                            title={items[8].title}
-                            description={items[8].description}
-                            descriptionImage={items[8].descriptionImage}
-                            skills={items[8].skills}
-                            className={items[8].className}
-                            gitHub={items[8].github}
-                            youtube={items[8].youtube}
-                        >
-                            {items[8].content}
                         </BentoGridItem>
                     </BentoGrid>
                 </BentoGrid>
