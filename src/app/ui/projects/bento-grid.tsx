@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 import React from 'react'
-import { useState, useRef, useId } from 'react'
+import { useState, useRef, useId, useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useOutsideClick } from '@/hooks/use-outside-click'
 import { GithubButton, YoutubeButton } from '@/app/ui/projects/content-buttons'
@@ -80,6 +80,14 @@ export const BentoGridItem = ({
     const id = useId()
 
     useOutsideClick(ref, () => setActive(null))
+
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') setActive(null)
+        }
+        if (active) window.addEventListener('keydown', onKey)
+        return () => window.removeEventListener('keydown', onKey)
+    }, [active])
 
     let visibility: string = ''
     if (!visibleOnMobile) visibility = 'hidden desktop:block'
