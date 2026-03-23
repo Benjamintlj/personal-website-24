@@ -15,7 +15,7 @@ export default function Home() {
 
     const descriptiveWords = [
         'Software Engineer',
-        'Swimmer',
+        'Athlete',
         'Software Architect',
     ]
     const relativeClause = 'Aspiring'

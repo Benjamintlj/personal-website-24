@@ -85,7 +85,10 @@ export const VanishingWords = ({
     return (
         <div className="flex items-center justify-center relative">
             <motion.div
-                className={`${className} inline-block absolute transform -translate-x-1/2`}
+                className={cn(
+                    'absolute inline-flex items-center whitespace-nowrap transform -translate-x-1/2',
+                    className
+                )}
                 key="relativeClause"
                 ref={divRef}
                 initial={{
@@ -101,10 +104,8 @@ export const VanishingWords = ({
                 }}
                 animate={{ x: posX }}
             >
-                <div className={`${className} inline-block`}>
-                    <p className="inline-block">{relativeClause}</p>
-                    <p className={`inline-block w-4`}></p>
-                </div>
+                <span className="inline-block">{relativeClause}</span>
+                <span aria-hidden="true" className="inline-block w-4 shrink-0" />
             </motion.div>
 
             <AnimatePresence
