@@ -129,7 +129,7 @@ const AllProjects = () => {
             visibleOnMobile: false,
             content: (
                 <main className="flex flex-col justify-center items-center h-full mb-4">
-                    <h1 className="header1 text-7xl py-0">AI</h1>
+                    <h2 className="header1 text-7xl py-0">AI</h2>
                     <p className="secondary text-center">Chat Bot & CNN</p>
                 </main>
             ),
