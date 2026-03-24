@@ -13,11 +13,7 @@ import LoadingSkeleton from '@/app/ui/loading/loading-skeleton'
 export default function Home() {
     const mainRef = useRef(null)
 
-    const descriptiveWords = [
-        'Software Engineer',
-        'Athlete',
-        'Software Architect',
-    ]
+    const descriptiveWords = ['Senior Engineer', 'Athlete', 'Founder']
     const relativeClause = 'Aspiring'
 
     useEffect(() => {

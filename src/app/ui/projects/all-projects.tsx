@@ -4,6 +4,7 @@ import { FaDiscord } from 'react-icons/fa'
 import CirclesBackground from '@/app/ui/projects/circles-background'
 import { WifiCircles } from '@/app/ui/projects/circle'
 import { Wind } from '@/app/ui/projects/wind'
+import MetaballCanvas from '@/app/ui/projects/metaball-canvas'
 import { useEffect, useRef, useState } from 'react'
 
 const AllProjects = () => {
@@ -382,6 +383,22 @@ const AllProjects = () => {
                 </main>
             ),
         },
+        {
+            // 9
+            title: 'AutoFin',
+            description: 'Coming soon.',
+            content: (
+                <main className="flex flex-row h-full overflow-hidden">
+                    <div className="w-1/2 h-full relative">
+                        <MetaballCanvas className="w-full h-full" />
+                    </div>
+                    <div className="w-1/2 flex flex-col justify-center px-6">
+                        <h2 className="header2-gradient">AutoFin</h2>
+                        <p className="secondary mt-2">Your finances, automated</p>
+                    </div>
+                </main>
+            ),
+        },
     ]
 
     return (
@@ -393,6 +410,16 @@ const AllProjects = () => {
                     numOfGridCols={3}
                     rowHeight={'32rem'}
                 >
+                    {/* AutoFin row — col-span-2 + empty placeholder */}
+                    <BentoGrid className="col-span-2" rowHeight="32rem">
+                        <BentoGridItem
+                            title={items[9].title}
+                            description={items[9].description}
+                        >
+                            {items[9].content}
+                        </BentoGridItem>
+                    </BentoGrid>
+                    <div className="rounded-xl bg-neutral-800/70" />
                     <BentoGridItem
                         title={items[0].title}
                         description={items[0].description}
