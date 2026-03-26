@@ -4,15 +4,15 @@
 export function initMetaball(stage, canvas) {
   const ctx = canvas.getContext('2d', { alpha: true })
 
-  const GRID_WIDTH = 15;
-  const GRID_HEIGHT = 11;
-  const ROOT_X = Math.ceil(GRID_WIDTH / 2);
-  const ROOT_Y = 6;
+  const GRID_WIDTH = 9;
+  const GRID_HEIGHT = 9;
+  const ROOT_X = 1;
+  const ROOT_Y = Math.ceil(GRID_HEIGHT / 2);
   const MIN_X = 1;
   const MAX_X = GRID_WIDTH;
 
-  const ACTIVE_GRID_SPAN = 0.58;
-  const BALL_RADIUS_RATIO = 0.44;
+  const ACTIVE_GRID_SPAN = 0.72;
+  const BALL_RADIUS_RATIO = 0.50;
 
   const MUTATION_INTERVAL_MS = 280;
   const NODE_GROW_MS = 1100;
@@ -82,7 +82,7 @@ export function initMetaball(stage, canvas) {
     const activeHeight = unifiedStep * (GRID_HEIGHT - 1);
     gridStepX = unifiedStep;
     gridStepY = unifiedStep;
-    gridOffsetX = (canvasWidth - activeWidth) * 0.5;
+    gridOffsetX = gridStepX * 0.5;
     gridOffsetY = (canvasHeight - activeHeight) * 0.5;
 
     const stepBase = Math.min(gridStepX, gridStepY);
@@ -167,8 +167,8 @@ export function initMetaball(stage, canvas) {
 
     tryAddBranch(now - 2800, {
       parentId: ROOT_ID,
-      preferredDirection: -1,
-      preferredSide: "left",
+      preferredDirection: 1,
+      preferredSide: "right",
       outwardBias: 1,
       strictPreferred: true,
     });
@@ -182,17 +182,15 @@ export function initMetaball(stage, canvas) {
 
     for (let i = 0; i < 12; i += 1) {
       const seedTime = now - (12 - i) * 220;
-      const preferredDirection = i % 2 === 0 ? -1 : 1;
-      const preferredSide = preferredDirection === -1 ? "left" : "right";
       if (
         !tryAddBranch(seedTime, {
-          preferredDirection,
-          preferredSide,
+          preferredDirection: 1,
+          preferredSide: "right",
           outwardBias: 0.96,
           strictPreferred: true,
         })
       ) {
-        tryAddBranch(seedTime, { preferredDirection, preferredSide, outwardBias: 0.9 });
+        tryAddBranch(seedTime, { preferredDirection: 1, preferredSide: "right", outwardBias: 0.9 });
       }
     }
 
@@ -667,18 +665,9 @@ export function initMetaball(stage, canvas) {
 
       const outwardBias = activeCount < 34 ? 0.9 : 0.76;
       const sideCounts = countActiveSides();
-      const sideTarget = sideCounts.left <= sideCounts.right ? "left" : "right";
-      const preferredDirection = sideTarget === "left" ? -1 : 1;
+      const sideTarget = "right";
+      const preferredDirection = 1;
 
-      if (sideCounts.left === 0) {
-        tryAddBranch(stepTime, {
-          parentId: ROOT_ID,
-          preferredDirection: -1,
-          preferredSide: "left",
-          outwardBias: 1,
-          strictPreferred: true,
-        });
-      }
       if (sideCounts.right === 0) {
         tryAddBranch(stepTime, {
           parentId: ROOT_ID,
@@ -862,7 +851,7 @@ export function initMetaball(stage, canvas) {
     const { byId, renderNodes, edges } = buildRenderSnapshot(now);
 
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    ctx.fillStyle = "#4ade80";
+    ctx.fillStyle = "#e5e5e5";
 
     for (const edge of edges) {
       const from = byId.get(edge.from);
