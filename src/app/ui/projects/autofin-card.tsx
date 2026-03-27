@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import MetaballCanvas from '@/app/ui/projects/metaball-canvas'
 import SparklesCanvas from '@/app/ui/projects/sparkles-canvas'
+import MetaballCanvas from '@/app/ui/projects/metaball-canvas'
 
 const SUBTITLE = 'Your finances, automated'
 
@@ -12,7 +12,7 @@ export default function AutoFinCard() {
 
     return (
         <main
-            className="relative flex flex-row h-full overflow-hidden"
+            className="relative flex h-full overflow-hidden"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
