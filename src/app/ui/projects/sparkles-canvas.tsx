@@ -11,7 +11,7 @@ type Particle = {
     drift: number
 }
 
-export default function SparklesCanvas({ className }: { className?: string }) {
+export default function SparklesCanvas({ className, particleCount = 80, color = '229, 229, 229' }: { className?: string; particleCount?: number; color?: string }) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const stageRef = useRef<HTMLDivElement>(null)
 
@@ -29,7 +29,7 @@ export default function SparklesCanvas({ className }: { className?: string }) {
         let canvasHeight = 0
 
         const dpr = Math.min(1.35, Math.max(1, window.devicePixelRatio || 1))
-        const PARTICLE_COUNT = 80
+        const PARTICLE_COUNT = particleCount
 
         function resize() {
             const bounds = stage!.getBoundingClientRect()
@@ -75,13 +75,13 @@ export default function SparklesCanvas({ className }: { className?: string }) {
 
                 // alpha fades as particle rises (full at bottom, 0 at top)
                 const progress = 1 - p.y / canvasHeight
-                const alpha = p.opacity * (1 - Math.min(1, progress * 1.2))
+                const alpha = p.opacity * (1 - Math.min(1, progress * 2.2))
 
                 if (alpha <= 0) continue
 
                 ctx!.beginPath()
                 ctx!.arc(p.x, p.y, p.size, 0, Math.PI * 2)
-                ctx!.fillStyle = `rgba(229, 229, 229, ${alpha})`
+                ctx!.fillStyle = `rgba(${color}, ${alpha})`
                 ctx!.fill()
             }
 
@@ -97,7 +97,7 @@ export default function SparklesCanvas({ className }: { className?: string }) {
             cancelAnimationFrame(rafId)
             window.removeEventListener('resize', resize)
         }
-    }, [])
+    }, [particleCount, color])
 
     return (
         <div ref={stageRef} className={`absolute inset-0 ${className ?? ''}`}>

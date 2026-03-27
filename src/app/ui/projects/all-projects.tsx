@@ -5,6 +5,7 @@ import CirclesBackground from '@/app/ui/projects/circles-background'
 import { WifiCircles } from '@/app/ui/projects/circle'
 import { Wind } from '@/app/ui/projects/wind'
 import AutoFinCard from '@/app/ui/projects/autofin-card'
+import AccessPayCard from '@/app/ui/projects/accesspay-card'
 import { useEffect, useRef, useState } from 'react'
 
 const AllProjects = () => {
@@ -389,27 +390,41 @@ const AllProjects = () => {
             description: 'Coming soon.',
             content: <AutoFinCard />,
         },
+        {
+            // 10
+            title: 'AccessPay',
+            description: 'Coming soon.',
+            content: <AccessPayCard />,
+        },
     ]
 
     return (
         <main>
             {isDesktop ? (
                 // desktop view
-                <BentoGrid
-                    className={`mt-5`}
-                    numOfGridCols={3}
-                    rowHeight={'32rem'}
-                >
-                    {/* AutoFin row — col-span-2 + empty placeholder */}
-                    <BentoGrid className="col-span-2" rowHeight="21rem">
+                <div className="flex flex-col gap-4 mt-5">
+                    {/* Top row: AutoFin + AccessPay at 21rem */}
+                    <div
+                        className="grid grid-cols-3 gap-4 w-full"
+                        style={{ gridAutoRows: '21rem' }}
+                    >
                         <BentoGridItem
+                            className="col-span-2"
                             title={items[9].title}
                             description={items[9].description}
                         >
                             {items[9].content}
                         </BentoGridItem>
-                    </BentoGrid>
-                    <div className="rounded-xl bg-neutral-800/70" />
+                        <BentoGridItem
+                            title={items[10].title}
+                            description={items[10].description}
+                        >
+                            {items[10].content}
+                        </BentoGridItem>
+                    </div>
+
+                    {/* Rest of grid at 32rem */}
+                    <BentoGrid numOfGridCols={3} rowHeight={'32rem'}>
                     <BentoGridItem
                         title={items[0].title}
                         description={items[0].description}
@@ -513,7 +528,8 @@ const AllProjects = () => {
                             {items[8].content}
                         </BentoGridItem>
                     </BentoGrid>
-                </BentoGrid>
+                    </BentoGrid>
+                </div>
             ) : (
                 // mobile view
                 <BentoGrid className="mt-5" rowHeight="16rem">
