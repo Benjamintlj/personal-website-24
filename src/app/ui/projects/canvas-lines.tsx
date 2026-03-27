@@ -59,22 +59,23 @@ export function CanvasLines({ hovered = false, className }: CanvasLinesProps) {
             const numLines = Math.floor(height / lineGap) + 10
             // Big amplitude — wave spans most of the card height
             const amplitude = height * 0.7
+            // One full sine wave across the card width, traveling left to right
+            const waveFreq = Math.PI * 2
 
-            // All lines share one wave shape (single unified wave)
-            const curve = Math.sin(phase) * amplitude
+            ctx.strokeStyle = `rgba(${WAVE_COLOR}, 0.45)`
+            ctx.lineWidth = 2
 
             for (let i = 0; i < numLines; i++) {
                 const y = i * lineGap
-                ctx.strokeStyle = `rgba(${WAVE_COLOR}, 0.18)`
-                ctx.lineWidth = 1.5
 
                 ctx.beginPath()
-                ctx.moveTo(0, y)
-                ctx.bezierCurveTo(
-                    width * 0.33, y + curve,
-                    width * 0.66, y + curve * 0.75,
-                    width, y,
-                )
+                ctx.moveTo(0, y + Math.sin(phase) * amplitude)
+
+                // Step across the card — sine wave rippling left to right
+                for (let x = 3; x <= width; x += 3) {
+                    ctx.lineTo(x, y + Math.sin(phase + (x / width) * waveFreq) * amplitude)
+                }
+
                 ctx.stroke()
             }
 

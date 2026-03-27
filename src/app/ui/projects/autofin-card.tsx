@@ -16,7 +16,7 @@ export default function AutoFinCard() {
             onMouseLeave={() => setIsHovered(false)}
         >
             {/* animated bezier wave — dimmed at rest, brighter on hover */}
-            <div className={`absolute inset-0 z-0 transition-opacity duration-700 ${isHovered ? 'opacity-60' : 'opacity-15'}`}>
+            <div className={`absolute inset-0 z-0 transition-opacity duration-700 ${isHovered ? 'opacity-70' : 'opacity-25'}`}>
                 <CanvasLines hovered={isHovered} className="w-full h-full" />
             </div>
 
