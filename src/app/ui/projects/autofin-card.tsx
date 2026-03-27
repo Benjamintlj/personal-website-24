@@ -2,8 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import SparklesCanvas from '@/app/ui/projects/sparkles-canvas'
-import MetaballCanvas from '@/app/ui/projects/metaball-canvas'
+import { CanvasLines } from '@/app/ui/projects/canvas-lines'
 
 const SUBTITLE = 'Your finances, automated'
 
@@ -16,26 +15,13 @@ export default function AutoFinCard() {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            {/* sparkles — behind everything */}
-            <SparklesCanvas className="z-0" isHovered={isHovered} />
-
-            {/* blue bottom glow — above sparkles (z-1), below tree/text (z-10) */}
-            <motion.div
-                className="absolute inset-0 z-[1] pointer-events-none"
-                animate={{ opacity: isHovered ? 1 : 0 }}
-                transition={{ duration: 0.5, ease: 'easeOut' }}
-                style={{
-                    background: 'radial-gradient(ellipse 90% 55% at 50% 100%, rgba(96, 165, 250, 0.30) 0%, transparent 70%)',
-                }}
-            />
-
-            {/* tree — left half */}
-            <div className="relative z-10 w-1/2 h-full pl-4">
-                <MetaballCanvas className="w-full h-full" />
+            {/* animated bezier wave — dimmed at rest, brighter on hover */}
+            <div className={`absolute inset-0 z-0 transition-opacity duration-700 ${isHovered ? 'opacity-60' : 'opacity-15'}`}>
+                <CanvasLines hovered={isHovered} className="w-full h-full" />
             </div>
 
-            {/* title + subtitle — right half */}
-            <div className="relative z-10 w-1/2 flex flex-col justify-center items-center px-8 gap-2">
+            {/* title + subtitle — centered over full card */}
+            <div className="relative z-10 w-full flex flex-col justify-center items-center gap-2">
                 <h2 className="header2-gradient">AutoFin</h2>
 
                 {/* subtitle always in DOM — only opacity/blur animates to prevent layout shift */}
