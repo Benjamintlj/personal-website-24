@@ -4,22 +4,16 @@ import { useEffect, useRef } from 'react'
 
 interface CanvasLinesProps {
     hovered?: boolean
-    curveIntensity?: number
     className?: string
 }
 
-// Slow cycle at rest (80s), slightly faster on hover (45s)
-const DURATION_REST = 80
-const DURATION_HOVER = 45
+const DURATION_REST = 80   // seconds per cycle at rest
+const DURATION_HOVER = 45  // seconds per cycle on hover
 
 // Discord purple
 const WAVE_COLOR = '88, 101, 242'
 
-export function CanvasLines({
-    hovered = false,
-    curveIntensity = 0.72,
-    className,
-}: CanvasLinesProps) {
+export function CanvasLines({ hovered = false, className }: CanvasLinesProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const hoveredRef = useRef(hovered)
 
@@ -61,26 +55,28 @@ export function CanvasLines({
             const { width, height } = canvas.getBoundingClientRect()
             ctx.clearRect(0, 0, width, height)
 
-            // Single filled wave — large amplitude, fills the card
-            const amplitude = height * curveIntensity
-            const midY = height * 0.5
+            const lineGap = 4
+            const numLines = Math.floor(height / lineGap) + 10
+            // Big amplitude — wave spans most of the card height
+            const amplitude = height * 0.7
 
-            const cp1y = midY + Math.sin(phase) * amplitude
-            const cp2y = midY + Math.sin(phase + 1.4) * amplitude * 0.7
+            // All lines share one wave shape (single unified wave)
+            const curve = Math.sin(phase) * amplitude
 
-            ctx.beginPath()
-            ctx.moveTo(-10, height + 10)
-            ctx.lineTo(-10, midY + Math.sin(phase - 0.3) * amplitude * 0.4)
-            ctx.bezierCurveTo(
-                width * 0.33, cp1y,
-                width * 0.66, cp2y,
-                width + 10, midY + Math.sin(phase + 2.8) * amplitude * 0.5,
-            )
-            ctx.lineTo(width + 10, height + 10)
-            ctx.closePath()
+            for (let i = 0; i < numLines; i++) {
+                const y = i * lineGap
+                ctx.strokeStyle = `rgba(${WAVE_COLOR}, 0.18)`
+                ctx.lineWidth = 1.5
 
-            ctx.fillStyle = `rgba(${WAVE_COLOR}, 0.85)`
-            ctx.fill()
+                ctx.beginPath()
+                ctx.moveTo(0, y)
+                ctx.bezierCurveTo(
+                    width * 0.33, y + curve,
+                    width * 0.66, y + curve * 0.75,
+                    width, y,
+                )
+                ctx.stroke()
+            }
 
             animFrameId = requestAnimationFrame(animate)
         }
@@ -91,7 +87,7 @@ export function CanvasLines({
             cancelAnimationFrame(animFrameId)
             ro.disconnect()
         }
-    }, [curveIntensity])
+    }, [])
 
     return <canvas ref={canvasRef} className={className} aria-hidden="true" />
 }
