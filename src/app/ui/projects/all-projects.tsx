@@ -15,6 +15,7 @@ const AllProjects = () => {
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
     const [fypHovered, setFypHovered] = useState(false)
     const [isDesktop, setIsDesktop] = useState(false)
+    const [isNarrowDesktop, setIsNarrowDesktop] = useState(false)
 
     useEffect(() => {
         const updateDimensions = () => {
@@ -38,7 +39,8 @@ const AllProjects = () => {
 
     useEffect(() => {
         const checkScreenSize = () => {
-            setIsDesktop(window.innerWidth >= 1100)
+            setIsDesktop(window.innerWidth >= 900)
+            setIsNarrowDesktop(window.innerWidth < 1028)
         }
 
         checkScreenSize()
@@ -90,8 +92,8 @@ const AllProjects = () => {
                         className="absolute flex justify-between transform rotate-[315deg] xsm:hidden desktop:flex"
                         style={{
                             width: '80%',
-                            top: `calc(50% - ${dimensions.height / 2}px)`,
-                            left: `calc(50% - ${dimensions.width / 0.9}px)`,
+                            top: isNarrowDesktop ? `calc(65% - ${dimensions.height / 2}px)` : `calc(50% - ${dimensions.height / 2}px)`,
+                            left: isNarrowDesktop ? `calc(50% - ${dimensions.width / 1.2}px)` : `calc(50% - ${dimensions.width / 0.75}px)`,
                         }}
                     >
                         <img
