@@ -62,7 +62,7 @@ export default function Home() {
     }
 
     return (
-        <div className="h-screen w-screen flex bg-black overflow-hidden">
+        <div className="h-screen w-screen flex flex-col md:flex-row bg-black overflow-hidden">
             <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} animate={false}>
                 <SidebarBody className="justify-between gap-10">
                     <div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
@@ -72,7 +72,7 @@ export default function Home() {
                                 <SidebarLink
                                     key={idx}
                                     link={link}
-                                    onClick={(e: React.MouseEvent<HTMLAnchorElement>) => scrollToSection(e, link.href)}
+                                    onClick={(e: React.MouseEvent<HTMLAnchorElement>) => { scrollToSection(e, link.href); setSidebarOpen(false) }}
                                 />
                             ))}
                         </div>
@@ -110,7 +110,7 @@ export default function Home() {
                 </SidebarBody>
             </Sidebar>
             <main
-                className="flex-1 h-screen snap-mandatory overflow-scroll hide-scrollbar"
+                className="flex-1 min-h-0 snap-mandatory overflow-scroll hide-scrollbar"
                 ref={mainRef}
             >
             <ContactButton mainRef={mainRef} />
