@@ -130,7 +130,7 @@ const AllProjects = () => {
             visibleOnMobile: false,
             content: (
                 <main className="relative flex flex-col justify-center items-center h-full overflow-hidden">
-                    <LinesGradientShader className="absolute inset-0" />
+                    <LinesGradientShader className="absolute inset-0" bandCount={16} />
                     <div className="relative z-10 flex flex-col items-center">
                         <h2 className="bento-title text-7xl py-0">AI</h2>
                         <p className="secondary text-center">Chat Bot & CNN</p>
@@ -195,13 +195,13 @@ const AllProjects = () => {
             github: 'https://github.com/Benjamintlj/cloud-course-work',
             content: (
                 <main
-                    className={`h-full overflow-hidden relative flex flex-col justify-evenly`}
+                    className={`h-full overflow-hidden relative flex flex-col`}
                 >
-                    <h2 className="bento-title sm:text-3xl text-center">
+                    <h2 className="bento-title sm:text-3xl text-center mt-5">
                         Cloud & Distributed Systems
                     </h2>
                     <div
-                        className={`flex flex-row justify-evenly items-center mb-5 max-w-[500px] mx-auto`}
+                        className={`flex-1 flex flex-row justify-evenly items-center max-w-[500px] mx-auto w-full`}
                     >
                         <img
                             className={`rounded-xl w-[25%] transition-transform hover:translate-y-[-5%] ease-in-out`}
@@ -252,12 +252,12 @@ const AllProjects = () => {
             content: (
                 <main className="flex flex-row desktop:flex-col justify-evenly items-center h-full">
                     <img
-                        className="w-[210px]"
+                        className="w-[210px] -translate-y-1"
                         src="images/dyson/dyson-vis-nav-title.png"
                         alt="Dyson 360 vis nav"
                     />
                     <img
-                        className="desktop:w-2/5 w-1/5"
+                        className="desktop:w-2/5 w-1/5 -translate-y-1"
                         src="images/dyson/dyson-vis-nav.png"
                         alt="Dyson 360 vis nav"
                     />
