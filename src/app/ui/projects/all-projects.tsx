@@ -4,6 +4,7 @@ import CirclesBackground from '@/app/ui/projects/circles-background'
 import { WifiCircles } from '@/app/ui/projects/circle'
 import { Wind } from '@/app/ui/projects/wind'
 import { LinesGradientShader } from '@/app/ui/projects/lines-gradient-shader'
+import AiCard from '@/app/ui/projects/ai-card'
 import AutoFinCard from '@/app/ui/projects/autofin-card'
 import AccessPayCard from '@/app/ui/projects/accesspay-card'
 import { useEffect, useRef, useState } from 'react'
@@ -129,13 +130,7 @@ const AllProjects = () => {
             github: 'https://github.com/Benjamintlj/ai-main-submission',
             visibleOnMobile: false,
             content: (
-                <main className="relative flex flex-col justify-center items-center h-full overflow-hidden">
-                    <LinesGradientShader className="absolute inset-0" bandCount={16} />
-                    <div className="relative z-10 flex flex-col items-center">
-                        <h2 className="bento-title text-7xl py-0">AI</h2>
-                        <p className="secondary text-center">Chat Bot & CNN</p>
-                    </div>
-                </main>
+                <AiCard />
             ),
         },
         {

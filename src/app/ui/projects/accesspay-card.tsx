@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import SparklesCanvas from '@/app/ui/projects/sparkles-canvas'
+import { LinesGradientShader } from '@/app/ui/projects/lines-gradient-shader'
 
 const ROTATION_STEP = 360 / 8
 
@@ -19,7 +19,7 @@ export default function AccessPayCard() {
             }}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <SparklesCanvas className="z-0" particleCount={120} color="245, 167, 35" />
+            <LinesGradientShader className="absolute inset-0" bandCount={8} bandSpacing={18} xOffset={-128} yOffset={-30} rotationAngle={20} />
 
             {/* radial glow from bottom on hover */}
             <motion.div

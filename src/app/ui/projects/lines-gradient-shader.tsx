@@ -24,6 +24,10 @@ interface LinesGradientShaderProps {
     waveAmplitude?: number
     colors?: RGB[]
     targetFps?: number
+    xOffset?: number
+    yOffset?: number
+    slopeMultiplier?: number
+    rotationAngle?: number
 }
 
 export function LinesGradientShader({
@@ -35,6 +39,10 @@ export function LinesGradientShader({
     waveAmplitude = 0.15,
     colors,
     targetFps = 30,
+    xOffset = 0,
+    yOffset = 0,
+    slopeMultiplier = 1.2,
+    rotationAngle,
 }: LinesGradientShaderProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
@@ -136,6 +144,9 @@ export function LinesGradientShader({
             const amp = H * waveAmplitude
             const half = bandCount / 2
             const span = W + 400
+            const effectiveSlope = rotationAngle !== undefined
+                ? Math.tan(rotationAngle * Math.PI / 180) * span / H
+                : slopeMultiplier
 
             ctx.clearRect(0, 0, W, H)
 
@@ -156,8 +167,8 @@ export function LinesGradientShader({
 
                 for (let i = 0; i <= 40; i++) {
                     const t = i / 40
-                    const x = -100 + span * t
-                    const baseY = 1.4 * H - t * H * 1.2 + center
+                    const x = -100 + span * t + xOffset
+                    const baseY = 1.4 * H - t * H * effectiveSlope + center + yOffset
                     const wave =
                         Math.sin(2.5 * t + p1) * amp +
                         Math.sin(1.5 * t + p2) * amp * 0.4 +
@@ -192,10 +203,10 @@ export function LinesGradientShader({
                 ctx.beginPath()
                 for (let i = 0; i <= 30; i++) {
                     const t = i / 30
-                    const x = -100 + span * t
+                    const x = -100 + span * t + xOffset
                     const y =
                         1.4 * H -
-                        t * H * 1.2 +
+                        t * H * effectiveSlope +
                         center +
                         Math.sin(2.5 * t + p1) * amp +
                         Math.sin(1.5 * t + p2) * amp * 0.4 +
@@ -218,7 +229,7 @@ export function LinesGradientShader({
             ro.disconnect()
             io.disconnect()
         }
-    }, [speed, bandCount, bandSpacing, bandThickness, waveAmplitude, bandColors, targetFps])
+    }, [speed, bandCount, bandSpacing, bandThickness, waveAmplitude, bandColors, targetFps, xOffset, yOffset, slopeMultiplier, rotationAngle])
 
     return (
         <div ref={containerRef} className={cn('relative overflow-hidden', className)}>
