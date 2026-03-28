@@ -41,7 +41,7 @@ export default function AccessPayCard() {
                 animate={{ rotate: rotation }}
                 transition={{ type: 'spring', stiffness: 180, damping: 12 }}
             />
-            <h2 className="relative z-10 header2-gradient">AccessPay</h2>
+            <h2 className="relative z-10 bento-title">AccessPay</h2>
         </main>
     )
 }

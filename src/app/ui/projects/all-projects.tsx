@@ -81,7 +81,7 @@ const AllProjects = () => {
                     onMouseEnter={() => setFypHovered(true)}
                     onMouseLeave={() => setFypHovered(false)}
                 >
-                    <h2 className="header2-gradient text-center xsm:text-left desktop:text-center mt-auto xsm:mt-10 desktop:mt-auto mb-5">
+                    <h2 className="bento-title sm:text-3xl relative z-10 text-center xsm:text-left desktop:text-center mt-auto xsm:mt-10 desktop:mt-auto mb-5">
                         Final Year Project
                     </h2>
                     <div
@@ -130,7 +130,7 @@ const AllProjects = () => {
             visibleOnMobile: false,
             content: (
                 <main className="flex flex-col justify-center items-center h-full mb-4">
-                    <h2 className="header1 text-7xl py-0">AI</h2>
+                    <h2 className="bento-title text-7xl py-0">AI</h2>
                     <p className="secondary text-center">Chat Bot & CNN</p>
                 </main>
             ),
@@ -149,7 +149,7 @@ const AllProjects = () => {
                     <FaDiscord
                         className={`text-8xl group-hover:text-blue-500 text-blue-400 transition transform duration-500 group-hover:translate-y-[5%]`}
                     />
-                    <h2 className="header2-gradient text-center desktop:hidden">
+                    <h2 className="bento-title text-center desktop:hidden">
                         Discord
                     </h2>
                 </main>
@@ -178,13 +178,14 @@ const AllProjects = () => {
             content: (
                 <main className="h-full w-full flex flex-col justify-end">
                     <CirclesBackground
+                        className="translate-y-4"
                         circleSize={70}
                         waveSize={10}
                         blur={2}
                         height={250}
                         waveWidth={15}
                     />
-                    <h2 className="header2-gradient text-center mt-auto mb-5">
+                    <h2 className="bento-title sm:text-3xl text-center mt-auto mb-5">
                         Mobile Dev
                     </h2>
                 </main>
@@ -213,7 +214,7 @@ const AllProjects = () => {
                 <main
                     className={`h-full overflow-hidden relative flex flex-col justify-evenly`}
                 >
-                    <h2 className="header2-gradient text-center">
+                    <h2 className="bento-title sm:text-3xl text-center">
                         Cloud & Distributed Systems
                     </h2>
                     <div
@@ -292,53 +293,34 @@ const AllProjects = () => {
                 <main className={`group h-full relative flex items-center`}>
                     <WifiCircles />
 
-                    <h2 className="header2-gradient ml-5">HTTP</h2>
+                    <h2 className="bento-title sm:text-3xl ml-5">HTTP</h2>
                 </main>
             ),
         },
         {
             // 7
-            title: 'Cloud & Distributed Systems',
+            title: 'Projects Coming Soon',
             description:
-                'Within this project, I created a trip management app. This project was heavly focused on the infrastructure and the backend, with a fully fleshed-out AWS architecture, it was designed to be serverless and highly scalable.',
+                "That wraps up the projects I've completed over the past year. So, what's next? I have a few ideas for personal projects, and I hope to see you on the battlefield—perhaps we'll be working together soon!",
+            descriptionImage: '/images/lakes.png',
             skills: [
                 Skills.AWS,
                 Skills.DynamoDB,
                 Skills.Lambda,
                 Skills.S3,
                 Skills.ECS,
+                Skills.EC2,
                 Skills.SQS,
+                Skills.SES,
                 Skills.CDK,
-                Skills.Python,
-                Skills.TypeScript,
-                Skills.Java,
-                Skills.Postman,
+                Skills.Route53,
             ],
-            github: 'https://github.com/Benjamintlj/cloud-course-work',
             visibleOnMobile: false,
             content: (
                 <main
-                    className={`h-full overflow-hidden relative flex flex-col justify-center`}
+                    className={`h-full relative flex items-center justify-center`}
                 >
-                    <div
-                        className={`flex flex-row justify-evenly items-center max-w-[500px] mx-auto`}
-                    >
-                        <img
-                            className={`rounded-xl w-[25%] transition-transform hover:translate-y-[-5%] ease-in-out`}
-                            src={`/images/aws/ecs.png`}
-                            alt={'ECS icon'}
-                        />
-                        <img
-                            className={`rounded-xl w-[25%] transition-transform hover:translate-y-[-5%] ease-in-out`}
-                            src={`/images/aws/lambda.png`}
-                            alt={'ECS icon'}
-                        />
-                        <img
-                            className={`rounded-xl w-[25%] transition-transform hover:translate-y-[-5%] ease-in-out`}
-                            src={`/images/aws/dynamodb.png`}
-                            alt={'ECS icon'}
-                        />
-                    </div>
+                    <h2 className="bento-title sm:text-3xl">Coming Soon...</h2>
                 </main>
             ),
         },
