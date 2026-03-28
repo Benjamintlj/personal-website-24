@@ -4,7 +4,6 @@ import React, { useEffect, useRef, Suspense } from 'react'
 import Dots from '@/app/ui/backgrounds/dots'
 import Memoji from '@/app/ui/title-section/memoji'
 import { VanishingWords } from '@/app/ui/title-section/vanishing-words'
-import ScrollPrompt from '@/app/ui/title-section/scroll-prompt'
 import { Break } from '@/app/ui/general/break'
 import ContactButton from '@/app/ui/contact/contact-button'
 import { FaGithub, FaLinkedin } from 'react-icons/fa'
@@ -45,7 +44,8 @@ export default function Home() {
     return (
         <div className="h-screen w-screen bg-black overflow-hidden">
             {/* Floating navbar */}
-            <div className="fixed top-6 inset-x-0 max-w-5xl mx-auto z-50 px-4">
+            <div className="fixed top-6 inset-x-0 w-4/5 max-w-[1100px] mx-auto z-50">
+                <div className="-mx-8">
                 <Menu setActive={() => {}}>
                     <div className="flex items-center gap-6">
                         {navLinks.map((link) => (
@@ -88,6 +88,7 @@ export default function Home() {
                         Download CV
                     </motion.a>
                 </Menu>
+                </div>
             </div>
             <main
                 className="h-full w-full snap-mandatory overflow-scroll hide-scrollbar"
@@ -98,24 +99,56 @@ export default function Home() {
                 className={`desktop:min-w-[1500px] desktop:max-w-[2000px] w-full flex flex-col justify-center`}
             >
                 {/*Title page*/}
-                <section id="hero" className="h-screen w-full flex flex-col items-center mt-[10vh]">
-                    <h1 className="header1">Ben Lewis-Jones</h1>
-                    <Memoji className="w-52 sm:w-64 md:w-72 lg:w-96" />
-                    <VanishingWords
-                        className="secondary text-2xl sm:text-4xl"
-                        relativeClause={relativeClause}
-                        words={descriptiveWords}
-                    />
-                    <ScrollPrompt
-                        className={`mt-auto mb-auto`}
-                        textSize={`text-base`}
-                        displayDelayMs={2500}
-                        mainRef={mainRef}
-                    />
+                <section id="hero" className="h-[90vh] w-full flex flex-col justify-center relative">
+                    <div className="w-4/5 max-w-[1100px] mx-auto">
+                        {/* Left: text */}
+                        <div className="flex flex-col gap-6 md:w-3/5">
+                            <div>
+                                <h1 className="text-4xl sm:text-5xl xl:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 leading-tight pb-2 whitespace-nowrap">
+                                    Ben Lewis-Jones
+                                </h1>
+                                <div className="mt-4">
+                                    <VanishingWords
+                                        className="secondary text-xl sm:text-2xl"
+                                        relativeClause={relativeClause}
+                                        words={descriptiveWords}
+                                    />
+                                </div>
+                            </div>
+
+                            <p className="text-neutral-500 text-sm leading-relaxed max-w-sm">
+                                {yearsInIndustry} years shipping production software — high-volume payment systems at AccessPay, and embedded to cloud development at Dyson.
+                            </p>
+
+                            <div className="flex flex-wrap gap-2">
+                                <span className="text-xs px-3 py-1.5 rounded-full border border-neutral-700 text-neutral-400 bg-neutral-900/50">
+                                    Mid-Level SE · AccessPay
+                                </span>
+                                <span className="text-xs px-3 py-1.5 rounded-full border border-neutral-700 text-neutral-400 bg-neutral-900/50">
+                                    {yearsInIndustry} yrs industry exp
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Memoji: center aligned to right edge of max-w-5xl */}
+                    <div
+                        className="absolute top-1/2"
+                        style={{
+                            right: 'max(0px, calc((100vw - 1024px) / 2))',
+                            transform: 'translate(25%, -50%)',
+                            maskImage: 'linear-gradient(to right, black 55%, transparent 85%)',
+                            WebkitMaskImage: 'linear-gradient(to right, black 55%, transparent 85%)',
+                        }}
+                    >
+                        <Memoji className="w-64 md:w-80 xl:w-96" />
+                    </div>
+
+
                 </section>
 
                 {/*Work Experience*/}
-                <section id="experience" className="w-4/5 desktop:w-3/5 snap-start mx-auto">
+                <section id="experience" className="w-4/5 max-w-[1100px] snap-start mx-auto">
                     <h2 className="header2 text-3xl mb-4">Work Experience</h2>
                     <Break />
                     <p className="text-gray-400 text-base mt-6 mb-12">
@@ -206,7 +239,7 @@ export default function Home() {
                 </section>
 
                 {/*Projects*/}
-                <section id="projects" className="w-4/5 desktop:w-3/5 snap-start mx-auto mb-24">
+                <section id="projects" className="w-4/5 max-w-[1100px] snap-start mx-auto mb-24">
                     <h2 className="header2 text-3xl mb-4">Projects</h2>
 
                     <Break />
@@ -216,7 +249,7 @@ export default function Home() {
                 </section>
 
                 {/*Contact*/}
-                <section id="contact" className="w-4/5 desktop:w-3/5 snap-start mx-auto">
+                <section id="contact" className="w-4/5 max-w-[1100px] snap-start mx-auto">
                     <h2 className="header2 text-3xl mb-4">Contact</h2>
                     <Break />
                     <div className="mt-8 flex flex-col gap-4">
@@ -266,7 +299,7 @@ export default function Home() {
                     </motion.a>
                 </section>
 
-                <section className="w-4/5 desktop:w-3/5 snap-start mx-auto h-24"></section>
+                <section className="w-4/5 max-w-[1100px] snap-start mx-auto h-24"></section>
             </Dots>
             </main>
         </div>
