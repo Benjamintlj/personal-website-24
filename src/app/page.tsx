@@ -104,7 +104,7 @@ export default function Home() {
                         {/* Left: text */}
                         <div className="flex flex-col gap-6 md:w-3/5">
                             <div>
-                                <h1 className="text-4xl sm:text-5xl xl:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 leading-tight pb-2 whitespace-nowrap">
+                                <h1 className="text-4xl sm:text-5xl xl:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 leading-tight pb-2">
                                     Ben Lewis-Jones
                                 </h1>
                                 <div className="mt-4">
