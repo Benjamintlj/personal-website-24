@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, lazy, useRef, Suspense } from 'react'
+import React, { useEffect, useRef, Suspense } from 'react'
 import Dots from '@/app/ui/backgrounds/dots'
 import Memoji from '@/app/ui/title-section/memoji'
 import { VanishingWords } from '@/app/ui/title-section/vanishing-words'
@@ -9,14 +9,11 @@ import { Break } from '@/app/ui/general/break'
 import ContactButton from '@/app/ui/contact/contact-button'
 import { FaGithub, FaLinkedin } from 'react-icons/fa'
 import { motion } from 'framer-motion'
-import { Sidebar, SidebarBody, SidebarLink } from '@/app/ui/sidebar'
-import { IconHome, IconBriefcase, IconCode, IconMail } from '@tabler/icons-react'
+import { Menu } from '@/app/ui/navbar-menu'
 const AllProjects = React.lazy(() => import('@/app/ui/projects/all-projects'))
-import LoadingSkeleton from '@/app/ui/loading/loading-skeleton'
 
 export default function Home() {
     const mainRef = useRef(null)
-    const [sidebarOpen, setSidebarOpen] = useState(false)
 
     const descriptiveWords = ['Senior Engineer', 'Athlete', 'Founder']
     const relativeClause = 'Aspiring'
@@ -25,26 +22,10 @@ export default function Home() {
     const yearsInIndustry = ((Date.now() - industryStart.getTime()) / (365.25 * 24 * 60 * 60 * 1000)).toFixed(1)
 
     const navLinks = [
-        {
-            label: 'Home',
-            href: '#hero',
-            icon: <IconHome className="h-5 w-5 shrink-0 text-neutral-400" />,
-        },
-        {
-            label: 'Work Experience',
-            href: '#experience',
-            icon: <IconBriefcase className="h-5 w-5 shrink-0 text-neutral-400" />,
-        },
-        {
-            label: 'Projects',
-            href: '#projects',
-            icon: <IconCode className="h-5 w-5 shrink-0 text-neutral-400" />,
-        },
-        {
-            label: 'Contact',
-            href: '#contact',
-            icon: <IconMail className="h-5 w-5 shrink-0 text-neutral-400" />,
-        },
+        { label: 'Home', href: '#hero' },
+        { label: 'Experience', href: '#experience' },
+        { label: 'Projects', href: '#projects' },
+        { label: 'Contact', href: '#contact' },
     ]
 
     useEffect(() => {
@@ -62,26 +43,26 @@ export default function Home() {
     }
 
     return (
-        <div className="h-screen w-screen flex flex-col md:flex-row bg-black overflow-hidden">
-            <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} animate={false}>
-                <SidebarBody className="justify-between gap-10">
-                    <div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
-                        <div className="h-5 w-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-white mb-4" />
-                        <div className="mt-4 flex flex-col gap-1">
-                            {navLinks.map((link, idx) => (
-                                <SidebarLink
-                                    key={idx}
-                                    link={link}
-                                    onClick={(e: React.MouseEvent<HTMLAnchorElement>) => { scrollToSection(e, link.href); setSidebarOpen(false) }}
-                                />
-                            ))}
-                        </div>
+        <div className="h-screen w-screen bg-black overflow-hidden">
+            {/* Floating navbar */}
+            <div className="fixed top-6 inset-x-0 max-w-5xl mx-auto z-50 px-4">
+                <Menu setActive={() => {}}>
+                    <div className="flex items-center gap-6">
+                        {navLinks.map((link) => (
+                            <a
+                                key={link.href}
+                                href={link.href}
+                                onClick={(e) => scrollToSection(e, link.href)}
+                                className="text-neutral-200 hover:text-white text-sm cursor-pointer transition-colors duration-150 whitespace-nowrap"
+                            >
+                                {link.label}
+                            </a>
+                        ))}
                     </div>
-                    <div className="rounded-lg bg-neutral-800 p-1.5">
                     <motion.a
                         href="/cv.pdf"
                         download
-                        className="flex items-center justify-start gap-2 py-1 pl-3 text-neutral-200 text-sm whitespace-pre"
+                        className="flex items-center gap-2 text-neutral-200 hover:text-white text-sm whitespace-nowrap transition-colors duration-150"
                         initial="rest"
                         whileHover="hover"
                     >
@@ -106,11 +87,10 @@ export default function Home() {
                         </div>
                         Download CV
                     </motion.a>
-                    </div>
-                </SidebarBody>
-            </Sidebar>
+                </Menu>
+            </div>
             <main
-                className="flex-1 min-h-0 snap-mandatory overflow-scroll hide-scrollbar"
+                className="h-full w-full snap-mandatory overflow-scroll hide-scrollbar"
                 ref={mainRef}
             >
             <ContactButton mainRef={mainRef} />

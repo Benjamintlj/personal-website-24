@@ -379,11 +379,10 @@ const AllProjects = () => {
                 <div className="flex flex-col gap-4 mt-5">
                     {/* Top row: AccessPay + AutoFin at 21rem */}
                     <div
-                        className="grid grid-cols-3 gap-4 w-full"
+                        className="grid grid-cols-2 gap-4 w-full"
                         style={{ gridAutoRows: '21rem' }}
                     >
                         <BentoGridItem
-                            className="col-span-2"
                             title={orderedItems[0].title}
                             description={orderedItems[0].description}
                         >
