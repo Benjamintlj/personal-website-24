@@ -440,32 +440,30 @@ const AllProjects = () => {
                             </BentoGridItem>
                         </BentoGrid>
                     </BentoGrid>
-                    <BentoGrid numOfGridCols={1} rowHeight={'10rem'}>
-                        <BentoGrid numOfGridCols={1} rowHeight={'21rem'}>
-                            <BentoGridItem
-                                title={orderedItems[2].title}
-                                description={orderedItems[2].description}
-                                descriptionImage={orderedItems[2].descriptionImage}
-                                skills={orderedItems[2].skills}
-                                gitHub={orderedItems[2].github}
-                                youtube={orderedItems[2].youtube}
-                            >
-                                {orderedItems[2].content}
-                            </BentoGridItem>
-                        </BentoGrid>
-                        <BentoGrid numOfGridCols={1} rowHeight={'10rem'}>
-                            <BentoGridItem
-                                title={orderedItems[5].title}
-                                description={orderedItems[5].description}
-                                descriptionImage={orderedItems[5].descriptionImage}
-                                skills={orderedItems[5].skills}
-                                gitHub={orderedItems[5].github}
-                                youtube={orderedItems[5].youtube}
-                            >
-                                {orderedItems[5].content}
-                            </BentoGridItem>
-                        </BentoGrid>
-                    </BentoGrid>
+                    <div className="flex flex-col gap-4">
+                        <BentoGridItem
+                            className="h-[17rem]"
+                            title={orderedItems[2].title}
+                            description={orderedItems[2].description}
+                            descriptionImage={orderedItems[2].descriptionImage}
+                            skills={orderedItems[2].skills}
+                            gitHub={orderedItems[2].github}
+                            youtube={orderedItems[2].youtube}
+                        >
+                            {orderedItems[2].content}
+                        </BentoGridItem>
+                        <BentoGridItem
+                            className="h-[14rem]"
+                            title={orderedItems[5].title}
+                            description={orderedItems[5].description}
+                            descriptionImage={orderedItems[5].descriptionImage}
+                            skills={orderedItems[5].skills}
+                            gitHub={orderedItems[5].github}
+                            youtube={orderedItems[5].youtube}
+                        >
+                            {orderedItems[5].content}
+                        </BentoGridItem>
+                    </div>
                     <BentoGrid numOfGridCols={1} rowHeight={'10rem'}>
                         <BentoGridItem
                             title={orderedItems[8].title}
