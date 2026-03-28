@@ -85,7 +85,7 @@ export default function Home() {
                                 <div className="absolute inset-x-1 top-1 h-px bg-amber-200/50" />
                             </motion.div>
                         </div>
-                        Download CV
+                        <span className="hidden sm:inline">Download CV</span>
                     </motion.a>
                 </Menu>
                 </div>
@@ -133,7 +133,7 @@ export default function Home() {
 
                     {/* Memoji: center aligned to right edge of max-w-5xl */}
                     <div
-                        className="absolute top-1/2"
+                        className="absolute top-1/2 hidden sm:block"
                         style={{
                             right: 'max(0px, calc((100vw - 1024px) / 2))',
                             transform: 'translate(25%, -50%)',
