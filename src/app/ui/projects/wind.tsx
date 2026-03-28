@@ -49,10 +49,10 @@ export const Wind = ({ className }: { className: string }) => {
                             y2: ['0%', '0%'],
                         }}
                         transition={{
-                            duration: 5,
+                            duration: 12,
                             ease: 'easeInOut',
                             repeat: Infinity,
-                            delay: Math.random() * 10,
+                            delay: Math.random() * 15,
                         }}
                     >
                         <stop
