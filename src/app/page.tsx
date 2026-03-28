@@ -7,6 +7,8 @@ import { VanishingWords } from '@/app/ui/title-section/vanishing-words'
 import ScrollPrompt from '@/app/ui/title-section/scroll-prompt'
 import { Break } from '@/app/ui/general/break'
 import ContactButton from '@/app/ui/contact/contact-button'
+import { FaGithub, FaLinkedin } from 'react-icons/fa'
+import { motion } from 'framer-motion'
 const AllProjects = React.lazy(() => import('@/app/ui/projects/all-projects'))
 import LoadingSkeleton from '@/app/ui/loading/loading-skeleton'
 
@@ -148,6 +150,57 @@ export default function Home() {
                     <Suspense fallback={<div>Loading All Projects...</div>}>
                         <AllProjects />
                     </Suspense>
+                </section>
+
+                {/*Contact*/}
+                <section className="w-4/5 desktop:w-3/5 snap-start mx-auto">
+                    <h2 className="header2 text-3xl mb-4">Contact</h2>
+                    <Break />
+                    <div className="mt-8 flex flex-col gap-4">
+                        <a href="https://github.com/Benjamintlj" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
+                            <FaGithub className="text-xl flex-shrink-0 text-white" />
+                            <span className="text-sm">github.com/Benjamintlj</span>
+                        </a>
+                        <a href="https://www.linkedin.com/in/benjamin-lewis-jones/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
+                            <FaLinkedin className="text-xl flex-shrink-0 text-[#60a5fa]" />
+                            <span className="text-sm">linkedin.com/in/benjamin-lewis-jones</span>
+                        </a>
+                        <a href="mailto:ben@benlewisjones.com" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
+                            <span className="text-lg flex-shrink-0 leading-none">✉️</span>
+                            <span className="text-sm">ben@benlewisjones.com</span>
+                        </a>
+                    </div>
+                    <motion.a
+                        href="/cv.pdf"
+                        download
+                        className="mt-8 flex items-center gap-3 text-gray-400 hover:text-white transition-colors"
+                        initial="rest"
+                        whileHover="hover"
+                    >
+                        <div className="relative flex-shrink-0" style={{ width: 20, height: 16, perspective: '60px' }}>
+                            {/* Folder back */}
+                            <div className="absolute inset-0 rounded bg-gradient-to-b from-amber-400 to-amber-500">
+                                <div className="absolute left-1 rounded-t-sm bg-gradient-to-b from-amber-300 to-amber-400" style={{ top: -4, width: 8, height: 4 }} />
+                            </div>
+                            {/* Document — slides up on hover */}
+                            <motion.div
+                                className="absolute bg-white rounded-sm"
+                                style={{ width: 10, height: 12, left: '50%', zIndex: 10 }}
+                                variants={{ rest: { x: '-50%', y: -4, rotate: 0 }, hover: { x: '-40%', y: -7, rotate: 8 } }}
+                                transition={{ duration: 0.25, ease: 'easeOut' }}
+                            />
+                            {/* Folder front flap — opens on hover */}
+                            <motion.div
+                                className="absolute inset-x-0 bottom-0 rounded bg-gradient-to-b from-amber-300 to-amber-500"
+                                style={{ height: '85%', zIndex: 20, transformOrigin: 'bottom', transformStyle: 'preserve-3d' }}
+                                variants={{ rest: { rotateX: -20 }, hover: { rotateX: -45 } }}
+                                transition={{ duration: 0.2 }}
+                            >
+                                <div className="absolute inset-x-1 top-1 h-px bg-amber-200/50" />
+                            </motion.div>
+                        </div>
+                        <span className="text-sm">Download CV</span>
+                    </motion.a>
                 </section>
 
                 <section className="w-4/5 desktop:w-3/5 snap-start mx-auto h-24"></section>
