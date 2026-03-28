@@ -38,7 +38,7 @@ const AllProjects = () => {
 
     useEffect(() => {
         const checkScreenSize = () => {
-            setIsDesktop(window.innerWidth >= 900)
+            setIsDesktop(window.innerWidth >= 1100)
         }
 
         checkScreenSize()

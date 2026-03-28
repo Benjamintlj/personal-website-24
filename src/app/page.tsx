@@ -135,7 +135,7 @@ export default function Home() {
                     <div
                         className="absolute top-1/2 hidden sm:block"
                         style={{
-                            right: 'max(0px, calc((100vw - 1024px) / 2))',
+                            right: 'max(10%, calc((100vw - 1100px) / 2))',
                             transform: 'translate(25%, -50%)',
                             maskImage: 'linear-gradient(to right, black 55%, transparent 85%)',
                             WebkitMaskImage: 'linear-gradient(to right, black 55%, transparent 85%)',
