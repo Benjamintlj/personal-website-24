@@ -226,7 +226,7 @@ export default function Home() {
                 </section>
 
                 {/*Projects*/}
-                <section id="projects" className="w-4/5 desktop:w-3/5 snap-start mx-auto">
+                <section id="projects" className="w-4/5 desktop:w-3/5 snap-start mx-auto mb-24">
                     <h2 className="header2 text-3xl mb-4">Projects</h2>
 
                     <Break />

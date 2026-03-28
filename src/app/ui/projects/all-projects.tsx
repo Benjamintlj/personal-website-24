@@ -1,9 +1,9 @@
 import { BentoGrid, BentoGridItem } from '@/app/ui/projects/bento-grid'
 import { Skills } from '@/app/ui/projects/skill-circle'
-import { FaDiscord } from 'react-icons/fa'
 import CirclesBackground from '@/app/ui/projects/circles-background'
 import { WifiCircles } from '@/app/ui/projects/circle'
 import { Wind } from '@/app/ui/projects/wind'
+import { LinesGradientShader } from '@/app/ui/projects/lines-gradient-shader'
 import AutoFinCard from '@/app/ui/projects/autofin-card'
 import AccessPayCard from '@/app/ui/projects/accesspay-card'
 import { useEffect, useRef, useState } from 'react'
@@ -129,34 +129,17 @@ const AllProjects = () => {
             github: 'https://github.com/Benjamintlj/ai-main-submission',
             visibleOnMobile: false,
             content: (
-                <main className="flex flex-col justify-center items-center h-full mb-4">
-                    <h2 className="bento-title text-7xl py-0">AI</h2>
-                    <p className="secondary text-center">Chat Bot & CNN</p>
+                <main className="relative flex flex-col justify-center items-center h-full overflow-hidden">
+                    <LinesGradientShader className="absolute inset-0" />
+                    <div className="relative z-10 flex flex-col items-center">
+                        <h2 className="bento-title text-7xl py-0">AI</h2>
+                        <p className="secondary text-center">Chat Bot & CNN</p>
+                    </div>
                 </main>
             ),
         },
         {
             // 2
-            title: 'Discord',
-            description:
-                'This project is currently in development (besides this website), and is acting as a music player. Future developments will include voice commands from within calls, allowing users to ask for helpful functions such as clipping.',
-            skills: [Skills.AWS, Skills.ECS, Skills.TypeScript, Skills.Docker],
-            github: 'https://github.com/Benjamintlj/discord-bot-2',
-            content: (
-                <main
-                    className={`flex flex-row desktop:flex-col desktop:justify-center justify-evenly items-center h-full group`}
-                >
-                    <FaDiscord
-                        className={`text-8xl group-hover:text-blue-500 text-blue-400 transition transform duration-500 group-hover:translate-y-[5%]`}
-                    />
-                    <h2 className="bento-title text-center desktop:hidden">
-                        Discord
-                    </h2>
-                </main>
-            ),
-        },
-        {
-            // 3
             title: 'Gym NFC Scanner',
             description:
                 'This Android application allows users to scan machines within gyms and stream videos. It also enables gym owners to create and manage content that can be viewed after scanning an NFC tag.',
@@ -382,17 +365,16 @@ const AllProjects = () => {
 
     // Display order: AccessPay → AutoFin → Dyson (360 Vis Nav, Purifier) → rest
     const orderedItems = [
-        items[10], // 0 AccessPay
-        items[9],  // 1 AutoFin
-        items[5],  // 2 360 Vis Nav (Dyson cloud)
-        items[8],  // 3 Purifier (Dyson embedded)
+        items[9],  // 0 AccessPay (was 10)
+        items[8],  // 1 AutoFin (was 9)
+        items[4],  // 2 360 Vis Nav (was 5)
+        items[7],  // 3 Purifier (was 8)
         items[0],  // 4 Final Year Project
-        items[4],  // 5 Cloud & Distributed Systems
-        items[2],  // 6 Discord
-        items[1],  // 7 AI
-        items[3],  // 8 Gym NFC Scanner
-        items[6],  // 9 HTTP
-        items[7],  // 10 Coming Soon
+        items[3],  // 5 Cloud & Distributed Systems (was 4)
+        items[1],  // 6 AI
+        items[2],  // 7 Gym NFC Scanner (was 3)
+        items[5],  // 8 HTTP (was 6)
+        items[6],  // 9 Coming Soon (was 7)
     ]
 
     return (
@@ -433,17 +415,7 @@ const AllProjects = () => {
                         {orderedItems[4].content}
                     </BentoGridItem>
                     <BentoGrid numOfGridCols={1} rowHeight={'10rem'}>
-                        <BentoGrid numOfGridCols={2} rowHeight={'10rem'}>
-                            <BentoGridItem
-                                title={orderedItems[7].title}
-                                description={orderedItems[7].description}
-                                descriptionImage={orderedItems[7].descriptionImage}
-                                skills={orderedItems[7].skills}
-                                gitHub={orderedItems[7].github}
-                                youtube={orderedItems[7].youtube}
-                            >
-                                {orderedItems[7].content}
-                            </BentoGridItem>
+                        <BentoGrid numOfGridCols={1} rowHeight={'10rem'}>
                             <BentoGridItem
                                 title={orderedItems[6].title}
                                 description={orderedItems[6].description}
@@ -457,14 +429,14 @@ const AllProjects = () => {
                         </BentoGrid>
                         <BentoGrid numOfGridCols={1} rowHeight={'21rem'}>
                             <BentoGridItem
-                                title={orderedItems[8].title}
-                                description={orderedItems[8].description}
-                                descriptionImage={orderedItems[8].descriptionImage}
-                                skills={orderedItems[8].skills}
-                                gitHub={orderedItems[8].github}
-                                youtube={orderedItems[8].youtube}
+                                title={orderedItems[7].title}
+                                description={orderedItems[7].description}
+                                descriptionImage={orderedItems[7].descriptionImage}
+                                skills={orderedItems[7].skills}
+                                gitHub={orderedItems[7].github}
+                                youtube={orderedItems[7].youtube}
                             >
-                                {orderedItems[8].content}
+                                {orderedItems[7].content}
                             </BentoGridItem>
                         </BentoGrid>
                     </BentoGrid>
@@ -492,6 +464,16 @@ const AllProjects = () => {
                     </BentoGrid>
                     <BentoGrid numOfGridCols={1} rowHeight={'10rem'}>
                         <BentoGridItem
+                            title={orderedItems[8].title}
+                            description={orderedItems[8].description}
+                            descriptionImage={orderedItems[8].descriptionImage}
+                            skills={orderedItems[8].skills}
+                            gitHub={orderedItems[8].github}
+                            youtube={orderedItems[8].youtube}
+                        >
+                            {orderedItems[8].content}
+                        </BentoGridItem>
+                        <BentoGridItem
                             title={orderedItems[9].title}
                             description={orderedItems[9].description}
                             descriptionImage={orderedItems[9].descriptionImage}
@@ -500,16 +482,6 @@ const AllProjects = () => {
                             youtube={orderedItems[9].youtube}
                         >
                             {orderedItems[9].content}
-                        </BentoGridItem>
-                        <BentoGridItem
-                            title={orderedItems[10].title}
-                            description={orderedItems[10].description}
-                            descriptionImage={orderedItems[10].descriptionImage}
-                            skills={orderedItems[10].skills}
-                            gitHub={orderedItems[10].github}
-                            youtube={orderedItems[10].youtube}
-                        >
-                            {orderedItems[10].content}
                         </BentoGridItem>
                     </BentoGrid>
                     <BentoGrid className={`col-span-2`} rowHeight={'21rem'}>
