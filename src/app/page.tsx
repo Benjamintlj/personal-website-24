@@ -9,11 +9,14 @@ import { Break } from '@/app/ui/general/break'
 import ContactButton from '@/app/ui/contact/contact-button'
 import { FaGithub, FaLinkedin } from 'react-icons/fa'
 import { motion } from 'framer-motion'
+import { Sidebar, SidebarBody, SidebarLink } from '@/app/ui/sidebar'
+import { IconHome, IconBriefcase, IconCode, IconMail } from '@tabler/icons-react'
 const AllProjects = React.lazy(() => import('@/app/ui/projects/all-projects'))
 import LoadingSkeleton from '@/app/ui/loading/loading-skeleton'
 
 export default function Home() {
     const mainRef = useRef(null)
+    const [sidebarOpen, setSidebarOpen] = useState(false)
 
     const descriptiveWords = ['Senior Engineer', 'Athlete', 'Founder']
     const relativeClause = 'Aspiring'
@@ -21,21 +24,101 @@ export default function Home() {
     const industryStart = new Date('2023-09-01')
     const yearsInIndustry = ((Date.now() - industryStart.getTime()) / (365.25 * 24 * 60 * 60 * 1000)).toFixed(1)
 
+    const navLinks = [
+        {
+            label: 'Home',
+            href: '#hero',
+            icon: <IconHome className="h-5 w-5 shrink-0 text-neutral-400" />,
+        },
+        {
+            label: 'Work Experience',
+            href: '#experience',
+            icon: <IconBriefcase className="h-5 w-5 shrink-0 text-neutral-400" />,
+        },
+        {
+            label: 'Projects',
+            href: '#projects',
+            icon: <IconCode className="h-5 w-5 shrink-0 text-neutral-400" />,
+        },
+        {
+            label: 'Contact',
+            href: '#contact',
+            icon: <IconMail className="h-5 w-5 shrink-0 text-neutral-400" />,
+        },
+    ]
+
     useEffect(() => {
         document.documentElement.classList.add('dark')
     }, [])
 
+    const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+        e.preventDefault()
+        const id = href.replace('#', '')
+        const el = document.getElementById(id)
+        const container = mainRef.current as HTMLElement | null
+        if (el && container) {
+            container.scrollTo({ top: el.offsetTop, behavior: 'smooth' })
+        }
+    }
+
     return (
-        <main
-            className="h-screen w-screen snap-mandatory overflow-scroll hide-scrollbar bg-black"
-            ref={mainRef}
-        >
+        <div className="h-screen w-screen flex bg-black overflow-hidden">
+            <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} animate={false}>
+                <SidebarBody className="justify-between gap-10">
+                    <div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
+                        <div className="h-5 w-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-white mb-4" />
+                        <div className="mt-4 flex flex-col gap-1">
+                            {navLinks.map((link, idx) => (
+                                <SidebarLink
+                                    key={idx}
+                                    link={link}
+                                    onClick={(e: React.MouseEvent<HTMLAnchorElement>) => scrollToSection(e, link.href)}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                    <div className="rounded-lg bg-neutral-800 p-1.5">
+                    <motion.a
+                        href="/cv.pdf"
+                        download
+                        className="flex items-center justify-start gap-2 py-1 pl-3 text-neutral-200 text-sm whitespace-pre"
+                        initial="rest"
+                        whileHover="hover"
+                    >
+                        <div className="relative shrink-0" style={{ width: 20, height: 16, perspective: '60px' }}>
+                            <div className="absolute inset-0 rounded bg-gradient-to-b from-amber-400 to-amber-500">
+                                <div className="absolute left-1 rounded-t-sm bg-gradient-to-b from-amber-300 to-amber-400" style={{ top: -4, width: 8, height: 4 }} />
+                            </div>
+                            <motion.div
+                                className="absolute bg-white rounded-sm"
+                                style={{ width: 10, height: 12, left: '50%', zIndex: 10 }}
+                                variants={{ rest: { x: '-50%', y: -4, rotate: 0 }, hover: { x: '-40%', y: -7, rotate: 8 } }}
+                                transition={{ duration: 0.25, ease: 'easeOut' }}
+                            />
+                            <motion.div
+                                className="absolute inset-x-0 bottom-0 rounded bg-gradient-to-b from-amber-300 to-amber-500"
+                                style={{ height: '85%', zIndex: 20, transformOrigin: 'bottom', transformStyle: 'preserve-3d' }}
+                                variants={{ rest: { rotateX: -20 }, hover: { rotateX: -45 } }}
+                                transition={{ duration: 0.2 }}
+                            >
+                                <div className="absolute inset-x-1 top-1 h-px bg-amber-200/50" />
+                            </motion.div>
+                        </div>
+                        Download CV
+                    </motion.a>
+                    </div>
+                </SidebarBody>
+            </Sidebar>
+            <main
+                className="flex-1 h-screen snap-mandatory overflow-scroll hide-scrollbar"
+                ref={mainRef}
+            >
             <ContactButton mainRef={mainRef} />
             <Dots
                 className={`desktop:min-w-[1500px] desktop:max-w-[2000px] w-full flex flex-col justify-center`}
             >
                 {/*Title page*/}
-                <section className="h-screen w-full flex flex-col items-center mt-[10vh]">
+                <section id="hero" className="h-screen w-full flex flex-col items-center mt-[10vh]">
                     <h1 className="header1">Ben Lewis-Jones</h1>
                     <Memoji className="w-52 sm:w-64 md:w-72 lg:w-96" />
                     <VanishingWords
@@ -52,7 +135,7 @@ export default function Home() {
                 </section>
 
                 {/*Work Experience*/}
-                <section className="w-4/5 desktop:w-3/5 snap-start mx-auto">
+                <section id="experience" className="w-4/5 desktop:w-3/5 snap-start mx-auto">
                     <h2 className="header2 text-3xl mb-4">Work Experience</h2>
                     <Break />
                     <p className="text-gray-400 text-base mt-6 mb-12">
@@ -143,7 +226,7 @@ export default function Home() {
                 </section>
 
                 {/*Projects*/}
-                <section className="w-4/5 desktop:w-3/5 snap-start mx-auto">
+                <section id="projects" className="w-4/5 desktop:w-3/5 snap-start mx-auto">
                     <h2 className="header2 text-3xl mb-4">Projects</h2>
 
                     <Break />
@@ -153,7 +236,7 @@ export default function Home() {
                 </section>
 
                 {/*Contact*/}
-                <section className="w-4/5 desktop:w-3/5 snap-start mx-auto">
+                <section id="contact" className="w-4/5 desktop:w-3/5 snap-start mx-auto">
                     <h2 className="header2 text-3xl mb-4">Contact</h2>
                     <Break />
                     <div className="mt-8 flex flex-col gap-4">
@@ -205,6 +288,7 @@ export default function Home() {
 
                 <section className="w-4/5 desktop:w-3/5 snap-start mx-auto h-24"></section>
             </Dots>
-        </main>
+            </main>
+        </div>
     )
 }
