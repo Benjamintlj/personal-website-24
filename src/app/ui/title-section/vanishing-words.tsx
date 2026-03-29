@@ -1,12 +1,6 @@
 'use client'
-import React, {
-    useCallback,
-    useEffect,
-    useLayoutEffect,
-    useRef,
-    useState,
-} from 'react'
-import { AnimatePresence, motion, LayoutGroup } from 'framer-motion'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { clsx } from 'clsx'
 
@@ -21,191 +15,75 @@ export const VanishingWords = ({
     relativeClause: string
     className?: string
 }) => {
-    const [relativeClauseSize, setRelativeClauseSize] = useState(0)
-
-    const divRef = useRef<HTMLDivElement>(null)
-    const currDiv = useRef<HTMLDivElement>(null)
-
-    const [isAnimating, setIsAnimating] = useState<boolean>(false)
-
-    const [currWord, setCurrWord] = useState(words[0])
+    const [isAnimating, setIsAnimating] = useState(false)
     const [currentWord, setCurrentWord] = useState(words[0])
 
-    const [centerXOffSet, setCenterXOffSet] = useState(0)
-    const [posX, setPosX] = useState(0)
-
     useEffect(() => {
-        if (!isAnimating && relativeClauseSize !== 0) {
+        if (!isAnimating) {
             const timeout = setTimeout(() => {
-                startAnimation()
+                setCurrentWord(words[(words.indexOf(currentWord) + 1) % words.length])
+                setIsAnimating(true)
             }, duration)
             return () => clearTimeout(timeout)
         }
-    }, [isAnimating, relativeClauseSize])
-
-    const updateSize = () => {
-        if (divRef.current) {
-            setRelativeClauseSize(divRef.current.offsetWidth)
-        }
-    }
-
-    useLayoutEffect(() => {
-        updateSize()
-    }, [])
-
-    useEffect(() => {
-        updateSize()
-        window.addEventListener('resize', updateSize)
-
-        return () => {
-            window.removeEventListener('resize', updateSize)
-        }
-    }, [])
-
-    useEffect(() => {
-        setCenterXOffSet(relativeClauseSize / 2)
-    }, [relativeClauseSize])
-
-    const startAnimation = useCallback(() => {
-        setCurrWord(words[(words.indexOf(currWord) + 1) % words.length])
-        setCurrentWord(words[(words.indexOf(currentWord) + 1) % words.length])
-        setIsAnimating(true)
-    }, [currentWord])
-
-    useEffect(() => {
-        if (currDiv.current) {
-            // @prettier-ignore
-            setPosX(
-                -(currDiv.current.offsetWidth + relativeClauseSize) / 2 +
-                    centerXOffSet
-            )
-        }
-    }, [currWord])
+    }, [isAnimating, currentWord])
 
     return (
-        <div className="flex items-center justify-center relative">
-            <motion.div
-                className={cn(
-                    'absolute inline-flex items-center whitespace-nowrap transform -translate-x-1/2',
-                    className
-                )}
-                key="relativeClause"
-                ref={divRef}
-                initial={{
-                    x: posX,
-                }}
-                transition={{
-                    duration: 1,
-                    delay: 0.6,
-                    ease: 'easeInOut',
-                    type: 'spring',
-                    stiffness: 100,
-                    damping: 15,
-                }}
-                animate={{ x: posX }}
-            >
-                <span className="inline-block">{relativeClause}</span>
-                <span aria-hidden="true" className="inline-block w-4 shrink-0" />
-            </motion.div>
-
-            <AnimatePresence
-                onExitComplete={() => {
-                    setIsAnimating(false)
-                }}
-            >
-                <motion.div
-                    key={`${currentWord}-carousel`}
-                    initial={{
-                        x: centerXOffSet,
-                    }}
-                    animate={{
-                        x: centerXOffSet,
-                    }}
-                    transition={{
-                        duration: 1,
-                        delay: 0.3,
-                        ease: 'easeInOut',
-                        type: 'spring',
-                        stiffness: 100,
-                        damping: 10,
-                    }}
-                    exit={{
-                        x: centerXOffSet,
-                        position: 'absolute',
-                        transition: {
-                            duration: 0.6,
-                        },
-                    }}
-                    className={cn(
-                        'z-10 inline-block relative text-left text-neutral-900 dark:text-neutral-100 px-1 whitespace-nowrap',
-                        className
-                    )}
-                >
-                    {currentWord.split('').map((letter, index) => (
-                        <motion.span
-                            key={currentWord + index}
-                            initial={{
-                                opacity: 0,
-                                y: 10,
-                                x: -5,
-                                filter: 'blur(8px)',
-                            }}
-                            animate={{
-                                opacity: 1,
-                                y: 0,
-                                filter: 'blur(0px)',
-                            }}
-                            transition={{
-                                delay: index * 0.08 + 1,
-                                type: 'spring',
-                                stiffness: 100,
-                                damping: 10,
-                                filter: {
-                                    type: 'tween',
-                                    duration: 0.4,
-                                    ease: 'easeOut',
-                                    delay: index * 0.08 + 1,
-                                },
-                            }}
-                            exit={{
-                                opacity: 0,
-                                y: -10,
-                                x: 5,
-                                filter: 'blur(8px)',
-                                transition: {
-                                    delay: index * 0.08,
-                                    duration: 0.2,
-                                },
-                            }}
-                            className={clsx(
-                                'inline-block z-10 relative text-left text-neutral-900 dark:text-neutral-100',
-                                letter === ' ' && 'w-2.5'
-                            )}
-                        >
-                            {letter}
-                        </motion.span>
-                    ))}
-                </motion.div>
-            </AnimatePresence>
-
-            <div
-                style={{
-                    position: 'absolute',
-                    top: '-999999px',
-                }}
-                className={`${className}`}
-            >
-                <div
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0,
-                    }}
-                    ref={currDiv}
-                >
-                    <div>{currWord}</div>
-                </div>
+        <div className="inline-flex items-center">
+            <span className={cn('text-neutral-900 dark:text-neutral-500', className)}>
+                {relativeClause}
+            </span>
+            <span aria-hidden="true" className="inline-block w-3 shrink-0" />
+            <div className="relative">
+                <AnimatePresence onExitComplete={() => setIsAnimating(false)}>
+                    <motion.div
+                        key={currentWord}
+                        exit={{
+                            position: 'absolute' as const,
+                            transition: { duration: 0.3 },
+                        }}
+                        className={cn(
+                            'z-10 inline-block relative whitespace-nowrap text-neutral-900 dark:text-neutral-100',
+                            className
+                        )}
+                    >
+                        {currentWord.split('').map((letter, index) => (
+                            <motion.span
+                                key={currentWord + index}
+                                initial={{ opacity: 0, y: 10, x: -5, filter: 'blur(8px)' }}
+                                animate={{ opacity: 1, y: 0, x: 0, filter: 'blur(0px)' }}
+                                transition={{
+                                    delay: index * 0.08 + 0.3,
+                                    type: 'spring',
+                                    stiffness: 100,
+                                    damping: 10,
+                                    filter: {
+                                        type: 'tween',
+                                        duration: 0.4,
+                                        ease: 'easeOut',
+                                        delay: index * 0.08 + 0.3,
+                                    },
+                                }}
+                                exit={{
+                                    opacity: 0,
+                                    y: -10,
+                                    x: 5,
+                                    filter: 'blur(8px)',
+                                    transition: {
+                                        delay: index * 0.08,
+                                        duration: 0.2,
+                                    },
+                                }}
+                                className={clsx(
+                                    'inline-block z-10 relative',
+                                    letter === ' ' && 'w-2.5'
+                                )}
+                            >
+                                {letter}
+                            </motion.span>
+                        ))}
+                    </motion.div>
+                </AnimatePresence>
             </div>
         </div>
     )

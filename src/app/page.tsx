@@ -91,6 +91,7 @@ export default function Home() {
                                 <div className="absolute inset-x-1 top-1 h-px bg-amber-200/50" />
                             </motion.div>
                         </div>
+                        <span className="inline sm:hidden">CV</span>
                         <span className="hidden sm:inline">Download CV</span>
                     </motion.a>
                 </div>
@@ -159,7 +160,7 @@ export default function Home() {
                     <p className="text-gray-400 text-base mt-6 mb-8">
                         Over the past <span className="text-white font-semibold">{yearsInIndustry} years</span>, I have had the opportunity to work with some of the most <span className="text-white font-semibold">amazing people</span>, on some <span className="text-white font-semibold">amazing projects</span>, affecting millions of people and at the time of writing <span className="text-white font-semibold">1 in 20 payments in the UK</span>.
                     </p>
-                    <Timeline data={[
+                    <Timeline scrollContainer={mainRef} data={[
                         {
                             title: 'Jun 2023',
                             content: (
@@ -236,7 +237,7 @@ export default function Home() {
                 </section>
 
                 {/*Projects*/}
-                <section id="projects" className="w-4/5 max-w-[1100px] snap-start mx-auto pt-12">
+                <section id="projects" className="w-4/5 max-w-[1100px] snap-start mx-auto pt-12 desktop:pt-20 mb-[5.75rem] desktop:mb-0">
                     <h2 className="header2 text-3xl mb-4">Projects</h2>
 
                     <Break />
