@@ -46,7 +46,9 @@ export default function Home() {
     const rawYears = (Date.now() - industryStart.getTime()) / (365.25 * 24 * 60 * 60 * 1000)
     const wholeYears = Math.floor(rawYears)
     const hasHalf = rawYears - wholeYears >= 0.5
-    const yearsInIndustry = hasHalf ? `${wholeYears} and a half` : `${wholeYears}`
+    const numberWords: Record<number, string> = { 0: 'Zero', 1: 'One', 2: 'Two', 3: 'Three', 4: 'Four', 5: 'Five' }
+    const yearsWord = numberWords[wholeYears] ?? `${wholeYears}`
+    const yearsInIndustry = hasHalf ? `${yearsWord} and a half` : yearsWord
     const yearsShort = hasHalf ? `${wholeYears}½` : `${wholeYears}`
 
     const navLinks = [
@@ -106,7 +108,7 @@ export default function Home() {
 
                     {/* Burger button — visible below 464px */}
                     <button
-                        className="nav:hidden flex flex-col justify-center gap-[5px] w-6 h-6"
+                        className="nav:hidden flex flex-col justify-center gap-[5px] w-6 h-6 ml-auto"
                         onClick={() => setBurgerOpen(o => !o)}
                         aria-label="Menu"
                     >
@@ -159,7 +161,7 @@ export default function Home() {
                                     <a
                                         key={link.href}
                                         href={link.href}
-                                        onClick={(e) => { scrollToSection(e, link.href); setBurgerOpen(false) }}
+                                        onClick={(e) => { e.preventDefault(); setBurgerOpen(false); const href = link.href; setTimeout(() => { const id = href.replace('#', ''); const el = document.getElementById(id); const container = mainRef.current as HTMLElement | null; const nav = document.querySelector('nav'); const navHeight = nav ? nav.getBoundingClientRect().height : 0; if (el && container) container.scrollTo({ top: el.offsetTop - navHeight - 10, behavior: 'smooth' }); }, 200) }}
                                         className="text-neutral-200 hover:text-white text-sm py-3 cursor-pointer transition-colors duration-150"
                                     >
                                         {link.label}
@@ -214,7 +216,7 @@ export default function Home() {
                             </div>
 
                             <p className="text-neutral-500 text-sm leading-relaxed max-w-sm">
-                                With {yearsInIndustry} years shipping production software — high-volume payment systems at AccessPay, and embedded to cloud development at Dyson.
+                                {yearsInIndustry} years of shipping production software, including high-volume payment systems at AccessPay and embedded to cloud development at Dyson.
                             </p>
 
                             <div className="flex flex-wrap gap-2">
@@ -249,33 +251,48 @@ export default function Home() {
                     <h2 className="header2 text-3xl mb-4">Work Experience</h2>
                     <Break />
                     <p className="text-gray-400 text-base mt-6 mb-8">
-                        Over the past <span className="text-white font-semibold">{yearsInIndustry} years</span>, I have had the opportunity to work with some of the most <span className="text-white font-semibold">amazing people</span>, on some <span className="text-white font-semibold">amazing projects</span>, affecting millions of people and at the time of writing <span className="text-white font-semibold">1 in 20 payments in the UK</span>.
+                        Over the past <span className="text-white font-semibold">{yearsInIndustry.toLowerCase()} years</span>, I have had the opportunity to work with some of the most <span className="text-white font-semibold">amazing people</span>, on some <span className="text-white font-semibold">amazing projects</span>, affecting millions of people and at the time of writing <span className="text-white font-semibold">1 in 20 payments in the UK</span>.
                     </p>
                     <Timeline scrollContainer={mainRef} data={[
                         {
-                            title: 'Sep 2022',
+                            title: 'Sep 2024 - Present',
                             content: (
                                 <div>
-                                    <p className="text-white font-bold text-xl mb-4">Dyson</p>
+                                    <p className="text-white font-bold text-xl mb-4">AccessPay</p>
 
-                                    <p className="text-gray-300 font-semibold text-sm mb-1">Embedded Software • Internship</p>
-                                    <p className="text-gray-500 text-xs mb-3">Sep 2022 – Mar 2023</p>
-                                    <ToolLogos tools={[
-                                        { name: 'C', icon: <span className="text-blue-400 text-[10px] font-bold">C</span> },
-                                        { name: 'Python', icon: <FaPython className="text-yellow-400 text-xs" /> },
-                                        { name: 'FreeRTOS', icon: <span className="text-green-400 text-[8px] font-bold leading-none">fRTOS</span> },
-                                        { name: 'Zephyr', icon: <GiKite className="text-purple-400 text-xs" /> },
-                                        { name: 'Linux', icon: <SiLinux className="text-white text-xs" /> },
-                                    ]} />
-                                    <p className="text-gray-400 text-sm mb-4">I started my time at Dyson by joining an embedded team working on what was then the next generation of purifiers, which has since become the current line. I had to learn quickly and was trusted with a lot of responsibility, culminating in the delivery of several key features.</p>
+                                    <p className="text-gray-300 font-semibold text-sm mb-1">Mid-Level Software Engineer</p>
+                                    <p className="text-gray-500 text-xs mb-3">Mar 2026 – Present</p>
+                                    <ToolLogos tools={accessPayTools} />
+                                    <p className="text-gray-400 text-sm mb-4">I have recently been promoted to Mid-Level Engineer. Let&apos;s see what the future holds!</p>
                                     <ul className="space-y-1 mb-8">
-                                        {['Shipped production features', 'Created I2C test tool', 'Practiced agile methods'].map((a) => (
+                                        {[].map((a) => (
                                             <li key={a} className="flex items-start gap-2 text-sm text-gray-400">
                                                 <svg className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
                                                 {a}
                                             </li>
                                         ))}
                                     </ul>
+
+                                    <p className="text-gray-300 font-semibold text-sm mb-1">Junior Software Engineer</p>
+                                    <p className="text-gray-500 text-xs mb-3">Sep 2024 – Mar 2026</p>
+                                    <ToolLogos tools={accessPayTools} />
+                                    <p className="text-gray-400 text-sm mb-4">I joined AccessPay as a junior engineer on a high‑throughput payments and cash management platform. Navigating legacy code, inconsistent banking standards and ambiguous user inputs, I helped keep critical services running while adapting to its demanding uptime and legacy challenges.</p>
+                                    <ul className="space-y-1">
+                                        {['Handled time-sensitive production incidents', 'Won company Go-Getter award and nominated for 2 others', 'Delivered across products'].map((a) => (
+                                            <li key={a} className="flex items-start gap-2 text-sm text-gray-400">
+                                                <svg className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                                                {a}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            ),
+                        },
+                        {
+                            title: 'Sep 2022 - Sep 2023',
+                            content: (
+                                <div>
+                                    <p className="text-white font-bold text-xl mb-4">Dyson</p>
 
                                     <p className="text-gray-300 font-semibold text-sm mb-1">Cloud Engineering • Internship</p>
                                     <p className="text-gray-500 text-xs mb-3">Apr 2023 – Sep 2023</p>
@@ -288,8 +305,8 @@ export default function Home() {
                                         { name: 'Docker', icon: <SiDocker className="text-blue-400 text-xs" /> },
                                         { name: 'Azure DevOps', icon: <SiAzuredevops className="text-blue-600 text-xs" /> },
                                     ]} />
-                                    <p className="text-gray-400 text-sm mb-4">I joined Dyson’s Cloud Robot team and shipped live backend services for the 360VisNav, across a diverse stack, delivering analytics and DevOps improvements across AWS. My work earned a recommendation to return.</p>
-                                    <ul className="space-y-1">
+                                    <p className="text-gray-400 text-sm mb-4">I joined Dyson's Cloud Robot team and shipped live backend services for the 360VisNav, across a diverse stack, delivering analytics and DevOps improvements across AWS. My work earned a recommendation to return.</p>
+                                    <ul className="space-y-1 mb-8">
                                         {['Shipped live services', 'Earned return recommendation', 'Enhanced AWS pipelines'].map((a) => (
                                             <li key={a} className="flex items-start gap-2 text-sm text-gray-400">
                                                 <svg className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
@@ -297,34 +314,19 @@ export default function Home() {
                                             </li>
                                         ))}
                                     </ul>
-                                </div>
-                            ),
-                        },
-                        {
-                            title: 'Sep 2024',
-                            content: (
-                                <div>
-                                    <p className="text-white font-bold text-xl mb-4">AccessPay</p>
 
-                                    <p className="text-gray-300 font-semibold text-sm mb-1">Junior Software Engineer</p>
-                                    <p className="text-gray-500 text-xs mb-3">Sep 2024 – Mar 2026</p>
-                                    <ToolLogos tools={accessPayTools} />
-                                    <p className="text-gray-400 text-sm mb-4">I joined AccessPay as a junior engineer on a high‑throughput payments and cash management platform. Navigating legacy code, inconsistent banking standards and ambiguous user inputs, I helped keep critical services running while adapting to its demanding uptime and legacy challenges.</p>
-                                    <ul className="space-y-1 mb-8">
-                                        {['Handled time-sensitive production incidents', 'Won company Go-Getter award and nominated for 2 others', 'Delivered across products'].map((a) => (
-                                            <li key={a} className="flex items-start gap-2 text-sm text-gray-400">
-                                                <svg className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                                                {a}
-                                            </li>
-                                        ))}
-                                    </ul>
-
-                                    <p className="text-gray-300 font-semibold text-sm mb-1">Mid-Level Software Engineer</p>
-                                    <p className="text-gray-500 text-xs mb-3">Mar 2026 – Present</p>
-                                    <ToolLogos tools={accessPayTools} />
-                                    <p className="text-gray-400 text-sm mb-4">I have recently been promoted to Mid-Level Engineer. Let&apos;s see what the future holds!</p>
+                                    <p className="text-gray-300 font-semibold text-sm mb-1">Embedded Software • Internship</p>
+                                    <p className="text-gray-500 text-xs mb-3">Sep 2022 – Mar 2023</p>
+                                    <ToolLogos tools={[
+                                        { name: 'C', icon: <span className="text-blue-400 text-[10px] font-bold">C</span> },
+                                        { name: 'Python', icon: <FaPython className="text-yellow-400 text-xs" /> },
+                                        { name: 'FreeRTOS', icon: <span className="text-green-400 text-[8px] font-bold leading-none">fRTOS</span> },
+                                        { name: 'Zephyr', icon: <GiKite className="text-purple-400 text-xs" /> },
+                                        { name: 'Linux', icon: <SiLinux className="text-white text-xs" /> },
+                                    ]} />
+                                    <p className="text-gray-400 text-sm mb-4">I started my time at Dyson by joining an embedded team working on what was then the next generation of purifiers, which has since become the current line. I had to learn quickly and was trusted with a lot of responsibility, culminating in the delivery of several key features.</p>
                                     <ul className="space-y-1">
-                                        {[].map((a) => (
+                                        {['Shipped production features', 'Created I2C test tool', 'Practiced agile methods'].map((a) => (
                                             <li key={a} className="flex items-start gap-2 text-sm text-gray-400">
                                                 <svg className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
                                                 {a}
