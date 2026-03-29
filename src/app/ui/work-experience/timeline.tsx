@@ -24,10 +24,14 @@ export const Timeline = ({
     const [height, setHeight] = useState(0);
 
     useEffect(() => {
-        if (ref.current) {
-            const rect = ref.current.getBoundingClientRect();
-            setHeight(rect.height);
-        }
+        if (!ref.current) return;
+        const updateHeight = () => {
+            setHeight(ref.current!.getBoundingClientRect().height);
+        };
+        updateHeight();
+        const observer = new ResizeObserver(updateHeight);
+        observer.observe(ref.current);
+        return () => observer.disconnect();
     }, [ref]);
 
     const { scrollYProgress } = useScroll({

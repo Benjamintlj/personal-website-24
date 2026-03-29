@@ -43,7 +43,11 @@ export default function Home() {
     const relativeClause = 'Aspiring'
 
     const industryStart = new Date('2023-09-01')
-    const yearsInIndustry = ((Date.now() - industryStart.getTime()) / (365.25 * 24 * 60 * 60 * 1000)).toFixed(1)
+    const rawYears = (Date.now() - industryStart.getTime()) / (365.25 * 24 * 60 * 60 * 1000)
+    const wholeYears = Math.floor(rawYears)
+    const hasHalf = rawYears - wholeYears >= 0.5
+    const yearsInIndustry = hasHalf ? `${wholeYears} and a half` : `${wholeYears}`
+    const yearsShort = hasHalf ? `${wholeYears}½` : `${wholeYears}`
 
     const navLinks = [
         { label: 'Home', href: '#hero' },
@@ -220,7 +224,7 @@ export default function Home() {
                                     Mid-Level SE · AccessPay
                                 </span>
                                 <span className="text-xs px-3 py-1.5 rounded-full border border-neutral-700 text-neutral-400 bg-neutral-900/50">
-                                    {yearsInIndustry} yrs industry exp
+                                    {yearsShort} yrs industry exp
                                 </span>
                             </div>
                         </div>
