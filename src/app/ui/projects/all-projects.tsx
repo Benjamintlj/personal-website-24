@@ -84,16 +84,16 @@ const AllProjects = () => {
             youtube: 'https://youtu.be/Rxn_09xkCQg',
             content: (
                 <main
-                    className={`h-full w-full flex flex-col xsm:flex-row desktop:flex-row justify-end xsm:justify-evenly desktop:justify-center relative overflow-hidden`}
+                    className={`h-full w-full flex flex-col xsm:flex-row desktop:flex-row justify-start xsm:justify-evenly desktop:justify-center relative overflow-hidden`}
                     onMouseEnter={() => setFypHovered(true)}
                     onMouseLeave={() => setFypHovered(false)}
                 >
-                    <h2 className="bento-title sm:text-3xl relative z-10 text-center xsm:text-left desktop:text-center mt-auto xsm:mt-10 desktop:mt-auto mb-5">
+                    <h2 className="bento-title sm:text-3xl relative z-10 text-center xsm:text-left desktop:text-center mt-10 desktop:mt-auto mb-5">
                         Final Year Project
                     </h2>
                     <div
                         ref={fypDivRef}
-                        className="absolute flex justify-between transform rotate-[315deg] xsm:hidden desktop:flex"
+                        className="absolute flex justify-between transform rotate-[315deg] hidden desktop:flex"
                         style={{
                             width: '80%',
                             top: isNarrowDesktop ? `calc(65% - ${dimensions.height / 2}px)` : `calc(50% - ${dimensions.height / 2}px)`,
@@ -112,10 +112,16 @@ const AllProjects = () => {
                         />
                     </div>
                     <img
-                        src="/images/fyp-compete.png"
-                        className={`absolute hidden xsm:block desktop:hidden -mt-16 500px:-mt-32 700px:-mt-40`}
-                        style={{ width: '110vw', maxWidth: 'none' }}
-                        alt="FYP Compete"
+                        src="/images/badges.png"
+                        className={`absolute block xsm:hidden`}
+                        style={{ width: '50%', maxWidth: '200px', top: '63%', left: '50%', transform: 'translate(-50%, -50%)' }}
+                        alt="FYP Badges"
+                    />
+                    <img
+                        src="/images/badges.png"
+                        className={`absolute hidden xsm:block desktop:hidden`}
+                        style={{ width: '70%', maxWidth: '280px', top: '80%', left: '50%', transform: 'translate(-50%, -50%)' }}
+                        alt="FYP Badges"
                     />
                 </main>
             ),
@@ -205,8 +211,8 @@ const AllProjects = () => {
                 <main
                     className={`h-full overflow-hidden relative flex flex-col`}
                 >
-                    <h2 className="bento-title sm:text-3xl text-center mt-5">
-                        Cloud & Distributed Systems
+                    <h2 className="bento-title sm:text-3xl text-center mt-5 translate-y-[5px] sm:translate-y-0">
+                        Cloud & Distributed<br className="sm:hidden" /> Systems
                     </h2>
                     <div
                         className={`flex-1 flex flex-row justify-evenly items-center max-w-[500px] mx-auto w-full`}
@@ -262,14 +268,14 @@ const AllProjects = () => {
             ],
             youtube: 'https://www.youtube.com/watch?v=PJb0tlHYohA',
             content: (
-                <main className="flex flex-row desktop:flex-col justify-evenly items-center h-full">
+                <main className="flex flex-col min-[440px]:flex-row desktop:flex-col justify-evenly items-center h-full">
                     <img
                         className="w-[210px] -translate-y-1"
                         src="images/dyson/dyson-vis-nav-title.png"
                         alt="Dyson 360 vis nav"
                     />
                     <img
-                        className="desktop:w-2/5 w-1/5 -translate-y-1"
+                        className="w-2/5 min-[440px]:w-1/5 desktop:w-2/5 -translate-y-1"
                         src="images/dyson/dyson-vis-nav.png"
                         alt="Dyson 360 vis nav"
                     />

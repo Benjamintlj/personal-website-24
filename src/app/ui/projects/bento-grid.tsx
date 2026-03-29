@@ -116,7 +116,7 @@ export const BentoGridItem = ({
             <AnimatePresence>
                 {active && (
                     <>
-                        <div className="fixed inset-0 grid place-items-center z-[100]">
+                        <div className="fixed inset-0 top-[56px] lg:top-0 grid place-items-center z-[100]">
                             <motion.div
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
@@ -130,7 +130,7 @@ export const BentoGridItem = ({
                             <motion.div
                                 layoutId={`card-${id}`}
                                 ref={ref}
-                                className={`relative w-full max-w-[700px] h-[100vh] lg:[@media(min-height:900px)]:h-[50vh] lg:[@media(max-height:899px)]:h-[70vh] flex flex-col ${descriptionImage ? 'lg:flex-row' : ''} bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden z-[101] pb-[100px] desktop:pb-0`}
+                                className={`relative w-full max-w-[700px] h-[calc(100vh-56px)] lg:[@media(min-height:900px)]:h-[50vh] lg:[@media(max-height:899px)]:h-[70vh] flex flex-col ${descriptionImage ? 'lg:flex-row' : ''} bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden z-[101] pb-[100px] desktop:pb-0`}
                             >
                                 <CloseButton
                                     className="z-[102]"

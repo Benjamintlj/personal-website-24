@@ -31,6 +31,7 @@ const AllProjects = React.lazy(() => import('@/app/ui/projects/all-projects'))
 export default function Home() {
     const mainRef = useRef(null)
     const [emailCopied, setEmailCopied] = useState(false)
+    const [burgerOpen, setBurgerOpen] = useState(false)
 
     const copyEmail = () => {
         navigator.clipboard.writeText('ben@benlewisjones.com')
@@ -85,7 +86,8 @@ export default function Home() {
             {/* Fixed full-width navbar */}
             <nav className="fixed top-0 inset-x-0 z-50 bg-neutral-900/70 backdrop-blur-md">
                 <div className="w-4/5 max-w-[1100px] mx-auto flex justify-between items-center py-4">
-                    <div className="flex items-center gap-6">
+                    {/* Nav links — hidden below 464px */}
+                    <div className="hidden nav:flex items-center gap-6">
                         {navLinks.map((link) => (
                             <a
                                 key={link.href}
@@ -97,10 +99,22 @@ export default function Home() {
                             </a>
                         ))}
                     </div>
+
+                    {/* Burger button — visible below 464px */}
+                    <button
+                        className="nav:hidden flex flex-col justify-center gap-[5px] w-6 h-6"
+                        onClick={() => setBurgerOpen(o => !o)}
+                        aria-label="Menu"
+                    >
+                        <motion.span animate={{ rotate: burgerOpen ? 45 : 0, y: burgerOpen ? 7 : 0 }} className="block h-0.5 w-6 bg-neutral-200 origin-center" />
+                        <motion.span animate={{ opacity: burgerOpen ? 0 : 1 }} className="block h-0.5 w-6 bg-neutral-200" />
+                        <motion.span animate={{ rotate: burgerOpen ? -45 : 0, y: burgerOpen ? -7 : 0 }} className="block h-0.5 w-6 bg-neutral-200 origin-center" />
+                    </button>
+
                     <motion.a
                         href="/cv.pdf"
                         download
-                        className="flex items-center gap-2 text-neutral-200 hover:text-white text-sm whitespace-nowrap transition-colors duration-150"
+                        className="hidden nav:flex items-center gap-2 text-neutral-200 hover:text-white text-sm whitespace-nowrap transition-colors duration-150"
                         initial="rest"
                         whileHover="hover"
                     >
@@ -123,10 +137,53 @@ export default function Home() {
                                 <div className="absolute inset-x-1 top-1 h-px bg-amber-200/50" />
                             </motion.div>
                         </div>
-                        <span className="inline sm:hidden">CV</span>
+                        <span className="hidden nav:inline sm:hidden">CV</span>
                         <span className="hidden sm:inline">Download CV</span>
                     </motion.a>
                 </div>
+
+                {/* Dropdown menu for mobile */}
+                <AnimatePresence>
+                    {burgerOpen && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="nav:hidden overflow-hidden border-t border-neutral-700/50"
+                        >
+                            <div className="flex flex-col py-2 w-4/5 mx-auto">
+                                {navLinks.map((link) => (
+                                    <a
+                                        key={link.href}
+                                        href={link.href}
+                                        onClick={(e) => { scrollToSection(e, link.href); setBurgerOpen(false) }}
+                                        className="text-neutral-200 hover:text-white text-sm py-3 cursor-pointer transition-colors duration-150"
+                                    >
+                                        {link.label}
+                                    </a>
+                                ))}
+                                <div className="py-3" />
+                                <a
+                                    href="/cv.pdf"
+                                    download
+                                    className="flex items-center gap-2 text-neutral-200 hover:text-white text-sm py-3 transition-colors duration-150"
+                                    onClick={() => setBurgerOpen(false)}
+                                >
+                                    <div className="relative shrink-0" style={{ width: 20, height: 16, perspective: '60px' }}>
+                                        <div className="absolute inset-0 rounded bg-gradient-to-b from-amber-400 to-amber-500">
+                                            <div className="absolute left-1 rounded-t-sm bg-gradient-to-b from-amber-300 to-amber-400" style={{ top: -4, width: 8, height: 4 }} />
+                                        </div>
+                                        <div className="absolute bg-white rounded-sm" style={{ width: 10, height: 12, left: '50%', transform: 'translateX(-50%) translateY(-4px)', zIndex: 10 }} />
+                                        <div className="absolute inset-x-0 bottom-0 rounded bg-gradient-to-b from-amber-300 to-amber-500" style={{ height: '85%', zIndex: 20 }}>
+                                            <div className="absolute inset-x-1 top-1 h-px bg-amber-200/50" />
+                                        </div>
+                                    </div>
+                                    Download CV
+                                </a>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </nav>
             <main
                 className="h-full w-full snap-mandatory overflow-scroll hide-scrollbar"
@@ -263,7 +320,7 @@ export default function Home() {
                                     <p className="text-gray-300 font-semibold text-sm mb-1">Mid-Level Software Engineer</p>
                                     <p className="text-gray-500 text-xs mb-3">Mar 2026 – Present</p>
                                     <ToolLogos tools={accessPayTools} />
-                                    <p className="text-gray-400 text-sm mb-4">I have recently been promoted to Mid-Level Engineer. Let's see what the future holds!</p>
+                                    <p className="text-gray-400 text-sm mb-4">I have recently been promoted to Mid-Level Engineer. Let&apos;s see what the future holds!</p>
                                     <ul className="space-y-1">
                                         {[].map((a) => (
                                             <li key={a} className="flex items-start gap-2 text-sm text-gray-400">

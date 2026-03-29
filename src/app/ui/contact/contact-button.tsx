@@ -123,7 +123,7 @@ export default function ContactButton({
                             <div className="absolute inset-[12px] rounded-full overflow-hidden bg-white">
                                 <video
                                     className="w-full h-full object-cover"
-                                    style={{ objectPosition: 'center 15%' }}
+                                    style={{ transform: 'translateY(3.5px) scale(1.15)' }}
                                     autoPlay
                                     loop
                                     muted

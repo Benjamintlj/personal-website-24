@@ -23,6 +23,7 @@ module.exports = {
         'desktop': '900px',
         '700px': '700px',
         '500px': '500px',
+        'nav': '464px',
         'xsm': '420px',
       },
       backdropBlur: {
