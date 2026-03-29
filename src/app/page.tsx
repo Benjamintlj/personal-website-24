@@ -1,19 +1,25 @@
 'use client'
 
-import React, { useEffect, useRef, Suspense } from 'react'
+import React, { useEffect, useRef, Suspense, useState } from 'react'
 import Dots from '@/app/ui/backgrounds/dots'
 import Memoji from '@/app/ui/title-section/memoji'
 import { VanishingWords } from '@/app/ui/title-section/vanishing-words'
 import { Break } from '@/app/ui/general/break'
 import ContactButton from '@/app/ui/contact/contact-button'
 import { FaGithub, FaLinkedin } from 'react-icons/fa'
-import { motion } from 'framer-motion'
-import { Menu } from '@/app/ui/navbar-menu'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Timeline } from '@/app/ui/work-experience/timeline'
 const AllProjects = React.lazy(() => import('@/app/ui/projects/all-projects'))
 
 export default function Home() {
     const mainRef = useRef(null)
+    const [emailCopied, setEmailCopied] = useState(false)
+
+    const copyEmail = () => {
+        navigator.clipboard.writeText('ben@benlewisjones.com')
+        setEmailCopied(true)
+        setTimeout(() => setEmailCopied(false), 1500)
+    }
 
     const descriptiveWords = ['Senior Engineer', 'Athlete', 'Founder']
     const relativeClause = 'Aspiring'
@@ -44,10 +50,9 @@ export default function Home() {
 
     return (
         <div className="h-screen w-screen bg-black overflow-hidden">
-            {/* Floating navbar */}
-            <div className="fixed top-6 inset-x-0 w-4/5 max-w-[1100px] mx-auto z-50">
-                <div className="-mx-8">
-                <Menu setActive={() => {}}>
+            {/* Fixed full-width navbar */}
+            <nav className="fixed top-0 inset-x-0 z-50 bg-neutral-900/70 backdrop-blur-md">
+                <div className="w-4/5 max-w-[1100px] mx-auto flex justify-between items-center py-4">
                     <div className="flex items-center gap-6">
                         {navLinks.map((link) => (
                             <a
@@ -88,9 +93,8 @@ export default function Home() {
                         </div>
                         <span className="hidden sm:inline">Download CV</span>
                     </motion.a>
-                </Menu>
                 </div>
-            </div>
+            </nav>
             <main
                 className="h-full w-full snap-mandatory overflow-scroll hide-scrollbar"
                 ref={mainRef}
@@ -100,7 +104,7 @@ export default function Home() {
                 className={`w-full flex flex-col justify-center`}
             >
                 {/*Title page*/}
-                <section id="hero" className="h-[90vh] w-full flex flex-col justify-center relative">
+                <section id="hero" className="h-[70vh] w-full flex flex-col justify-center relative">
                     <div className="w-4/5 max-w-[1100px] mx-auto">
                         {/* Left: text */}
                         <div className="flex flex-col gap-6 md:w-3/5">
@@ -232,7 +236,7 @@ export default function Home() {
                 </section>
 
                 {/*Projects*/}
-                <section id="projects" className="w-4/5 max-w-[1100px] snap-start mx-auto mb-24">
+                <section id="projects" className="w-4/5 max-w-[1100px] snap-start mx-auto pt-12">
                     <h2 className="header2 text-3xl mb-4">Projects</h2>
 
                     <Break />
@@ -254,10 +258,49 @@ export default function Home() {
                             <FaLinkedin className="text-xl flex-shrink-0 text-[#60a5fa]" />
                             <span className="text-sm">linkedin.com/in/benjamin-lewis-jones</span>
                         </a>
-                        <a href="mailto:ben@benlewisjones.com" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
+                        <button onClick={copyEmail} className="relative flex items-center gap-3 text-gray-400 hover:text-white transition-colors cursor-pointer">
                             <span className="text-lg flex-shrink-0 leading-none">✉️</span>
-                            <span className="text-sm">ben@benlewisjones.com</span>
-                        </a>
+                            <AnimatePresence mode="wait">
+                                {emailCopied ? (
+                                    <motion.span
+                                        key="copied"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        transition={{ duration: 0.15 }}
+                                        className="text-sm text-green-400 relative"
+                                    >
+                                        Copied!
+                                        {[0, 60, 120, 180, 240, 300].map((angle, i) => (
+                                            <motion.div
+                                                key={i}
+                                                className="absolute w-1.5 h-1.5 rounded-full bg-green-400 pointer-events-none"
+                                                style={{ top: '50%', left: '50%' }}
+                                                initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+                                                animate={{
+                                                    x: Math.cos(angle * Math.PI / 180) * 28,
+                                                    y: Math.sin(angle * Math.PI / 180) * 28,
+                                                    opacity: 0,
+                                                    scale: 0,
+                                                }}
+                                                transition={{ duration: 0.55, ease: 'easeOut', delay: i * 0.02 }}
+                                            />
+                                        ))}
+                                    </motion.span>
+                                ) : (
+                                    <motion.span
+                                        key="email"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        transition={{ duration: 0.15 }}
+                                        className="text-sm"
+                                    >
+                                        ben@benlewisjones.com
+                                    </motion.span>
+                                )}
+                            </AnimatePresence>
+                        </button>
                     </div>
                     <motion.a
                         href="/cv.pdf"
