@@ -214,7 +214,7 @@ export default function Home() {
                             </div>
 
                             <p className="text-neutral-500 text-sm leading-relaxed max-w-sm">
-                                {yearsInIndustry} years shipping production software — high-volume payment systems at AccessPay, and embedded to cloud development at Dyson.
+                                With {yearsInIndustry} years shipping production software — high-volume payment systems at AccessPay, and embedded to cloud development at Dyson.
                             </p>
 
                             <div className="flex flex-wrap gap-2">

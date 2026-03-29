@@ -56,7 +56,7 @@ export default function ContactButton({
         if (!el) return
 
         const handleScroll = () => {
-            setVisible(el.scrollTop > window.innerHeight * 0.5)
+            setVisible(el.scrollTop > window.innerHeight * 0.3)
         }
 
         el.addEventListener('scroll', handleScroll, { passive: true })
