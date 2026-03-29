@@ -21,7 +21,6 @@ export default function AccessPayCard() {
         >
             <LinesGradientShader className="absolute inset-0" bandCount={8} bandSpacing={18} xOffset={-128} yOffset={-30} rotationAngle={20} />
 
-            {/* radial glow from bottom on hover */}
             <motion.div
                 className="absolute inset-0 z-[1] pointer-events-none"
                 animate={{

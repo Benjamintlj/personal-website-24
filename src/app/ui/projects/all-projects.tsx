@@ -61,6 +61,11 @@ const AllProjects = () => {
                 'This e-learning app, offers a short-form gamified experience for learners, to improve their attention and content retention.',
             descriptionImage: '/images/stock/students-on-phones.jpg',
             skills: [
+                // Languages (violet)
+                Skills.Java,
+                Skills.Python,
+                Skills.TypeScript,
+                // Cloud (purple)
                 Skills.AWS,
                 Skills.DynamoDB,
                 Skills.Lambda,
@@ -68,13 +73,12 @@ const AllProjects = () => {
                 Skills.ECS,
                 Skills.CDK,
                 Skills.Route53,
-                Skills.Java,
-                Skills.Python,
-                Skills.TypeScript,
+                // Frontend (pink)
+                Skills.Android,
+                // DevOps (rose)
                 Skills.Docker,
                 Skills.Postman,
                 Skills.Git,
-                Skills.Android,
             ],
             github: 'https://github.com/Benjamintlj/fyp-code',
             youtube: 'https://youtu.be/Rxn_09xkCQg',
@@ -122,6 +126,7 @@ const AllProjects = () => {
             description:
                 'This project involved creating a chatbot that handles first-order logic and answers or proves simple questions based on its knowledge base. The tone of the chatbot’s responses depends on the user’s emotional tone and adjusts accordingly. The chatbot can also accept image input, and using a CNN model with hyperparameter tuning, it identifies the image from a selection of fruits.',
             skills: [
+                // Languages (violet)
                 Skills.Python,
                 Skills.Scikit,
                 Skills.Nltk,
@@ -142,14 +147,17 @@ const AllProjects = () => {
                 'This Android application allows users to scan machines within gyms and stream videos. It also enables gym owners to create and manage content that can be viewed after scanning an NFC tag.',
             descriptionImage: '/images/stock/mobile-app-ss.png',
             skills: [
+                // Languages (violet)
+                Skills.TypeScript,
+                Skills.Python,
+                Skills.Java,
+                // Cloud (purple)
                 Skills.AWS,
                 Skills.DynamoDB,
                 Skills.Lambda,
                 Skills.S3,
                 Skills.CDK,
-                Skills.TypeScript,
-                Skills.Python,
-                Skills.Java,
+                // Frontend (pink)
                 Skills.Android,
             ],
             github: 'https://github.com/Benjamintlj/mobile-applications',
@@ -177,6 +185,11 @@ const AllProjects = () => {
             description:
                 'Within this project, I created a trip management app. This project was heavly focused on the infrastructure and the backend, with a fully fleshed-out AWS architecture, it was designed to be serverless and highly scalable.',
             skills: [
+                // Languages (violet)
+                Skills.Python,
+                Skills.TypeScript,
+                Skills.Java,
+                // Cloud (purple)
                 Skills.AWS,
                 Skills.DynamoDB,
                 Skills.Lambda,
@@ -184,9 +197,7 @@ const AllProjects = () => {
                 Skills.ECS,
                 Skills.SQS,
                 Skills.CDK,
-                Skills.Python,
-                Skills.TypeScript,
-                Skills.Java,
+                // DevOps (rose)
                 Skills.Postman,
             ],
             github: 'https://github.com/Benjamintlj/cloud-course-work',
@@ -226,6 +237,11 @@ const AllProjects = () => {
                 'During my second rotation at Dyson, I joined the Cloud Robot team, where I contributed to the development of several backend features for the (at the time) unreleased Dyson 360 Vis Nav. I took responsibility for several key components, gaining valuable experience along the way.',
             descriptionImage: '/images/stock/dyson-vis-nav.jpeg',
             skills: [
+                // Languages (violet)
+                Skills.DotNetCore,
+                Skills.TypeScript,
+                Skills.Python,
+                // Cloud (purple)
                 Skills.AWS,
                 Skills.DynamoDB,
                 Skills.Lambda,
@@ -235,10 +251,9 @@ const AllProjects = () => {
                 Skills.SQS,
                 Skills.SES,
                 Skills.Route53,
-                Skills.DotNetCore,
-                Skills.TypeScript,
-                Skills.Python,
+                // Databases (fuchsia)
                 Skills.SQL,
+                // DevOps (rose)
                 Skills.Git,
                 Skills.Azure,
                 Skills.Atlassian,
@@ -281,7 +296,7 @@ const AllProjects = () => {
             // 7
             title: 'Projects Coming Soon',
             description:
-                "That wraps up the projects I've completed over the past year. So, what's next? I have a few ideas for personal projects, and I hope to see you on the battlefield—perhaps we'll be working together soon!",
+                "That wraps up the projects I've completed over the past few years. So, what's next? I have a few ideas for personal projects, and I hope to see you on the battlefield—perhaps we'll be working together soon!",
             descriptionImage: '/images/lakes.png',
             skills: [
                 Skills.AWS,
@@ -311,10 +326,13 @@ const AllProjects = () => {
                 'During my first rotation at Dyson, I joined one of the embedded teams, where I worked on the next generation of purifiers, now the current generation. I was expected to learn quickly and was given considerable responsibility, ultimately implementing several key features.',
             descriptionImage: '/images/stock/hullavington.jpg',
             skills: [
+                // Languages (violet)
                 Skills.C,
                 Skills.Python,
+                // DevOps (rose)
                 Skills.Git,
                 Skills.Atlassian,
+                // Systems (orange)
                 Skills.FreeRTOS,
                 Skills.Zephyr,
                 Skills.Linux,
@@ -349,13 +367,42 @@ const AllProjects = () => {
         {
             // 9
             title: 'AutoFin',
-            description: 'Coming soon.',
+            description:
+                "AutoFin is a personal project I'm building. It's a programming language for making financial automations through open banking. It's the biggest thing I've taken on by myself, and I'm using it as a way to improve my skills as a developer. I'm still working on it, so it's growing and changing as I go.",
+            github: 'https://github.com/Benjamintlj/finance-automator',
+            skills: [
+                // Languages (violet)
+                Skills.DotNetCore,
+                // Databases (fuchsia)
+                Skills.Postgres,
+                // DevOps (rose)
+                Skills.Docker,
+            ],
             content: <AutoFinCard />,
         },
         {
             // 10
             title: 'AccessPay',
-            description: 'Coming soon.',
+            description:
+                'AccessPay is where I have grown from junior to mid-level engineer, delivering across a high-throughput payments and cash management platform that powers 1 in 20 UK payments. Along the way I have handled time-sensitive production work, shipped across multiple products, and picked up the company Go-Getter award.',
+            descriptionImage: '/images/accesspay/go-getter-award.webp',
+            skills: [
+                // Languages (violet)
+                Skills.DotNetCore,
+                // Cloud (purple)
+                Skills.AWS,
+                Skills.GCP,
+                // Databases (fuchsia)
+                Skills.Postgres,
+                Skills.SQL,
+                // DevOps (rose)
+                Skills.RabbitMQ,
+                Skills.Docker,
+                Skills.Azure,
+                // Systems (orange)
+                Skills.Linux,
+                Skills.WindowsServer,
+            ],
             content: <AccessPayCard />,
         },
     ]
@@ -387,12 +434,16 @@ const AllProjects = () => {
                         <BentoGridItem
                             title={orderedItems[0].title}
                             description={orderedItems[0].description}
+                            descriptionImage={orderedItems[0].descriptionImage}
+                            skills={orderedItems[0].skills}
                         >
                             {orderedItems[0].content}
                         </BentoGridItem>
                         <BentoGridItem
                             title={orderedItems[1].title}
                             description={orderedItems[1].description}
+                            skills={orderedItems[1].skills}
+                            gitHub={orderedItems[1].github}
                         >
                             {orderedItems[1].content}
                         </BentoGridItem>

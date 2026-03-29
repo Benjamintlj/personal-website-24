@@ -33,6 +33,10 @@ import {
     SiAmazonec2,
     SiAmazonsqs,
     SiAmazonsimpleemailservice,
+    SiPostgresql,
+    SiRabbitmq,
+    SiGooglecloud,
+    SiWindows,
 } from 'react-icons/si'
 
 import { GiKite } from 'react-icons/gi'
@@ -40,12 +44,12 @@ import { GiKite } from 'react-icons/gi'
 import { motion } from 'framer-motion'
 
 export enum Categories {
-    CloudServices = 'bg-red-500',
-    ProgrammingLanguages = 'bg-blue-500',
-    FrontEndFrameworks = 'bg-purple-500',
-    DevOpsTools = 'bg-green-800',
-    EmbeddedSystems = 'bg-pink-700',
-    Ai = 'bg-rose-500',
+    Languages = 'bg-violet-700',
+    Cloud = 'bg-purple-900',
+    Databases = 'bg-fuchsia-700',
+    Frontend = 'bg-pink-900',
+    DevOps = 'bg-rose-700',
+    Systems = 'bg-red-500',
 }
 
 export enum Skills {
@@ -84,44 +88,58 @@ export enum Skills {
     Aiml = 'aiml',
     Numpy = 'Numpy',
     Scipy = 'Scipy',
+    Postgres = 'Postgres',
+    RabbitMQ = 'RabbitMQ',
+    GCP = 'GCP',
+    WindowsServer = 'Windows Server',
 }
 
 export const skillCategoryMap: { [key in Skills]: Categories } = {
-    [Skills.AWS]: Categories.CloudServices,
-    [Skills.DynamoDB]: Categories.CloudServices,
-    [Skills.Lambda]: Categories.CloudServices,
-    [Skills.S3]: Categories.CloudServices,
-    [Skills.ECS]: Categories.CloudServices,
-    [Skills.EC2]: Categories.CloudServices,
-    [Skills.SQS]: Categories.CloudServices,
-    [Skills.SES]: Categories.CloudServices,
-    [Skills.CDK]: Categories.CloudServices,
-    [Skills.Route53]: Categories.CloudServices,
-    [Skills.Java]: Categories.ProgrammingLanguages,
-    [Skills.C]: Categories.ProgrammingLanguages,
-    [Skills.Python]: Categories.ProgrammingLanguages,
-    [Skills.TypeScript]: Categories.ProgrammingLanguages,
-    [Skills.JavaScript]: Categories.ProgrammingLanguages,
-    [Skills.React]: Categories.FrontEndFrameworks,
-    [Skills.Next]: Categories.FrontEndFrameworks,
-    [Skills.DotNetCore]: Categories.ProgrammingLanguages,
-    [Skills.SQL]: Categories.ProgrammingLanguages,
-    [Skills.Docker]: Categories.DevOpsTools,
-    [Skills.Postman]: Categories.DevOpsTools,
-    [Skills.Git]: Categories.DevOpsTools,
-    [Skills.Atlassian]: Categories.DevOpsTools,
-    [Skills.Azure]: Categories.DevOpsTools,
-    [Skills.Android]: Categories.FrontEndFrameworks,
-    [Skills.FreeRTOS]: Categories.EmbeddedSystems,
-    [Skills.Linux]: Categories.EmbeddedSystems,
-    [Skills.Zephyr]: Categories.EmbeddedSystems,
-    [Skills.JLink]: Categories.EmbeddedSystems,
-    [Skills.I2C]: Categories.EmbeddedSystems,
-    [Skills.Scikit]: Categories.Ai,
-    [Skills.Nltk]: Categories.Ai,
-    [Skills.Aiml]: Categories.Ai,
-    [Skills.Numpy]: Categories.Ai,
-    [Skills.Scipy]: Categories.Ai,
+    // Cloud
+    [Skills.AWS]: Categories.Cloud,
+    [Skills.GCP]: Categories.Cloud,
+    [Skills.DynamoDB]: Categories.Cloud,
+    [Skills.Lambda]: Categories.Cloud,
+    [Skills.S3]: Categories.Cloud,
+    [Skills.ECS]: Categories.Cloud,
+    [Skills.EC2]: Categories.Cloud,
+    [Skills.SQS]: Categories.Cloud,
+    [Skills.SES]: Categories.Cloud,
+    [Skills.CDK]: Categories.Cloud,
+    [Skills.Route53]: Categories.Cloud,
+    // Languages (violet)
+    [Skills.Java]: Categories.Languages,
+    [Skills.C]: Categories.Languages,
+    [Skills.Python]: Categories.Languages,
+    [Skills.TypeScript]: Categories.Languages,
+    [Skills.JavaScript]: Categories.Languages,
+    [Skills.DotNetCore]: Categories.Languages,
+    [Skills.Scikit]: Categories.Languages,
+    [Skills.Nltk]: Categories.Languages,
+    [Skills.Aiml]: Categories.Languages,
+    [Skills.Numpy]: Categories.Languages,
+    [Skills.Scipy]: Categories.Languages,
+    // Databases (fuchsia)
+    [Skills.SQL]: Categories.Databases,
+    [Skills.Postgres]: Categories.Databases,
+    // Frontend (pink)
+    [Skills.React]: Categories.Frontend,
+    [Skills.Next]: Categories.Frontend,
+    [Skills.Android]: Categories.Frontend,
+    // DevOps (rose)
+    [Skills.Docker]: Categories.DevOps,
+    [Skills.Git]: Categories.DevOps,
+    [Skills.Atlassian]: Categories.DevOps,
+    [Skills.Azure]: Categories.DevOps,
+    [Skills.Postman]: Categories.DevOps,
+    [Skills.RabbitMQ]: Categories.DevOps,
+    // Systems (orange)
+    [Skills.FreeRTOS]: Categories.Systems,
+    [Skills.Zephyr]: Categories.Systems,
+    [Skills.JLink]: Categories.Systems,
+    [Skills.I2C]: Categories.Systems,
+    [Skills.Linux]: Categories.Systems,
+    [Skills.WindowsServer]: Categories.Systems,
 }
 
 const skillIcons = {
@@ -157,6 +175,10 @@ const skillIcons = {
     [Skills.Scikit]: <SiScikitlearn />,
     [Skills.Numpy]: <SiNumpy />,
     [Skills.Scipy]: <SiScipy />,
+    [Skills.Postgres]: <SiPostgresql />,
+    [Skills.RabbitMQ]: <SiRabbitmq />,
+    [Skills.GCP]: <SiGooglecloud />,
+    [Skills.WindowsServer]: <SiWindows />,
 }
 
 export const SkillCircle = ({
