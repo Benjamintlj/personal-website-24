@@ -7,8 +7,10 @@ import { VanishingWords } from '@/app/ui/title-section/vanishing-words'
 import { Break } from '@/app/ui/general/break'
 import ContactButton from '@/app/ui/contact/contact-button'
 import { FaGithub, FaLinkedin } from 'react-icons/fa'
+import { SiC, SiCplusplus, SiAmazonaws, SiPython, SiDocker, SiTypescript, SiReact, SiGo } from 'react-icons/si'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Timeline } from '@/app/ui/work-experience/timeline'
+import { ToolLogos } from '@/app/ui/work-experience/tool-logos'
 const AllProjects = React.lazy(() => import('@/app/ui/projects/all-projects'))
 
 export default function Home() {
@@ -167,6 +169,10 @@ export default function Home() {
                                 <div>
                                     <p className="text-white font-semibold text-base mb-1">Dyson · Embedded Software</p>
                                     <p className="text-gray-500 text-sm mb-3">Jun 2023 – Sep 2023</p>
+                                    <ToolLogos tools={[
+                                        { name: 'C', icon: <SiC className="text-blue-400 text-xs" /> },
+                                        { name: 'C++', icon: <SiCplusplus className="text-blue-500 text-xs" /> },
+                                    ]} />
                                     <p className="text-gray-400 text-sm mb-4">Stub description for the first Dyson rotation in embedded software engineering.</p>
                                     <ul className="space-y-1">
                                         {['Stub achievement one.', 'Stub achievement two.', 'Stub achievement three.'].map((a) => (
@@ -185,6 +191,11 @@ export default function Home() {
                                 <div>
                                     <p className="text-white font-semibold text-base mb-1">Dyson · Cloud Engineering</p>
                                     <p className="text-gray-500 text-sm mb-3">Jan 2024 – Jun 2024</p>
+                                    <ToolLogos tools={[
+                                        { name: 'AWS', icon: <SiAmazonaws className="text-orange-400 text-xs" /> },
+                                        { name: 'Python', icon: <SiPython className="text-yellow-400 text-xs" /> },
+                                        { name: 'Docker', icon: <SiDocker className="text-blue-400 text-xs" /> },
+                                    ]} />
                                     <p className="text-gray-400 text-sm mb-4">Stub description for the second Dyson rotation in cloud engineering.</p>
                                     <ul className="space-y-1">
                                         {['Stub achievement one.', 'Stub achievement two.', 'Stub achievement three.'].map((a) => (
@@ -203,6 +214,11 @@ export default function Home() {
                                 <div>
                                     <p className="text-white font-semibold text-base mb-1">AccessPay · Junior Software Engineer</p>
                                     <p className="text-gray-500 text-sm mb-3">Sep 2024 – Present</p>
+                                    <ToolLogos tools={[
+                                        { name: 'TypeScript', icon: <SiTypescript className="text-blue-400 text-xs" /> },
+                                        { name: 'React', icon: <SiReact className="text-cyan-400 text-xs" /> },
+                                        { name: 'Go', icon: <SiGo className="text-cyan-500 text-xs" /> },
+                                    ]} />
                                     <p className="text-gray-400 text-sm mb-4">Stub description for the junior software engineer role at AccessPay.</p>
                                     <ul className="space-y-1">
                                         {['Stub achievement one.', 'Stub achievement two.', 'Stub achievement three.'].map((a) => (
