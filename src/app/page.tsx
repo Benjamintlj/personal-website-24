@@ -116,7 +116,7 @@ export default function Home() {
                     </button>
 
                     <motion.a
-                        href="/cv.pdf" download="ben lewis-jones CV.pdf"
+                        href="/cv.pdf" download="Ben Lewis-Jones CV.pdf"
                         className="hidden nav:flex items-center gap-2 text-neutral-200 hover:text-white text-sm whitespace-nowrap transition-colors duration-150"
                         initial="rest"
                         whileHover="hover"
@@ -167,7 +167,7 @@ export default function Home() {
                                 ))}
                                 <div className="py-3" />
                                 <a
-                                    href="/cv.pdf" download="ben lewis-jones CV.pdf"
+                                    href="/cv.pdf" download="Ben Lewis-Jones CV.pdf"
                                     className="flex items-center gap-2 text-neutral-200 hover:text-white text-sm py-3 transition-colors duration-150"
                                     onClick={() => setBurgerOpen(false)}
                                 >
@@ -405,7 +405,7 @@ export default function Home() {
                         </button>
                     </div>
                     <motion.a
-                        href="/cv.pdf" download="ben lewis-jones CV.pdf"
+                        href="/cv.pdf" download="Ben Lewis-Jones CV.pdf"
                         className="mt-8 flex items-center gap-3 text-gray-400 hover:text-white transition-colors"
                         initial="rest"
                         whileHover="hover"
