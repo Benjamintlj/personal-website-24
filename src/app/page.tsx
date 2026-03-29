@@ -73,8 +73,10 @@ export default function Home() {
         const id = href.replace('#', '')
         const el = document.getElementById(id)
         const container = mainRef.current as HTMLElement | null
+        const nav = document.querySelector('nav')
+        const navHeight = nav ? nav.getBoundingClientRect().height : 0
         if (el && container) {
-            container.scrollTo({ top: el.offsetTop, behavior: 'smooth' })
+            container.scrollTo({ top: el.offsetTop - navHeight - 10, behavior: 'smooth' })
         }
     }
 
@@ -140,7 +142,7 @@ export default function Home() {
                         {/* Left: text */}
                         <div className="flex flex-col gap-6 md:w-3/5">
                             <div>
-                                <h1 className="text-4xl sm:text-5xl xl:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500 leading-tight pb-2">
+                                <h1 className="text-4xl sm:text-5xl xl:text-6xl font-bold text-white leading-tight pb-2">
                                     Ben Lewis-Jones
                                 </h1>
                                 <div className="mt-4">
@@ -277,7 +279,7 @@ export default function Home() {
                 </section>
 
                 {/*Projects*/}
-                <section id="projects" className="w-4/5 max-w-[1100px] snap-start mx-auto pt-12 desktop:pt-20 mb-[5.75rem] desktop:mb-0">
+                <section id="projects" className="w-4/5 max-w-[1100px] snap-start mx-auto mb-[5.75rem] desktop:mb-0">
                     <h2 className="header2 text-3xl mb-4">Projects</h2>
 
                     <Break />

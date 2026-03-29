@@ -113,8 +113,8 @@ export default function ContactButton({
                                     fontWeight="500"
                                     style={{ userSelect: 'none' }}
                                 >
-                                    <textPath href="#contact-circle-path">
-                                        Contact Me • Contact Me • Contact Me •
+                                    <textPath href="#contact-circle-path" textLength="258" lengthAdjust="spacing">
+                                        {'Contact Me • Contact Me • Contact Me •'}
                                     </textPath>
                                 </text>
                             </motion.svg>
