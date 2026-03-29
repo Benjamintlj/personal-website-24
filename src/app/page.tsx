@@ -167,14 +167,16 @@ export default function Home() {
                             title: 'Jun 2023',
                             content: (
                                 <div>
-                                    <p className="text-white font-semibold text-base mb-1">Dyson · Embedded Software</p>
-                                    <p className="text-gray-500 text-sm mb-3">Jun 2023 – Sep 2023</p>
+                                    <p className="text-white font-bold text-xl mb-4">Dyson</p>
+
+                                    <p className="text-gray-300 font-semibold text-sm mb-1">Embedded Software</p>
+                                    <p className="text-gray-500 text-xs mb-3">Jun 2023 – Sep 2023</p>
                                     <ToolLogos tools={[
                                         { name: 'C', icon: <SiC className="text-blue-400 text-xs" /> },
                                         { name: 'C++', icon: <SiCplusplus className="text-blue-500 text-xs" /> },
                                     ]} />
                                     <p className="text-gray-400 text-sm mb-4">Stub description for the first Dyson rotation in embedded software engineering.</p>
-                                    <ul className="space-y-1">
+                                    <ul className="space-y-1 mb-8">
                                         {['Stub achievement one.', 'Stub achievement two.', 'Stub achievement three.'].map((a) => (
                                             <li key={a} className="flex items-start gap-2 text-sm text-gray-400">
                                                 <svg className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
@@ -182,15 +184,9 @@ export default function Home() {
                                             </li>
                                         ))}
                                     </ul>
-                                </div>
-                            ),
-                        },
-                        {
-                            title: 'Jan 2024',
-                            content: (
-                                <div>
-                                    <p className="text-white font-semibold text-base mb-1">Dyson · Cloud Engineering</p>
-                                    <p className="text-gray-500 text-sm mb-3">Jan 2024 – Jun 2024</p>
+
+                                    <p className="text-gray-300 font-semibold text-sm mb-1">Cloud Engineering</p>
+                                    <p className="text-gray-500 text-xs mb-3">Jan 2024 – Jun 2024</p>
                                     <ToolLogos tools={[
                                         { name: 'AWS', icon: <SiAmazonaws className="text-orange-400 text-xs" /> },
                                         { name: 'Python', icon: <SiPython className="text-yellow-400 text-xs" /> },
@@ -212,8 +208,10 @@ export default function Home() {
                             title: 'Sep 2024',
                             content: (
                                 <div>
-                                    <p className="text-white font-semibold text-base mb-1">AccessPay · Junior Software Engineer</p>
-                                    <p className="text-gray-500 text-sm mb-3">Sep 2024 – Present</p>
+                                    <p className="text-white font-bold text-xl mb-4">AccessPay</p>
+
+                                    <p className="text-gray-300 font-semibold text-sm mb-1">Junior Software Engineer</p>
+                                    <p className="text-gray-500 text-xs mb-3">Sep 2024 – Present</p>
                                     <ToolLogos tools={[
                                         { name: 'TypeScript', icon: <SiTypescript className="text-blue-400 text-xs" /> },
                                         { name: 'React', icon: <SiReact className="text-cyan-400 text-xs" /> },
