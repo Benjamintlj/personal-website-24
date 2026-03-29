@@ -11,14 +11,17 @@ function Tooltip({
     tooltipKey,
     name,
     anchorRect,
+    entrySide,
 }: {
     tooltipKey: number;
     name: string;
     anchorRect: DOMRect;
+    entrySide: "left" | "right";
 }) {
     const tooltipRef = useRef<HTMLDivElement>(null);
     const [left, setLeft] = useState(anchorRect.left + anchorRect.width / 2);
     const top = anchorRect.top - 12;
+    const initialRotate = entrySide === "left" ? -8 : 8;
 
     useLayoutEffect(() => {
         const width = tooltipRef.current?.offsetWidth ?? 0;
@@ -44,7 +47,7 @@ function Tooltip({
                     key={tooltipKey}
                     ref={tooltipRef}
                     className="relative max-w-[calc(100vw-24px)] bg-neutral-900 border border-neutral-700 text-white text-xs font-medium px-2.5 py-1 rounded-md whitespace-nowrap shadow-lg"
-                    initial={{ opacity: 0, y: 6, rotate: -8, scale: 0.82 }}
+                    initial={{ opacity: 0, y: 6, rotate: initialRotate, scale: 0.82 }}
                     animate={{ opacity: 1, y: 0, rotate: 0, scale: 1 }}
                     transition={{
                         type: "spring",
@@ -68,6 +71,7 @@ export function ToolLogos({ tools }: { tools: Tool[] }) {
         key: number;
         name: string;
         anchorRect: DOMRect;
+        entrySide: "left" | "right";
     } | null>(null);
 
     return (
@@ -79,11 +83,16 @@ export function ToolLogos({ tools }: { tools: Tool[] }) {
                         className="relative -mr-2 last:mr-0 shrink-0 cursor-default"
                         style={{ zIndex: hovered === i ? 50 : i }}
                         onMouseEnter={(event) => {
+                            const rect = event.currentTarget.getBoundingClientRect();
+                            const entrySide =
+                                event.clientX <= rect.left + rect.width / 2 ? "left" : "right";
+
                             setHovered(i);
                             setTooltip({
                                 key: i,
                                 name: tool.name,
-                                anchorRect: event.currentTarget.getBoundingClientRect(),
+                                anchorRect: rect,
+                                entrySide,
                             });
                         }}
                         onMouseLeave={() => {
@@ -107,6 +116,7 @@ export function ToolLogos({ tools }: { tools: Tool[] }) {
                         tooltipKey={tooltip.key}
                         name={tooltip.name}
                         anchorRect={tooltip.anchorRect}
+                        entrySide={tooltip.entrySide}
                     />
                 )}
             </AnimatePresence>
