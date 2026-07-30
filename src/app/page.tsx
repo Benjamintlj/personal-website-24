@@ -21,6 +21,7 @@ import {
     SiRabbitmq,
     SiGooglecloud,
     SiWindows,
+    SiMarkdown,
 } from 'react-icons/si'
 import { GiKite } from 'react-icons/gi'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -206,27 +207,13 @@ export default function Home() {
                                 <h1 className="text-4xl sm:text-5xl xl:text-6xl font-bold text-white leading-tight pb-2">
                                     Ben Lewis-Jones
                                 </h1>
-                                <div className="mt-4">
-                                    <VanishingWords
-                                        className="secondary text-xl sm:text-2xl"
-                                        relativeClause={relativeClause}
-                                        words={descriptiveWords}
-                                    />
-                                </div>
+                                <p className="text-white text-2xl sm:text-3xl font-semibold mt-2">Software Engineer</p>
                             </div>
 
-                            <p className="text-neutral-500 text-sm leading-relaxed max-w-sm">
-                                {yearsInIndustry} years of shipping production software, including high-volume payment systems at AccessPay and embedded to cloud development at Dyson.
+                            <p className="text-neutral-500 text-sm leading-relaxed max-w-md">
+                                {yearsInIndustry} years of shipping production software, including high-volume payment systems at <span className="text-white font-semibold">AccessPay</span> and embedded to cloud development at <span className="text-white font-semibold">Dyson</span>.
                             </p>
 
-                            <div className="flex flex-wrap gap-2">
-                                <span className="text-xs px-3 py-1.5 rounded-full border border-neutral-700 text-neutral-400 bg-neutral-900/50">
-                                    Mid-Level SE · AccessPay
-                                </span>
-                                <span className="text-xs px-3 py-1.5 rounded-full border border-neutral-700 text-neutral-400 bg-neutral-900/50">
-                                    {yearsShort} yrs industry exp
-                                </span>
-                            </div>
                         </div>
                     </div>
 
@@ -251,7 +238,7 @@ export default function Home() {
                     <h2 className="header2 text-3xl mb-4">Work Experience</h2>
                     <Break />
                     <p className="text-gray-400 text-base mt-6 mb-8">
-                        Over the past <span className="text-white font-semibold">{yearsInIndustry.toLowerCase()} years</span>, I have had the opportunity to work with some of the most <span className="text-white font-semibold">amazing people</span>, on some <span className="text-white font-semibold">amazing projects</span>, affecting millions of people and at the time of writing <span className="text-white font-semibold">1 in 20 payments in the UK</span>.
+                        Over the past <span className="text-white font-semibold">{yearsInIndustry.toLowerCase()} years</span>, I have had the opportunity to work with some of the most amazing people, on some amazing projects, affecting millions of people and at the time of writing <span className="text-white font-semibold">1 in 20 payments in the UK</span>.
                     </p>
                     <Timeline scrollContainer={mainRef} data={[
                         {
@@ -436,6 +423,14 @@ export default function Home() {
                         </div>
                         <span className="text-sm">Download CV</span>
                     </motion.a>
+                    <a
+                        href="/notes"
+                        className="mt-4 flex items-center gap-3 text-gray-400 hover:text-white transition-colors"
+                        aria-label="Open notes"
+                    >
+                        <SiMarkdown className="h-5 w-5 flex-shrink-0 text-sky-400" aria-hidden="true" />
+                        <span className="text-sm">Notes</span>
+                    </a>
                 </section>
 
                 <section className="w-4/5 max-w-[1100px] snap-start mx-auto h-24"></section>
