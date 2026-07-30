@@ -2,6 +2,7 @@
 node_modules/
 .next/
 out/
+public/notes/
 .DS_Store
 .gitignore
 .gstack/
