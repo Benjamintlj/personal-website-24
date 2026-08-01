@@ -38,17 +38,23 @@ async function listHtmlFiles(directory, relativeDirectory = directory) {
     return files.sort();
 }
 
-// These two Notion-export details are not present in the Markdown source: blank
-// blocks, and fetched bookmark-preview payloads. Compare their stable forms only.
+// These Notion-export details are not present in the Markdown source: blank
+// blocks, fetched bookmark-preview payloads, and list continuation after an
+// intervening block. Markdown's explicit `1.` is authoritative in that case.
 function comparableHtml(html) {
     return html
         .replace(/<p class="" dir="auto">\s*<\/p>/g, '')
         .replace(/<img class="page-cover-image"[^>]*\/>/g, '')
         .replace(/<img class="icon notion-static-icon"[^>]*\/>/g, '')
-        .replace(/<img style="width:\d+px"/g, '<img')
-        .replace(/\s+(?=<\/(?:h[1-3]|li|p)>)/g, '')
+        .replace(/<img style="width:[\d.]+px"/g, '<img')
+        .replace(/<td class="" style="width:[\d.]+px">/g, '<td class="">')
+        .replace(/<th class="simple-table-header-color simple-table-header" style="width:[\d.]+px">/g, '<th class="simple-table-header-color simple-table-header">')
+        .replace(/class="numbered-list numbered-list-digits-\d+"/g, 'class="numbered-list"')
+        .replace(/(<ol type="1" class="numbered-list" start=")\d+(" dir="auto">)/g, (_, prefix, suffix) => `${prefix}1${suffix}`)
+        .replace(/\s+(?=<\/(?:h[1-3]|li|p|td|th)>)/g, '')
         .replace(/<code([^>]*)>([\s\S]*?)<\/code>/g, (_, attributes, code) => `<code${attributes}>${code.replace(/\n{2,}/g, '\n\n')}</code>`)
         .replace(/(?:<em>){2,}([\s\S]*?)(?:<\/em>){2,}/g, '<em>$1</em>')
+        .replace(/(?:<strong>){2,}([\s\S]*?)(?:<\/strong>){2,}/g, '<strong>$1</strong>')
         .replace(/<p class="" dir="auto"><a href="(https?:[^"]+)">[\s\S]*?<\/a><\/p>/g, '<p class="" dir="auto"><a href="$1">$1</a></p>')
         .replace(/<figure class="bookmark source"><a href="([^"]+)">[\s\S]*?<\/a><\/figure>/g, '<p class="" dir="auto"><a href="$1">$1</a></p>')
         .replace(/<figure[^>]*>\s*<a href="([^"]+)" class="bookmark source">[\s\S]*?<\/a><\/figure>/g, '<p class="" dir="auto"><a href="$1">$1</a></p>');
