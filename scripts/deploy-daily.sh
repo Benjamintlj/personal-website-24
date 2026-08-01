@@ -32,6 +32,8 @@ command -v aws >/dev/null || {
     exit 1
 }
 
+printf '{"updatedAt":"%s"}\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "$project_root/public/deployment.json"
+
 echo "Building static site"
 (
     cd "$project_root"

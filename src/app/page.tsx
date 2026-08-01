@@ -33,6 +33,7 @@ export default function Home() {
     const mainRef = useRef(null)
     const [emailCopied, setEmailCopied] = useState(false)
     const [burgerOpen, setBurgerOpen] = useState(false)
+    const [lastUpdated, setLastUpdated] = useState<string | null>(null)
 
     const copyEmail = () => {
         navigator.clipboard.writeText('ben@benlewisjones.com')
@@ -74,6 +75,10 @@ export default function Home() {
 
     useEffect(() => {
         document.documentElement.classList.add('dark')
+        fetch('/deployment.json', { cache: 'no-store' })
+            .then((response) => response.ok ? response.json() : null)
+            .then((deployment) => setLastUpdated(deployment?.updatedAt ?? null))
+            .catch(() => setLastUpdated(null))
     }, [])
 
     const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -429,7 +434,13 @@ export default function Home() {
                         aria-label="Open notes"
                     >
                         <SiMarkdown className="h-5 w-5 flex-shrink-0 text-sky-400" aria-hidden="true" />
-                        <span className="text-sm">Notes</span>
+                        <span className="text-sm">
+                            Notes{lastUpdated && (
+                                <span className="ml-1 text-[10px] text-neutral-600">
+                                    ({new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(lastUpdated))})
+                                </span>
+                            )}
+                        </span>
                     </a>
                 </section>
 
