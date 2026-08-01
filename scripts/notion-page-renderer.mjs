@@ -1,10 +1,13 @@
 import { marked } from 'marked';
 
-export function renderNotionPage(markdown) {
+export function renderNotionPage(markdown, { resolvePageLink } = {}) {
     const normalisedMarkdown = markdown
         .replace(/^# Computer Science\s*\n+/i, '')
         .replace(/\]\(([^)\s]+)\.md\)/g, ']($1.html)')
-        .replace(/<page\s+url="([^"]+)">([\s\S]*?)<\/page>/g, '[$2]($1)')
+        .replace(/<page\s+url="([^"]+)">([\s\S]*?)<\/page>/g, (_match, url, title) => {
+            const localLink = resolvePageLink?.(url);
+            return localLink ? `[${title}](${localLink})` : title;
+        })
         .replace(/<empty-block\s*\/>/g, '');
 
     return `<!doctype html>

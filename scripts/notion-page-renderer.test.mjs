@@ -9,9 +9,19 @@ test('renders Notion Markdown as a dark, structured notes page', () => {
     assert.match(html, /class="page-title">Computer Science/);
     assert.match(html, /<h1>Networking<\/h1>/);
     assert.match(html, /<li>TCP<\/li>/);
-    assert.match(html, /<a href="https:\/\/app\.notion\.com\/p\/networking">Networking notes<\/a>/);
+    assert.match(html, /<p>Networking notes<\/p>/);
+    assert.doesNotMatch(html, /app\.notion\.com/);
     assert.doesNotMatch(html, /<page url=/);
     assert.match(html, /<pre><code class="language-js">/);
+});
+
+test('uses the supplied local page URL for Notion page references', () => {
+    const html = renderNotionPage('<page url="https://app.notion.com/p/abc">Networking notes</page>', {
+        resolvePageLink: () => 'Computer%20Science/Networking.html',
+    });
+
+    assert.match(html, /href="Computer%20Science\/Networking\.html"/);
+    assert.doesNotMatch(html, /app\.notion\.com/);
 });
 
 test('renders exported Markdown links as links to local HTML pages', () => {
