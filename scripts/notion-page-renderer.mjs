@@ -1,6 +1,12 @@
 import { marked } from 'marked';
 
 export function renderNotionPage(markdown) {
+    const normalisedMarkdown = markdown
+        .replace(/^# Computer Science\s*\n+/i, '')
+        .replace(/\]\(([^)\s]+)\.md\)/g, ']($1.html)')
+        .replace(/<page\s+url="([^"]+)">([\s\S]*?)<\/page>/g, '[$2]($1)')
+        .replace(/<empty-block\s*\/>/g, '');
+
     return `<!doctype html>
 <html lang="en">
 <head>
@@ -12,7 +18,7 @@ export function renderNotionPage(markdown) {
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; min-height: 100%; background: #000; }
     body { max-width: 900px; margin: 2em auto; padding: 0 1.5rem 3rem; color: #e5e5e5; font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
-    .page-title { margin: 0 0 .75em; font-size: 2.5rem; font-weight: 700; line-height: 1.2; letter-spacing: -.01em; }
+    .page-title { margin: 4rem 0 .75em; font-size: 2.5rem; font-weight: 700; line-height: 1.2; letter-spacing: -.01em; }
     h1, h2, h3 { margin: 1.5em 0 0; font-weight: 600; line-height: 1.2; letter-spacing: -.01em; }
     h1 { font-size: 1.875rem; } h2 { font-size: 1.5rem; } h3 { font-size: 1.25rem; }
     p, ul, ol, blockquote, pre, table { margin: 1.25em 0; }
@@ -28,7 +34,7 @@ export function renderNotionPage(markdown) {
   </style>
 </head>
 <body>
-  <main class="page-body"><h1 class="page-title">Computer Science</h1>${marked.parse(markdown)}</main>
+  <main class="page-body"><h1 class="page-title">Computer Science</h1>${marked.parse(normalisedMarkdown)}</main>
 </body>
 </html>`;
 }
