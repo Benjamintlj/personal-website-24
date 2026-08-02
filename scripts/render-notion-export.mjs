@@ -12,35 +12,124 @@ function escapeHtml(value) {
 function normaliseIndentedParagraphs(markdown) {
     let inFence = false;
     let inAnnotationBlock = false;
-    return markdown.split('\n').map((line) => {
+    let lastNonBlank = '';
+    const lines = markdown.split('\n');
+    return lines.map((line) => {
         if (/^\s*```/.test(line)) inFence = !inFence;
-        if (inFence) return line;
+        if (inFence) { lastNonBlank = line; return line; }
+        if (/^ {4,}[^\n]*[←→]/.test(line) && !/^ {4,}[-*+] /.test(line)) return `<p class="" dir="auto">${line}</p>`;
         if (/^ {4,}\^/.test(line)) inAnnotationBlock = true;
-        if (inAnnotationBlock && /^ {4}(.+)$/.test(line)) return `<p class="" dir="auto">${line}</p>`;
+        if (inAnnotationBlock && /^ {4}(.+)$/.test(line)) { lastNonBlank = line; return `<p class="" dir="auto">${line}</p>`; }
         if (inAnnotationBlock && line && !/^ {4}/.test(line)) inAnnotationBlock = false;
         const paragraph = line.match(/^ {4}([a-z][^\n]+)$/);
-        return paragraph ? `<p class="" dir="auto">${paragraph[1]}</p>` : line;
+        // Skip conversion when inside a list continuation (preceding non-blank line is a list item or indented continuation)
+        const inList = /^( {0,3}[-*+]| {4}|\d+\.)/.test(lastNonBlank);
+        if (line) lastNonBlank = line;
+        return (paragraph && !inList) ? `<p class="" dir="auto">${paragraph[1]}</p>` : line;
     }).join('\n');
 }
 
 function renderInlineEquations(markdown) {
     return markdown.split(/(```[\s\S]*?```)/).map((part, index) => index % 2
         ? part
-        : part.replace(/(?<!\\)\$([^$\n]+)\$/g, (_, equation) => {
+        : part.replace(/(?<!\\)\$(?!["@ ])([^$\n]+)\$/g, (_, equation) => {
             const source = equation.trim();
             return `<span data-notion-inline-equation="${escapeHtml(source)}" class="notion-text-equation-token" contenteditable="false">${katex.renderToString(source, { throwOnError: false, output: 'html' })}</span>`;
         })).join('');
 }
 
+function fixMultiLineCells(src) {
+    const lines = src.split('\n');
+    const out = [];
+    let i = 0;
+    while (i < lines.length) {
+        const line = lines[i];
+        if (/^\|/.test(line) && !/\|\s*$/.test(line)) {
+            let merged = line;
+            let j = i + 1;
+            while (j < lines.length) {
+                const next = lines[j];
+                if (next.trim() === '') {
+                    j++;
+                } else if (/^\|/.test(next)) {
+                    break;
+                } else {
+                    merged += '<br/><br/>' + next.trimEnd();
+                    j++;
+                    if (/\|\s*$/.test(merged)) break;
+                }
+            }
+            out.push(merged);
+            i = j;
+        } else {
+            out.push(line);
+            i++;
+        }
+    }
+    return out.join('\n');
+}
+
+function splitTableRow(row) {
+    const cells = [];
+    let cur = '';
+    let backtick = false;
+    let i = row[0] === '|' ? 1 : 0;
+    while (i < row.length) {
+        if (row[i] === '\\' && row[i + 1] === '|') { cur += '\\|'; i += 2; }
+        else if (row[i] === '`') { backtick = !backtick; cur += row[i++]; }
+        else if (row[i] === '|' && !backtick) { cells.push(cur); cur = ''; i++; }
+        else { cur += row[i++]; }
+    }
+    return cells;
+}
+
+function fixTablePipes(src) {
+    const lines = src.split('\n');
+    let headerCols = 0;
+    return lines.map((line) => {
+        if (!/^\|/.test(line)) { headerCols = 0; return line; }
+        const inner = splitTableRow(line);
+        // Remove trailing empty cell from the closing |
+        if (inner.at(-1)?.trim() === '') inner.pop();
+        if (inner.every((c) => /^\s*:?-+:?\s*$/.test(c))) { headerCols = inner.length; return line; }
+        if (headerCols === 0) { headerCols = inner.length; return line; }
+        if (inner.length <= headerCols) return line;
+        const merged = [inner[0]];
+        for (let j = 1; j < inner.length; j++) {
+            if (inner[j].trimStart().startsWith(',') || merged.length >= headerCols) {
+                merged[merged.length - 1] += '\\|' + inner[j];
+            } else {
+                merged.push(inner[j]);
+            }
+        }
+        return '|' + merged.join('|') + '|';
+    }).join('\n');
+}
+
 function normaliseMarkdown(markdown) {
-    return normaliseIndentedParagraphs(renderInlineEquations(markdown
-        .replace(/\]\(([^)]+)\.md\)/g, ']($1.html)')
+    return normaliseIndentedParagraphs(renderInlineEquations(fixTablePipes(fixMultiLineCells(markdown)
+        .replace(/\]\((.+?\.md)\)/g, (match, target) => {
+            if (/^https?:/i.test(target)) return match;
+            const url = target.slice(0, -3) + '.html';
+            const opens = (url.match(/\(/g) ?? []).length;
+            const closes = (url.match(/\)/g) ?? []).length;
+            return opens !== closes ? `](<${url}>)` : `](${url})`;
+        })
         .replace(/`\|`/g, '`\\|`')
-        .replace(/^( {4,}[^\n]*[←→][^\n]*)$/gm, '<p class="" dir="auto">$1</p>')
+        .replace(/^\|.*\|$/gm, (row) => row.replace(/\|\|/g, '\\|\\|'))
         .replace(/<page\s+url="[^"]+">([\s\S]*?)<\/page>/g, '$1')
         .replace(/<empty-block\s*\/>/g, '')
-        // Angle-bracket placeholders are literal note text, not HTML tags.
-        .replace(/<([A-Za-z][\w-]*)>/g, '&lt;$1&gt;')));
+        // Standalone > (no space, no content) on its own line is parsed as empty blockquote; escape to keep as literal >.
+        // Blockquote continuations like "> " or "> text" are left untouched.
+        .replace(/^>$/gm, '\\>')
+        // Angle-bracket placeholders are literal note text (type params, camelCase names, etc.) — escape all except known HTML elements.
+        // Code fences pass through unchanged; in text, \<Tag> needs a doubled backslash so marked's backslash-escape doesn't consume the \.
+        .replace(/(```[^\n]*\n[\s\S]*?\n```|~~~[^\n]*\n[\s\S]*?\n~~~)|\\?<([A-Za-z][\w-]*)>/g, (match, fence, tag) => {
+            if (fence !== undefined) return fence;
+            if (tag === 'aside') return match;
+            const encoded = `&lt;${tag}&gt;`;
+            return match.startsWith('\\') ? `\\\\${encoded}` : encoded;
+        }))));
 }
 
 function renderPage(markdown) {
@@ -57,10 +146,16 @@ function renderPage(markdown) {
     renderer.codespan = ({ text }) => {
         const literal = text.replaceAll('&lt;', '<').replaceAll('&gt;', '>');
         const emphasis = literal.match(/^\*([\s\S]*)\*$/);
-        return emphasis ? `<code><em>${escapeHtml(emphasis[1])}</em></code>` : `<code>${escapeHtml(literal)}</code>`;
+        const raw = emphasis ? emphasis[1] : literal;
+        if (raw.includes('<br/>')) {
+            // Multi-line table cell: <br/><br/> separators → single <br/> HTML breaks
+            const code = raw.split('<br/><br/>').map(escapeHtml).join('<br/>');
+            return emphasis ? `<code><em>${code}</em></code>` : `<code>${code}</code>`;
+        }
+        return emphasis ? `<code><em>${escapeHtml(raw)}</em></code>` : `<code>${escapeHtml(raw)}</code>`;
     };
     renderer.link = function ({ href, tokens }) {
-        const target = href.endsWith('.md') ? `${href.slice(0, -2)}html` : href;
+        const target = !/^https?:/i.test(href) && href.endsWith('.md') ? `${href.slice(0, -2)}html` : href;
         return `<a href="${escapeHtml(target)}">${this.parser.parseInline(tokens)}</a>`;
     };
     renderer.image = ({ href, text }) => {
@@ -75,9 +170,10 @@ function renderPage(markdown) {
     renderer.paragraph = function ({ tokens }) {
         const text = this.parser.parseInline(tokens);
         if (text.startsWith('<figure class="image"')) return text;
-        const localPage = text.match(/^<a href="([^"]+\.html)">([\s\S]*)<\/a>$/);
+        const localPage = text.trim().match(/^<a href="([^"]+\.html)">([\s\S]*?)<\/a>$/);
         if (localPage && !/^https?:/i.test(localPage[1])) {
-            return `<figure class="link-to-page"><a href="${localPage[1]}">${localPage[2].replace(/<[^>]+>/g, '')}</a></figure>`;
+            const label = localPage[2].replace(/<[^>]+>/g, '') || 'Untitled';
+            return `<figure class="link-to-page"><a href="${localPage[1]}">${label}</a></figure>`;
         }
         return `<p class="" dir="auto">${text.replaceAll('\n', '<br/>')}</p>`;
     };
@@ -113,7 +209,9 @@ function renderPage(markdown) {
                 if (!content.trim()) return `<p class="" dir="auto">${listStart + index}.</p>`;
                 return `<ol type="1" class="numbered-list" start="${listStart + index}" dir="auto"><li>${content}</li></ol>`;
             }
-            return `<ul class="bulleted-list" dir="auto"><li style="list-style-type:${parentListType === 'unordered' ? 'circle' : 'disc'}">${content}</li></ul>`;
+            const unorderedDepth = listTypes.filter(t => t === 'unordered').length;
+            const bulletStyle = ['disc', 'circle', 'square'][(unorderedDepth - 1) % 3];
+            return `<ul class="bulleted-list" dir="auto"><li style="list-style-type:${bulletStyle}">${content}</li></ul>`;
         }).join('');
         listTypes.pop();
         return html;
@@ -139,10 +237,11 @@ function renderPage(markdown) {
                 sql: 'sha512-sijCOJblSCXYYmXdwvqV0tak8QJW5iy2yLB1wAbbLc3OOIueqymizRFWUS/mwKctnzPKpNdPJV3aK1zlDMJmXQ==',
                 python: 'sha512-AKaNmg8COK0zEbjTdMHJAPJ0z6VeNqvRvH4/d5M4sHJbQQUToMBtodq4HaV4fa+WV2UTfoperElm66c9/8cKmQ==',
                 go: 'sha512-w200Nz1i9KgDNi+IpPMgpZBVRIvfVK/V5vskyHjkz7XJkVnRJcb1uNmpiHhDv0/Ln+GG2VqScKKz/1izBfg64Q==',
+                swift: 'sha512-7hhh8A+k7FG1Ine2Wam8hOMFqU+jcLg3XA/ITEY2EG9iY2LCgrg8GYsJbwy2w6vyMuIUZE+Pk1ZsvqkwVkw4kA==',
             };
             const prismComponents = lang === 'cpp'
                 ? `<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js" integrity="${prismIntegrity.c}" crossorigin="anonymous" referrerPolicy="no-referrer"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js" integrity="${prismIntegrity.cpp}" crossorigin="anonymous" referrerPolicy="no-referrer"></script>`
-                : lang === 'csharp' || lang === 'dart'
+                : ['csharp', 'dart', 'mermaid', 'css', 'wasm', 'html', 'xml', 'matlab', 'powershell', 'makefile'].includes(lang)
                 ? ''
                 : lang === 'tsx'
                 ? `<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js" integrity="sha512-m3JYEI6gx5fh9jF10FjGoMzVKcV2N6nchcDcqPCdI1L3R2WQV7br2XVNR8iTLb2daOMRl3zldbcfT40xU2ntVw==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js" integrity="sha512-uOw7XYETzS/DPmmirpP5UCMihSDNMeyTS965J0/456OSPfxn9xEtHHjj5Q/5WefVdqyMfN/afmQnNpZd/tpkcA==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-tsx.min.js" integrity="sha512-xjGCJ9YxyZBfYTCHsEjkOZMoOse1W3cKMXv1szXrxs68myuXt0YTj3/xKPar6iDMlXzTUSEqwUxprWcyp+plaw==" crossorigin="anonymous" referrerPolicy="no-referrer"></script>`
@@ -163,10 +262,18 @@ function renderPage(markdown) {
     };
     const body = marked.parse(content, { renderer })
         .replaceAll('&#39;', '&#x27;')
-        .replace(/<strong><code>([\s\S]*?)<\/code>:(<\/strong>)/g, '<code><strong>$1</strong></code><strong>:$2')
+        .replace(/<strong>([\s\S]*?)<\/strong>/g, (match, inner) => {
+            if (!inner.includes('<code>')) return match;
+            return inner.split(/(<code>[\s\S]*?<\/code>)/).map((seg) =>
+                seg.startsWith('<code>')
+                    ? seg.replace(/<code>([\s\S]*?)<\/code>/, '<code><strong>$1</strong></code>')
+                    : seg ? `<strong>${seg}</strong>` : '',
+            ).join('');
+        })
         .replace(/<em>([^<]*?)<code>([^<]+)<\/code>([^<]*?)<\/em>/g, '<em>$1</em><code><em>$2</em></code><em>$3</em>')
-        .replace(/<em>([^<]*?)<strong>([^<]+)<\/strong>([^<]*?)<\/em>/g, '<em>$1</em><strong><em>$2</em></strong><em>$3</em>')
-        .replace(/<strong><code>([\s\S]*?)<\/code><\/strong>/g, '<code><strong>$1</strong></code>')
+        .replace(/<em>([^<]*?)<strong>([^<]+)<\/strong>([^<]*?)<\/em>/g, (match, before, inner, after) =>
+            (before || after) ? `<em>${before}</em><strong><em>${inner}</em></strong><em>${after}</em>` : match,
+        )
         .replace(
             /(<ul class="bulleted-list" dir="auto"><li[^>]*>[\s\S]*?)<\/li><\/ul>((?:<p class="" dir="auto">\s*\^[\s\S]*?<\/p>)+)/g,
             (_, listStart, annotations) => `${listStart}${annotations.replace(/(<p class="" dir="auto">) {4}/g, '$1')}</li></ul>`,
