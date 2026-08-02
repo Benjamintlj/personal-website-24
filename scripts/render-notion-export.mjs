@@ -285,19 +285,42 @@ function renderPage(markdown) {
     return `<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>${escapeHtml(title)}</title>${pageStyles}</head><body><article class="page sans"><header><h1 class="page-title" dir="auto">${escapeHtml(title)}</h1><p class="page-description" dir="auto"></p></header><div class="page-body">${body}</div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>`;
 }
 
-async function renderDirectory(sourceDirectory, outputDirectory) {
+function logLine(level, message) {
+    process.stderr.write(`[${new Date().toISOString()}] [render] ${level.padEnd(5)} ${message}\n`);
+}
+
+async function renderDirectory(sourceDirectory, outputDirectory, stats) {
     for (const entry of await readdir(sourceDirectory, { withFileTypes: true })) {
         const sourcePath = path.join(sourceDirectory, entry.name);
         if (entry.isDirectory()) {
-            await renderDirectory(sourcePath, path.join(outputDirectory, entry.name));
+            await renderDirectory(sourcePath, path.join(outputDirectory, entry.name), stats);
         } else if (entry.isFile() && entry.name.endsWith('.md')) {
             const outputPath = path.join(outputDirectory, entry.name.replace(/\.md$/, '.html'));
-            await mkdir(path.dirname(outputPath), { recursive: true });
-            await writeFile(outputPath, renderPage(await readFile(sourcePath, 'utf8')));
+            stats.total++;
+            try {
+                await mkdir(path.dirname(outputPath), { recursive: true });
+                await writeFile(outputPath, renderPage(await readFile(sourcePath, 'utf8')));
+                stats.succeeded++;
+            } catch (err) {
+                stats.failed++;
+                stats.errors.push({ file: sourcePath, error: err.message });
+                logLine('ERROR', `${sourcePath}: ${err.message}`);
+            }
         }
     }
 }
 
 export async function renderMarkdownExport(markdownDirectory, outputDirectory) {
-    await renderDirectory(markdownDirectory, outputDirectory);
+    const stats = { total: 0, succeeded: 0, failed: 0, errors: [] };
+    const startMs = Date.now();
+    logLine('INFO', `Rendering Markdown export from ${markdownDirectory}`);
+    await renderDirectory(markdownDirectory, outputDirectory, stats);
+    const elapsed = ((Date.now() - startMs) / 1000).toFixed(1);
+    const summary = `${stats.succeeded}/${stats.total} pages rendered successfully in ${elapsed}s`;
+    if (stats.failed > 0) {
+        logLine('WARN', `${summary} — ${stats.failed} page(s) failed (see errors above)`);
+    } else {
+        logLine('INFO', summary);
+    }
+    return stats;
 }
