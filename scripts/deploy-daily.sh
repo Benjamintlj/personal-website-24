@@ -88,5 +88,5 @@ log "Build complete in $((SECONDS - build_start))s"
 # ── Deploy to S3 ──────────────────────────────────────────────────────────────
 log "Syncing changed files to s3://$bucket"
 sync_start=$SECONDS
-aws s3 sync "$project_root/out/" "s3://$bucket/" --delete --only-show-errors
+aws s3 sync "$project_root/out/" "s3://$bucket/" --delete --exact-timestamps --only-show-errors
 log "S3 sync complete in $((SECONDS - sync_start))s"
