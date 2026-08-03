@@ -1,21 +1,30 @@
 import { marked } from 'marked';
 
-export function renderNotionPage(markdown, { resolvePageLink } = {}) {
+function escapeRegex(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function escapeHtml(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+export function renderNotionPage(markdown, { resolvePageLink, title = 'Computer Science' } = {}) {
     const normalisedMarkdown = markdown
-        .replace(/^# Computer Science\s*\n+/i, '')
+        .replace(new RegExp(`^# ${escapeRegex(title)}\\s*\\n+`, 'i'), '')
         .replace(/\]\(([^)\s]+)\.md\)/g, ']($1.html)')
-        .replace(/<page\s+url="([^"]+)">([\s\S]*?)<\/page>/g, (_match, url, title) => {
+        .replace(/<page\s+url="([^"]+)">([\s\S]*?)<\/page>/g, (_match, url, pageTitle) => {
             const localLink = resolvePageLink?.(url);
-            return localLink ? `[${title}](${localLink})` : title;
+            return localLink ? `[${pageTitle}](${localLink})` : pageTitle;
         })
         .replace(/<empty-block\s*\/>/g, '');
 
+    const safeTitle = escapeHtml(title);
     return `<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Computer Science</title>
+  <title>${safeTitle}</title>
   <style>
     :root { color-scheme: dark; }
     * { box-sizing: border-box; }
@@ -37,7 +46,7 @@ export function renderNotionPage(markdown, { resolvePageLink } = {}) {
   </style>
 </head>
 <body>
-  <main class="page-body"><h1 class="page-title">Computer Science</h1>${marked.parse(normalisedMarkdown)}</main>
+  <main class="page-body"><h1 class="page-title">${safeTitle}</h1>${marked.parse(normalisedMarkdown)}</main>
 </body>
 </html>`;
 }
