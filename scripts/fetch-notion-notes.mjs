@@ -13,12 +13,14 @@ if (!apiKey) {
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const notesDir = path.join(projectRoot, 'public', 'notes', 'Private & Shared');
 
+const notionHeaders = {
+    Authorization: `Bearer ${apiKey}`,
+    'Notion-Version': '2026-03-11',
+};
+
 async function fetchPageMarkdown(pageId) {
     const response = await fetch(`https://api.notion.com/v1/pages/${pageId}/markdown`, {
-        headers: {
-            Authorization: `Bearer ${apiKey}`,
-            'Notion-Version': '2026-03-11',
-        },
+        headers: notionHeaders,
     });
     if (!response.ok) {
         throw new Error(`Notion API returned ${response.status} for page ${pageId}`);
@@ -28,6 +30,16 @@ async function fetchPageMarkdown(pageId) {
         process.stderr.write(`[WARN] Page ${pageId} is truncated — share all nested content with the connection.\n`);
     }
     return data.markdown;
+}
+
+async function fetchPageTitle(pageId) {
+    const response = await fetch(`https://api.notion.com/v1/pages/${pageId}`, {
+        headers: notionHeaders,
+    });
+    if (!response.ok) return null;
+    const data = await response.json();
+    const titleProp = Object.values(data.properties ?? {}).find(p => p.type === 'title');
+    return titleProp?.title?.[0]?.plain_text ?? null;
 }
 
 function extractChildPageIds(markdown) {
@@ -67,18 +79,29 @@ while (queue.length > 0) {
     }
 }
 
+// Build title map: prefer H1 from markdown, fall back to Notion page properties
+const pageTitles = new Map(); // pageId -> title string
+for (const [pageId, markdown] of pageMarkdowns) {
+    const h1 = markdown.match(/^# (.+)/)?.[1]?.trim();
+    if (h1) {
+        pageTitles.set(pageId, h1);
+    } else {
+        const apiTitle = await fetchPageTitle(pageId);
+        pageTitles.set(pageId, apiTitle ?? pageId);
+    }
+}
+
 // Assign a stable file path to every fetched page
 const pageFiles = new Map(); // pageId -> absolute file path
-for (const [pageId, markdown] of pageMarkdowns) {
-    const rawTitle = markdown.match(/^# (.+)/)?.[1]?.trim() ?? pageId;
-    const fileName = `${sanitiseTitle(rawTitle)} ${pageId}.html`;
+for (const [pageId] of pageMarkdowns) {
+    const fileName = `${sanitiseTitle(pageTitles.get(pageId))} ${pageId}.html`;
     pageFiles.set(pageId, path.join(notesDir, fileName));
 }
 
 // Render all pages with cross-page links resolved
 for (const [pageId, markdown] of pageMarkdowns) {
     const destPath = pageFiles.get(pageId);
-    const title = markdown.match(/^# (.+)/)?.[1]?.trim() ?? pageId;
+    const title = pageTitles.get(pageId);
 
     const html = renderNotionPage(markdown, {
         title,
