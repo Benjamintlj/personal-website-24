@@ -19,8 +19,29 @@ const notionHeaders = {
     'Notion-Version': '2026-03-11',
 };
 
+async function fetchWithRetry(url, options, maxRetries = 5) {
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+            const response = await fetch(url, options);
+            if (response.status === 429) {
+                const retryAfter = Number(response.headers.get('retry-after') ?? 10);
+                const delay = Math.max(retryAfter * 1000, 2 ** attempt * 1000);
+                process.stderr.write(`[WARN] Rate limited — retrying in ${Math.round(delay / 1000)}s (attempt ${attempt + 1}/${maxRetries})\n`);
+                await new Promise(r => setTimeout(r, delay));
+                continue;
+            }
+            return response;
+        } catch (err) {
+            if (attempt === maxRetries) throw err;
+            const delay = 2 ** attempt * 1000;
+            process.stderr.write(`[WARN] Request failed (${err.message}) — retrying in ${Math.round(delay / 1000)}s\n`);
+            await new Promise(r => setTimeout(r, delay));
+        }
+    }
+}
+
 async function fetchPageMarkdown(pageId) {
-    const response = await fetch(`https://api.notion.com/v1/pages/${pageId}/markdown`, {
+    const response = await fetchWithRetry(`https://api.notion.com/v1/pages/${pageId}/markdown`, {
         headers: notionHeaders,
     });
     if (!response.ok) {
@@ -34,7 +55,7 @@ async function fetchPageMarkdown(pageId) {
 }
 
 async function fetchPageTitle(pageId) {
-    const response = await fetch(`https://api.notion.com/v1/pages/${pageId}`, {
+    const response = await fetchWithRetry(`https://api.notion.com/v1/pages/${pageId}`, {
         headers: notionHeaders,
     });
     if (!response.ok) return null;
