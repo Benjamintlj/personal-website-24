@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { renderNotionPage } from './notion-page-renderer.mjs';
+import { renderPage } from './render-notion-export.mjs';
 
 const rootPageId = 'b0d29bee5364465e957af27b14e3527b';
 const apiKey = process.env.NOTION_API_KEY;
@@ -166,19 +166,19 @@ for (const [pageId, markdown] of pageMarkdowns) {
     const destPath = pageFiles.get(pageId);
     const title = pageTitles.get(pageId);
 
-    const html = renderNotionPage(markdown, {
-        title,
-        resolvePageLink(pageUrl) {
-            const id = pageUrl.match(/([a-f0-9]{32})/i)?.[1]?.toLowerCase();
+    const preprocessed = markdown
+        .replace(/<page\s+url="([^"]+)">([\s\S]*?)<\/page>/g, (_, url, pageTitle) => {
+            const id = url.match(/([a-f0-9]{32})/i)?.[1]?.toLowerCase();
             const target = id ? pageFiles.get(id) : null;
-            return target
-                ? path.relative(path.dirname(destPath), target)
-                    .split(path.sep)
-                    .map(encodeURIComponent)
-                    .join('/')
-                : null;
-        },
-    });
+            if (!target) return pageTitle;
+            const relPath = path.relative(path.dirname(destPath), target)
+                .split(path.sep).map(encodeURIComponent).join('/');
+            return `[${pageTitle}](${relPath})`;
+        })
+        .replace(/<empty-block\s*\/>/g, '')
+        .replace(/<unknown[^>]*>([\s\S]*?)<\/unknown>/g, '$1');
+
+    const html = renderPage(preprocessed);
 
     await mkdir(path.dirname(destPath), { recursive: true });
     await writeFile(destPath, html);

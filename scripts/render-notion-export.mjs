@@ -132,7 +132,7 @@ function normaliseMarkdown(markdown) {
         }))));
 }
 
-function renderPage(markdown) {
+export function renderPage(markdown) {
     const titleMatch = markdown.match(/^#\s+(.+)$/m);
     const title = titleMatch?.[1] ?? 'Untitled';
     const content = normaliseMarkdown(markdown.replace(/^#\s+.+\n*/m, ''));
