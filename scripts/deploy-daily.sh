@@ -6,6 +6,12 @@ backup_directory="$project_root/../notion-backup"
 bucket="benlewisjones.com"
 notion_archive="${1:-}"
 
+# Load credentials so the script works unattended (e.g. from cron).
+if [[ -f /etc/personal-website-24/notion.env ]]; then
+    # shellcheck source=/dev/null
+    source /etc/personal-website-24/notion.env
+fi
+
 # ── Logging ───────────────────────────────────────────────────────────────────
 # Primary log location for a system service; fall back to the XDG state dir
 # if /var/log/personal-website/ is not writable (e.g. running as a non-root user).
