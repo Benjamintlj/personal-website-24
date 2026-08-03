@@ -2,7 +2,7 @@
 
 const nextConfig = {
     output: 'export',
-    trailingSlash: true,
+    trailingSlash: false,
     eslint: { ignoreDuringBuilds: true },
 };
 

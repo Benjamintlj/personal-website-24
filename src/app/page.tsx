@@ -429,7 +429,7 @@ export default function Home() {
                         <span className="text-sm">Download CV</span>
                     </motion.a>
                     <a
-                        href="/notes"
+                        href="/notes.html"
                         className="mt-4 flex items-center gap-3 text-gray-400 hover:text-white transition-colors"
                         aria-label="Open notes"
                     >
