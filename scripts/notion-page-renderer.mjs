@@ -29,7 +29,8 @@ export function renderNotionPage(markdown, { resolvePageLink, title = 'Computer 
   <style>
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; min-height: 100%; }
-    body { max-width: 900px; margin: 2em auto; padding: 0 1.5rem 3rem; font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; white-space: pre-wrap; }
+    body { max-width: 900px; margin: 2em auto; padding: 0 1.5rem 3rem; font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+    p { white-space: pre-wrap; }
     .page-title { margin: 4rem 0 .75em; font-size: 2.5rem; font-weight: 700; line-height: 1.2; letter-spacing: -.01em; }
     h1, h2, h3 { margin: 1.5em 0 0; font-weight: 600; line-height: 1.2; letter-spacing: -.01em; }
     h1 { font-size: 1.875rem; } h2 { font-size: 1.5rem; } h3 { font-size: 1.25rem; }
@@ -44,9 +45,6 @@ export function renderNotionPage(markdown, { resolvePageLink, title = 'Computer 
     table { border-collapse: collapse; width: 100%; } th, td { padding: .5rem; border: 1px solid #ccc; text-align: left; vertical-align: top; }
     img { max-width: 100%; height: auto; } input[type="checkbox"] { accent-color: currentColor; }
   </style>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-  <script>document.addEventListener('DOMContentLoaded', () => hljs.highlightAll());</script>
 </head>
 <body>
   <main class="page-body"><h1 class="page-title">${safeTitle}</h1>${marked.parse(normalisedMarkdown)}</main>
