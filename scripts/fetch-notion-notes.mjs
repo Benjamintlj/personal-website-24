@@ -11,7 +11,8 @@ if (!apiKey) {
 }
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const notesDir = path.join(projectRoot, 'public', 'notes', 'Private & Shared');
+const publicDir = path.join(projectRoot, 'public');
+const notesDir = path.join(publicDir, 'notes', 'Private & Shared');
 
 const notionHeaders = {
     Authorization: `Bearer ${apiKey}`,
@@ -55,7 +56,12 @@ function sanitiseTitle(title) {
     return title.replace(/[/\\?%*:|"<>]/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
-// BFS crawl — track parent→children relationships for sidebar nav tree
+function filePathToUrlPath(filePath) {
+    const rel = path.relative(publicDir, filePath);
+    return '/' + rel.split(path.sep).map(encodeURIComponent).join('/');
+}
+
+// BFS crawl — track parent→children relationships for nav tree
 const pageMarkdowns = new Map(); // pageId -> markdown string
 const pageChildren = new Map();  // pageId -> [childId, ...]
 const queue = [rootPageId];
@@ -102,12 +108,13 @@ for (const [pageId] of pageMarkdowns) {
     pageFiles.set(pageId, path.join(notesDir, fileName));
 }
 
-// Build navigation tree rooted at the CS page
+// Build navigation tree rooted at the CS page (URL paths for the client)
 function buildNavNode(pageId) {
+    const filePath = pageFiles.get(pageId);
     return {
         pageId,
         title: pageTitles.get(pageId) ?? pageId,
-        filePath: pageFiles.get(pageId),
+        urlPath: filePath ? filePathToUrlPath(filePath) : null,
         children: (pageChildren.get(pageId) ?? [])
             .filter(id => pageFiles.has(id))
             .map(buildNavNode),
@@ -115,15 +122,52 @@ function buildNavNode(pageId) {
 }
 const navTree = buildNavNode(rootPageId);
 
-// Render all pages with cross-page links and sidebar nav resolved
+// Save raw Notion markdown for the "copy markdown" button
+const markdownDir = path.join(publicDir, 'notes-md');
+await mkdir(markdownDir, { recursive: true });
+for (const [pageId, markdown] of pageMarkdowns) {
+    await writeFile(path.join(markdownDir, `${pageId}.md`), markdown);
+}
+console.log(`Wrote ${pageMarkdowns.size} markdown files to public/notes-md/`);
+
+// Write nav tree JSON for the Next.js notes viewer
+await mkdir(publicDir, { recursive: true });
+await writeFile(path.join(publicDir, 'notes-nav.json'), JSON.stringify(navTree, null, 2));
+console.log('Wrote public/notes-nav.json');
+
+// Build search index — strip markdown syntax to plain text
+function markdownToText(md) {
+    return md
+        .replace(/^#{1,6}\s+/gm, '')
+        .replace(/\*{1,2}([^*]+)\*{1,2}/g, '$1')
+        .replace(/`{3}[\s\S]*?`{3}/g, '')
+        .replace(/`([^`]+)`/g, '$1')
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+        .replace(/^[>*\-+]\s+/gm, '')
+        .replace(/<[^>]+>/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+const searchIndex = [];
+for (const [pageId, markdown] of pageMarkdowns) {
+    searchIndex.push({
+        pageId,
+        title: pageTitles.get(pageId) ?? pageId,
+        urlPath: filePathToUrlPath(pageFiles.get(pageId)),
+        text: markdownToText(markdown),
+    });
+}
+await writeFile(path.join(publicDir, 'notes-search.json'), JSON.stringify(searchIndex));
+console.log(`Wrote public/notes-search.json (${searchIndex.length} entries)`);
+
+// Render all pages with cross-page links resolved (no sidebar — stays in Next.js)
 for (const [pageId, markdown] of pageMarkdowns) {
     const destPath = pageFiles.get(pageId);
     const title = pageTitles.get(pageId);
 
     const html = renderNotionPage(markdown, {
         title,
-        currentPageId: pageId,
-        navTree,
         resolvePageLink(pageUrl) {
             const id = pageUrl.match(/([a-f0-9]{32})/i)?.[1]?.toLowerCase();
             const target = id ? pageFiles.get(id) : null;
@@ -133,12 +177,6 @@ for (const [pageId, markdown] of pageMarkdowns) {
                     .map(encodeURIComponent)
                     .join('/')
                 : null;
-        },
-        resolveNavLink(targetFilePath) {
-            return path.relative(path.dirname(destPath), targetFilePath)
-                .split(path.sep)
-                .map(encodeURIComponent)
-                .join('/');
         },
     });
 

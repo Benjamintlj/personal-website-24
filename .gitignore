@@ -3,6 +3,9 @@ node_modules/
 .next/
 out/
 public/notes/
+public/notes-nav.json
+public/notes-search.json
+public/notes-md/
 .DS_Store
 .gitignore
 .gstack/
