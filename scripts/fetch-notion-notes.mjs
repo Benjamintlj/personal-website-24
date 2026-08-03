@@ -55,8 +55,9 @@ function sanitiseTitle(title) {
     return title.replace(/[/\\?%*:|"<>]/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
-// BFS crawl starting from the root CS page, following all <page> references
+// BFS crawl — track parent→children relationships for sidebar nav tree
 const pageMarkdowns = new Map(); // pageId -> markdown string
+const pageChildren = new Map();  // pageId -> [childId, ...]
 const queue = [rootPageId];
 const visited = new Set();
 
@@ -74,7 +75,10 @@ while (queue.length > 0) {
     }
 
     pageMarkdowns.set(pageId, markdown);
-    for (const childId of extractChildPageIds(markdown)) {
+
+    const childIds = extractChildPageIds(markdown);
+    if (childIds.length > 0) pageChildren.set(pageId, childIds);
+    for (const childId of childIds) {
         if (!visited.has(childId)) queue.push(childId);
     }
 }
@@ -98,13 +102,28 @@ for (const [pageId] of pageMarkdowns) {
     pageFiles.set(pageId, path.join(notesDir, fileName));
 }
 
-// Render all pages with cross-page links resolved
+// Build navigation tree rooted at the CS page
+function buildNavNode(pageId) {
+    return {
+        pageId,
+        title: pageTitles.get(pageId) ?? pageId,
+        filePath: pageFiles.get(pageId),
+        children: (pageChildren.get(pageId) ?? [])
+            .filter(id => pageFiles.has(id))
+            .map(buildNavNode),
+    };
+}
+const navTree = buildNavNode(rootPageId);
+
+// Render all pages with cross-page links and sidebar nav resolved
 for (const [pageId, markdown] of pageMarkdowns) {
     const destPath = pageFiles.get(pageId);
     const title = pageTitles.get(pageId);
 
     const html = renderNotionPage(markdown, {
         title,
+        currentPageId: pageId,
+        navTree,
         resolvePageLink(pageUrl) {
             const id = pageUrl.match(/([a-f0-9]{32})/i)?.[1]?.toLowerCase();
             const target = id ? pageFiles.get(id) : null;
@@ -114,6 +133,12 @@ for (const [pageId, markdown] of pageMarkdowns) {
                     .map(encodeURIComponent)
                     .join('/')
                 : null;
+        },
+        resolveNavLink(targetFilePath) {
+            return path.relative(path.dirname(destPath), targetFilePath)
+                .split(path.sep)
+                .map(encodeURIComponent)
+                .join('/');
         },
     });
 
