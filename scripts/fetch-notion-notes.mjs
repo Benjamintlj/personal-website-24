@@ -199,7 +199,7 @@ for (const [pageId, markdown] of pageMarkdowns) {
         .replace(/<empty-block\s*\/>/g, '')
         .replace(/<unknown[^>]*>([\s\S]*?)<\/unknown>/g, '$1');
 
-    const html = renderPage(preprocessed);
+    const html = renderPage(preprocessed, null, pageTitles.get(pageId));
 
     await mkdir(path.dirname(destPath), { recursive: true });
     await writeFile(destPath, html);

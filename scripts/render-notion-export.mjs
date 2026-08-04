@@ -121,7 +121,9 @@ function normaliseMarkdown(markdown) {
         .replace(/<empty-block\s*\/>/g, '')
         // Standalone > (no space, no content) on its own line is parsed as empty blockquote; escape to keep as literal >.
         // Blockquote continuations like "> " or "> text" are left untouched.
-        .replace(/^>$/gm, '\\>')
+        // marked does not strip the backslash escape for \> so we use &gt; directly.
+        // Also handle > with trailing whitespace which GFM parses as an empty blockquote.
+        .replace(/^>\s*$/gm, '&gt;')
         // Angle-bracket placeholders are literal note text (type params, camelCase names, etc.) — escape all except known HTML elements.
         // Code fences pass through unchanged; in text, \<Tag> needs a doubled backslash so marked's backslash-escape doesn't consume the \.
         .replace(/(```[^\n]*\n[\s\S]*?\n```|~~~[^\n]*\n[\s\S]*?\n~~~)|\\?<([A-Za-z][\w-]*)>/g, (match, fence, tag) => {
@@ -132,9 +134,9 @@ function normaliseMarkdown(markdown) {
         }))));
 }
 
-export function renderPage(markdown) {
+export function renderPage(markdown, pageId = null, externalTitle = null) {
     const titleMatch = markdown.match(/^#\s+(.+)$/m);
-    const title = titleMatch?.[1] ?? 'Untitled';
+    const title = externalTitle ?? titleMatch?.[1] ?? 'Untitled';
     const content = normaliseMarkdown(markdown.replace(/^#\s+.+\n*/m, ''));
     const renderer = new marked.Renderer();
     const loadedPrismLanguages = new Set();
@@ -282,7 +284,8 @@ export function renderPage(markdown) {
         // its alt text and once as the following paragraph.
         .replace(/(<figure class="image"[\s\S]*?<figcaption>([\s\S]*?)<\/figcaption><\/figure>)<p class="" dir="auto">\2<\/p>/g, '$1')
         .replace(/(<figcaption>([\s\S]*?)<\/figcaption>)<figcaption>\2<\/figcaption>/g, '$1');
-    return `<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>${escapeHtml(title)}</title>${pageStyles}</head><body><article class="page sans"><header><h1 class="page-title" dir="auto">${escapeHtml(title)}</h1><p class="page-description" dir="auto"></p></header><div class="page-body">${body}</div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>`;
+    const articleAttrs = pageId ? ` id="${pageId}"` : '';
+    return `<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>${escapeHtml(title)}</title>${pageStyles}</head><body><article${articleAttrs} class="page sans"><header><h1 class="page-title" dir="auto">${escapeHtml(title)}</h1><p class="page-description" dir="auto"></p></header><div class="page-body">${body}</div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>`;
 }
 
 function logLine(level, message) {
@@ -296,10 +299,12 @@ async function renderDirectory(sourceDirectory, outputDirectory, stats) {
             await renderDirectory(sourcePath, path.join(outputDirectory, entry.name), stats);
         } else if (entry.isFile() && entry.name.endsWith('.md')) {
             const outputPath = path.join(outputDirectory, entry.name.replace(/\.md$/, '.html'));
+            const rawUuid = entry.name.match(/([0-9a-f]{32})\.md$/i)?.[1];
+            const pageId = rawUuid ? rawUuid.replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/, '$1-$2-$3-$4-$5') : null;
             stats.total++;
             try {
                 await mkdir(path.dirname(outputPath), { recursive: true });
-                await writeFile(outputPath, renderPage(await readFile(sourcePath, 'utf8')));
+                await writeFile(outputPath, renderPage(await readFile(sourcePath, 'utf8'), pageId));
                 stats.succeeded++;
             } catch (err) {
                 stats.failed++;
