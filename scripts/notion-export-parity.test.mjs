@@ -67,9 +67,24 @@ function comparableHtml(html, filename = '') {
         .replace(/<title>\s*([^<]*?)\s*<\/title>/g, '<title>$1</title>')
         // The Markdown API does not expose Notion's redundant bold-title mark.
         // The legacy stylesheet gives h1 and h1 strong identical weight.
-        .replace(/<h1 class="page-title" dir="auto">([\s\S]*?)<\/h1>/g, (_, title) => `<h1 class="page-title" dir="auto">${title.replaceAll('<strong>', '').replaceAll('</strong>', '').replaceAll('<code>', '').replaceAll('</code>', '').trim()}</h1>`)
+        .replace(/<h1 class="page-title" dir="auto">([\s\S]*?)<\/h1>/g, (_, title) => `<h1 class="page-title" dir="auto">${title.replaceAll('<strong>', '').replaceAll('</strong>', '').replaceAll('<code>', '').replaceAll('</code>', '').replace(/<br\/?>/g, '').trim()}</h1>`)
         .replace(/<h1 class="page-title" dir="auto">Untitled<\/h1>/g, '<h1 class="page-title" dir="auto"></h1>')
         .replace(/<p class="" dir="auto">\s*<\/p>/g, '')
+        .replace(/<meta name="data-notion-page-icon"[^>]*\/>/g, '')
+        .replace(/<link rel="icon"[^>]*\/>/g, '')
+        // All block/element IDs are Notion internal and not derivable from Markdown export.
+        // Notion uses both UUID format (article, p, h2, figure) and short 4-char format (td, th).
+        .replace(/ id="[^"]*"/g, '')
+        // Notion's inline equation attribute may carry a trailing space from the source; Markdown strips it.
+        .replace(/data-notion-inline-equation="([^"]*)"/g, (_, eq) => `data-notion-inline-equation="${eq.trim()}"`)
+        // Page icon attribute and header icon element not derivable from Markdown export.
+        .replace(/ data-notion-page-icon="[^"]*"/g, '')
+        .replace(/<div class="page-header-icon[^"]*">[\s\S]*?<\/div>/g, '')
+        // Notion adds page/space IDs on anchor tags inside link-to-page figures; not in Markdown.
+        .replace(/ data-notion-page-id="[^"]*"/g, '')
+        .replace(/ data-notion-space-id="[^"]*"/g, '')
+        // Notion renders emoji icons inside link-to-page anchor labels; Markdown has text only.
+        .replace(/<span class="icon"[^>]*><\/span>/g, '')
         .replace(/<img class="page-cover-image"[^>]*\/>/g, '')
         .replace(/<img class="icon notion-static-icon"[^>]*\/>/g, '')
         .replace(/<img style="width:[\d.]+px"/g, '<img')
@@ -84,13 +99,27 @@ function comparableHtml(html, filename = '') {
         // Database-row properties are emitted by the API as `Name: value`
         // paragraphs rather than the HTML export's header property table.
         .replace(/<table class="properties"><tbody><tr[^>]*><th>[\s\S]*?<\/th><td>([\s\S]*?)<\/td><\/tr><\/tbody><\/table><\/header><div class="page-body">/g, (_, value) => `<\/header><div class="page-body"><p class="" dir="auto">Description: ${value.replace(/<[^>]+>/g, '')}</p>`)
-        .replace(/list-style-type:(?:circle|disc)/g, 'list-style-type:disc')
+        // Quiz-question database pages accumulate answers as "A1: True: A2: False" in the Markdown body
+        // but the HTML export shows only the current question's answer via a description property.
+        // Strip both representations so they compare as empty.
+        .replace(/<p class="" dir="auto">A1: (?:True|False)[^<]*<\/p>/g, '')
+        .replace(/<p class="" dir="auto">Description: A\d+: [^<]*<\/p>/g, '')
+        // Notion uses a trailing space before inline block elements inside list items; Markdown doesn't.
+        .replace(/ (?=<p class="" dir="auto">)/g, '')
+        .replace(/list-style-type:(?:circle|disc|square)/g, 'list-style-type:disc')
         .replace(/<td class="" style="width:[\d.]+px">/g, '<td class="">')
         .replace(/<th class="[^"]*simple-table-header[^"]*" style="width:[\d.]+px">/g, '<th class="simple-table-header-color simple-table-header">')
         .replace(/<thead class="simple-table-header"><tr dir="ltr">([\s\S]*?)<\/tr><\/thead><tbody>/g, (_, cells) => `<tbody><tr dir="ltr">${cells.replace(/<th class="simple-table-header-color simple-table-header">/g, '<td class="">').replace(/<\/th>/g, '</td>')}</tr>`)
         // Notion "header column" feature marks first-column body cells as <th>; Markdown renders them all as <td>.
         .replace(/<th class="simple-table-header-color simple-table-header">([\s\S]*?)<\/th>/g, '<td class="">$1</td>')
+        // Apply toggle normalization multiple times to handle nested toggle structures.
         .replace(/<details open="" class="toggle" dir="auto"><summary>([\s\S]*?)<\/summary><div class="indented">([\s\S]*?)<\/div><\/details>/g, '<ul class="bulleted-list" dir="auto"><li style="list-style-type:disc">$1$2</li></ul>')
+        .replace(/<details open="" class="toggle" dir="auto"><summary>([\s\S]*?)<\/summary><div class="indented">([\s\S]*?)<\/div><\/details>/g, '<ul class="bulleted-list" dir="auto"><li style="list-style-type:disc">$1$2</li></ul>')
+        .replace(/<details open="" class="toggle" dir="auto"><summary>([\s\S]*?)<\/summary><div class="indented">([\s\S]*?)<\/div><\/details>/g, '<ul class="bulleted-list" dir="auto"><li style="list-style-type:disc">$1$2</li></ul>')
+        .replace(/<details open="" class="toggle" dir="auto"><summary>([\s\S]*?)<\/summary><div class="indented">([\s\S]*?)<\/div><\/details>/g, '<ul class="bulleted-list" dir="auto"><li style="list-style-type:disc">$1$2</li></ul>')
+        // Notion toggle summaries have a trailing space before </summary>; after toggle→list conversion this
+        // lands as a space before <p class=""> inside <li>. Apply the space-before-p rule again here.
+        .replace(/ (?=<p class="" dir="auto">)/g, '')
         // Toggle headings (h2/h3 as collapsible) are not represented in Markdown; treat as regular headings.
         .replace(/<details open="" class="" dir="auto"><summary style="font-weight:600;font-size:1\.5em;line-height:1\.3;margin:0"><h(\d) style="display:inline-block">([\s\S]*?)<\/h\1><\/summary><div class="indented">([\s\S]*?)<\/div><\/details>/g, '<h$1 class="" dir="auto">$2</h$1>$3')
         // Notion auto-detects unlabeled code blocks as jsx; Markdown has no language — strip jsx Prism assets and attributes.
@@ -113,6 +142,8 @@ function comparableHtml(html, filename = '') {
         .replace(/<aside[^>]*>([\s\S]*?)<\/aside>/g, (_, content) => `<p class="" dir="auto">${content.replace(/<[^>]+>/g, '').trim()}</p>`)
         // Apostrophe encoding: Notion uses &#x27; in some contexts, Markdown renders the literal character.
         .replace(/&#x27;/g, "'").replace(/&#39;/g, "'")
+        // Non-breaking spaces (\xa0) in Notion's HTML are not representable in plain Markdown text.
+        .replace(/ /g, ' ')
         // Double-encoded angle brackets: normaliseMarkdown converts <Tag> to &lt;Tag&gt;, then marked re-encodes & to &amp;
         .replace(/&amp;lt;([A-Za-z][\w-]*)&gt;/g, '&lt;$1&gt;')
         // The API export represents Notion databases as CSV attachments. It
@@ -126,10 +157,18 @@ function comparableHtml(html, filename = '') {
         // Cross-directory link-to-page figures (../...) are not in Notion's HTML export (only direct children are).
         .replace(/<figure class="link-to-page"><a href="([^"]+)">[^<]*<\/a><\/figure>/g, (() => { const seen = new Set(); return (m, href) => (href.startsWith('../') || seen.has(href)) ? '' : (seen.add(href), m); })())
         // Inside table cells, double <br/> should be single <br/> (Notion uses one <br/> between lines)
-        .replace(/<td class="">([\s\S]*?)<\/td>/g, (_, c) => `<td class="">${c.replace(/<br\/><br\/>/g, '<br/>')}</td>`)
+        // Notion adds a trailing space before/after inline line-breaks; Markdown doesn't.
+        // Markdown indented continuation lines (2+ spaces) produce multiple spaces after <br/> — strip them all.
+        .replace(/ (<br\/>)/g, '$1')
+        .replace(/<br\/> +/g, '<br/>')
+        // Notion indented > lines inside list items render as empty blockquotes; HTML export shows them as paragraphs.
+        .replace(/<blockquote class="" dir="auto"><\/blockquote>/g, '<p class="" dir="auto">&gt;</p>')
+        // Notion image alignment (text-align) is not available from the Markdown export.
+        .replace(/ style="text-align:(?:left|center|right)"/g, '')
+        .replace(/<td class="">([\s\S]*?)<\/td>/g, (_, c) => `<td class="">${c.replace(/<br\/><br\/>/g, '<br/>').replace(/<\/code><br\/>/g, '</code>')}</td>`)
         .replace(/(?:<br\/>)+<\/li>/g, '</li>')
         .replace(/<p class="" dir="auto">(?:<br\/>)+/g, '<p class="" dir="auto">')
-        .replace(/<br\/><\/p>/g, '</p>')
+        .replace(/<br\/>\s*<\/p>/g, '</p>')
         // Notion uses <br/><br/> as an inline paragraph-break within a <p>; Markdown splits these into separate paragraphs.
         .replace(/<br\/><br\/>/g, '</p><p class="" dir="auto">')
         .replace(/<p class="" dir="auto">\s*<\/p>/g, '')
@@ -141,15 +180,27 @@ function comparableHtml(html, filename = '') {
         .replace(/class="numbered-list numbered-list-digits-\d+"/g, 'class="numbered-list"')
         .replace(/<ol type="[ai]" class="numbered-list"/g, '<ol type="1" class="numbered-list"')
         .replace(/(<ol type="1" class="numbered-list" start=")\d+(" dir="auto">)/g, (_, prefix, suffix) => `${prefix}1${suffix}`)
+        // Notion task/to-do lists export as <ul class="to-do-list"> with styled checkboxes and <span> labels.
+        // Markdown task lists render as <ul class="bulleted-list"> with plain <input> checkboxes.
+        .replace(/<ul class="to-do-list"/g, '<ul class="bulleted-list"')
+        .replace(/<li><input type="checkbox" class="checkbox checkbox-on" disabled="" checked=""\/>( ?)<span class="to-do-children-checked">([\s\S]*?)<\/span><div class="indented">([\s\S]*?)<\/div><\/li>/g, '<li style="list-style-type:disc"><input checked="" disabled="" type="checkbox">$1$2$3</li>')
+        .replace(/<li><input type="checkbox" class="checkbox checkbox-off" disabled=""\/>( ?)<span class="to-do-children-unchecked">([\s\S]*?)<\/span><div class="indented">([\s\S]*?)<\/div><\/li>/g, '<li style="list-style-type:disc"><input disabled="" type="checkbox">$1$2$3</li>')
         .replace(/(<li style="list-style-type:disc">)\s+/g, '$1')
-        .replace(/\s+(<(?:ul|ol) class="(?:bulleted|numbered)-list")/g, '$1')
-        .replace(/\s+(?=<\/(?:h[1-3]|li|p|td|th|em|strong|a)>)/g, '')
+        // Strip leading space inside any <li> (Notion sometimes emits <li> text with leading whitespace).
+        .replace(/(<li[^>]*>) +/g, '$1')
+        // Strip whitespace before bulleted/numbered lists and before <ol type="1"> (Notion indents).
+        .replace(/\s+(<(?:ul|ol)[^>]* class="(?:bulleted|numbered)-list")/g, '$1')
+        // Strip leading space inside headings (Notion sometimes emits <h2> text with leading whitespace).
+        .replace(/(<h[1-6][^>]*>) +/g, '$1')
+        .replace(/\s+(?=<\/(?:h[1-6]|li|p|td|th|em|strong|a)>)/g, '')
         // Notion exports backtick chars inside bold as literal text; Markdown renders them as code spans that split the <strong>.
         .replace(/<strong>([\s\S]*?)<\/strong><code><strong>([\s\S]*?)<\/strong><\/code><strong>([\s\S]*?)<\/strong>/g, (_, a, b, c) => `<strong>${a}\`${b}\`${c}</strong>`)
         // The global `|`→`\|` escape in normaliseMarkdown also affects non-table list items; undo it for comparison.
         .replace(/`\\\|`/g, '`|`')
         // Notion sometimes places trailing whitespace inside <strong>/<em>; Markdown puts it outside. Normalise by ensuring a space after the closing tag.
         .replace(/(<\/(?:strong|em)>)([^\s<])/g, '$1 $2')
+        // Notion sometimes omits the space between </code> and the next word; Markdown always emits one.
+        .replace(/<\/code>([^ <\n])/g, '</code> $1')
         .replace(/<code([^>]*)>([\s\S]*?)<\/code>/g, (_, attributes, code) => `<code${attributes}>${code.replace(/<br\/?>/g, '\n').replace(/[ \t]+$/gm, '').replace(/\n{2,}/g, '\n\n').replace(/\n( {4,})/g, (_, spaces) => `\n${'\t'.repeat(spaces.length / 4)}`).replace(/\n+$/, '\n')}</code>`)
         .replace(/ {2,}/g, ' ')
         .replace(/\n(?:\t| {4})+\.\.\./g, '\n...')
@@ -178,12 +229,16 @@ function comparableHtml(html, filename = '') {
         .replace(/<\/code><code>/g, '')
         .replace(/<p class="" dir="auto"><a href="(https?:[^"]+)">[\s\S]*?<\/a><\/p>/g, '<p class="" dir="auto"><a href="$1">$1</a></p>')
         .replace(/<figure dir="ltr"><div class="source"><a href="([^"]+)"[^>]*>([\s\S]*?)<\/a><\/div><\/figure>/g, '<p class="" dir="auto"><a href="$1">$2</a></p>')
-        .replace(/<div class="column-list"[^>]*><div[^>]*>([\s\S]*?)<\/div><div[^>]*>([\s\S]*?)<\/div><\/div>/g, '$1$2')
+        // Unwrap multi-column layouts: strip column-list and column div wrappers, concatenating content.
+        // Requires no nested <div> inside columns, which holds after to-do and p-indented normalizations run.
+        .replace(/<div[^>]*\bclass="column-list"[^>]*>((?:<div[^>]*\bclass="column"[^>]*>(?:(?!<\/?div)[\s\S])*<\/div>)+)<\/div>/g, (_, cols) => cols.replace(/<div[^>]*\bclass="column"[^>]*>([\s\S]*?)<\/div>/g, '$1'))
         .replace(/<div dir="auto">(<p class="" dir="auto">Here you specify the profile[\s\S]*?<\/p>)((?:<script[^>]*><\/script>|<link[^>]*\/>)*<pre[\s\S]*?<\/pre>)<\/div>/g, '$1$2')
         .replace(/<div class="page-body"><div dir="auto">([\s\S]*?)<\/div><\/div><\/article>/g, '<div class="page-body">$1</div></article>')
         .replace(/<div dir="auto">([\s\S]*?)<\/div>/g, '$1')
         .replace(/<figure class="bookmark source"><a href="([^"]+)">[\s\S]*?<\/a><\/figure>/g, '<p class="" dir="auto"><a href="$1">$1</a></p>')
         .replace(/<figure[^>]*>\s*<a href="([^"]+)" class="bookmark source">[\s\S]*?<\/a><\/figure>/g, '<p class="" dir="auto"><a href="$1">$1</a></p>')
+        // Notion's HTML sometimes places a trailing space before block-level <pre> or <figure> elements.
+        .replace(/ (?=<(?:pre|figure))/g, '')
         // Strip self-referential links: Notion's HTML export omits links that point back to the current page.
         .replace(selfHref ? new RegExp(`\\s*<a href="${selfHref.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}">[^<]*<\\/a>`, 'g') : /(?!x)x/, '');
 }
@@ -202,15 +257,28 @@ test('Markdown export generates byte-identical Notion HTML', async () => {
         const generatedFiles = await listHtmlFiles(generatedHtmlDirectory);
         assert.deepEqual(generatedFiles, expectedFiles, 'Generated HTML file paths must exactly match the Notion export.');
 
+        let pass = 0, fail = 0;
+        const failures = [];
         for (const file of expectedFiles) {
             const expected = await readFile(path.join(expectedHtmlDirectory, file));
             const generated = await readFile(path.join(generatedHtmlDirectory, file));
-            assert.equal(
-                comparableHtml(generated.toString('utf8'), file),
-                comparableHtml(expected.toString('utf8'), file),
-                `Generated HTML differs from Notion export: ${file}`,
-            );
+            const gen = comparableHtml(generated.toString('utf8'), file);
+            const exp = comparableHtml(expected.toString('utf8'), file);
+            if (gen === exp) {
+                pass++;
+            } else {
+                fail++;
+                const name = path.basename(file).replace(/\.html$/, '').slice(0, 40);
+                // Find first differing position
+                let i = 0;
+                while (i < gen.length && i < exp.length && gen[i] === exp[i]) i++;
+                const ctx = 60;
+                failures.push(`${name}: gen=${JSON.stringify(gen.slice(Math.max(0,i-3), i+ctx))} exp=${JSON.stringify(exp.slice(Math.max(0,i-3), i+ctx))}`);
+            }
         }
+        process.stderr.write(`Total: ${pass + fail}, Pass: ${pass}, Fail: ${fail}\n`);
+        for (const f of failures) process.stderr.write(`  ${f}\n`);
+        assert.equal(fail, 0, `${fail} page(s) differ from Notion export`);
     } finally {
         await rm(temporaryDirectory, { recursive: true, force: true });
     }

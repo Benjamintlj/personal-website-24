@@ -106,8 +106,21 @@ function fixTablePipes(src) {
     }).join('\n');
 }
 
+function escapeIsolatedBlockquoteMarkers(src) {
+    // A bare `>` or `> ` line that is NOT adjacent to another blockquote line is a literal `>` symbol.
+    // Leave blank blockquote continuation lines (adjacent to real blockquote lines) untouched so that
+    // GFM can treat them as paragraph breaks inside the blockquote, matching Notion's HTML export.
+    const lines = src.split('\n');
+    return lines.map((line, i) => {
+        if (!/^>\s*$/.test(line)) return line;
+        const prev = i > 0 ? lines[i - 1] : '';
+        const next = i < lines.length - 1 ? lines[i + 1] : '';
+        return (/^>/.test(prev) || /^>/.test(next)) ? line : '&gt;';
+    }).join('\n');
+}
+
 function normaliseMarkdown(markdown) {
-    return normaliseIndentedParagraphs(renderInlineEquations(fixTablePipes(fixMultiLineCells(markdown)
+    const stage1 = escapeIsolatedBlockquoteMarkers(fixMultiLineCells(markdown)
         .replace(/\]\((.+?\.md)\)/g, (match, target) => {
             if (/^https?:/i.test(target)) return match;
             const url = target.slice(0, -3) + '.html';
@@ -118,12 +131,8 @@ function normaliseMarkdown(markdown) {
         .replace(/`\|`/g, '`\\|`')
         .replace(/^\|.*\|$/gm, (row) => row.replace(/\|\|/g, '\\|\\|'))
         .replace(/<page\s+url="[^"]+">([\s\S]*?)<\/page>/g, '$1')
-        .replace(/<empty-block\s*\/>/g, '')
-        // Standalone > (no space, no content) on its own line is parsed as empty blockquote; escape to keep as literal >.
-        // Blockquote continuations like "> " or "> text" are left untouched.
-        // marked does not strip the backslash escape for \> so we use &gt; directly.
-        // Also handle > with trailing whitespace which GFM parses as an empty blockquote.
-        .replace(/^>\s*$/gm, '&gt;')
+        .replace(/<empty-block\s*\/>/g, ''));
+    return normaliseIndentedParagraphs(renderInlineEquations(fixTablePipes(stage1)
         // Angle-bracket placeholders are literal note text (type params, camelCase names, etc.) — escape all except known HTML elements.
         // Code fences pass through unchanged; in text, \<Tag> needs a doubled backslash so marked's backslash-escape doesn't consume the \.
         .replace(/(```[^\n]*\n[\s\S]*?\n```|~~~[^\n]*\n[\s\S]*?\n~~~)|\\?<([A-Za-z][\w-]*)>/g, (match, fence, tag) => {
@@ -131,7 +140,7 @@ function normaliseMarkdown(markdown) {
             if (tag === 'aside') return match;
             const encoded = `&lt;${tag}&gt;`;
             return match.startsWith('\\') ? `\\\\${encoded}` : encoded;
-        }))));
+        })));
 }
 
 export function renderPage(markdown, pageId = null, externalTitle = null) {
