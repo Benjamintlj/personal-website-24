@@ -146,7 +146,7 @@ function normaliseMarkdown(markdown) {
 export function renderPage(markdown, pageId = null, externalTitle = null) {
     const titleMatch = markdown.match(/^#\s+(.+)$/m);
     const title = externalTitle ?? titleMatch?.[1] ?? 'Untitled';
-    const content = normaliseMarkdown(markdown.replace(/^#\s+.+\n*/m, ''));
+    const content = normaliseMarkdown(markdown.replace(/^#\s+.+\n*/, ''));
     const renderer = new marked.Renderer();
     const loadedPrismLanguages = new Set();
     const listTypes = [];
