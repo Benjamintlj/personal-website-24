@@ -181,10 +181,17 @@ export function renderPage(markdown, pageId = null, externalTitle = null) {
     renderer.paragraph = function ({ tokens }) {
         const text = this.parser.parseInline(tokens);
         if (text.startsWith('<figure class="image"')) return text;
-        const localPage = text.trim().match(/^<a href="([^"]+\.html)">([\s\S]*?)<\/a>$/);
-        if (localPage && !/^https?:/i.test(localPage[1])) {
-            const label = localPage[2].replace(/<[^>]+>/g, '') || 'Untitled';
-            return `<figure class="link-to-page"><a href="${localPage[1]}">${label}</a></figure>`;
+        // A paragraph may contain multiple consecutive local page links (Notion markdown has no
+        // blank lines between them). Extract each link individually and render as separate figures.
+        const allLinks = [...text.trim().matchAll(/<a href="([^"]+\.html)">([\s\S]*?)<\/a>/g)];
+        if (allLinks.length > 0 && allLinks.every(m => !/^https?:/i.test(m[1]))) {
+            const remainder = text.trim().replace(/<a href="[^"]+\.html">[\s\S]*?<\/a>/g, '').trim();
+            if (remainder === '') {
+                return allLinks.map(m => {
+                    const label = m[2].replace(/<[^>]+>/g, '') || 'Untitled';
+                    return `<figure class="link-to-page"><a href="${m[1]}">${label}</a></figure>`;
+                }).join('');
+            }
         }
         return `<p class="" dir="auto">${text.replaceAll('\n', '<br/>')}</p>`;
     };
