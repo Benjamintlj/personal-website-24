@@ -106,6 +106,26 @@ function fixTablePipes(src) {
     }).join('\n');
 }
 
+function convertHtmlTables(src) {
+    return src.replace(/<table([^>]*)>([\s\S]*?)<\/table>/g, (_, attrs, body) => {
+        const hasHeader = /header-row/.test(attrs);
+        const rows = [];
+        for (const rowMatch of body.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)) {
+            const cells = [];
+            for (const cellMatch of rowMatch[1].matchAll(/<(?:td|th)[^>]*>([\s\S]*?)<\/(?:td|th)>/g)) {
+                cells.push(cellMatch[1].trim().replace(/\|/g, '\\|'));
+            }
+            if (cells.length) rows.push(cells);
+        }
+        if (!rows.length) return '';
+        const cols = Math.max(...rows.map(r => r.length));
+        const pad = (row) => row.concat(Array(Math.max(0, cols - row.length)).fill('')).join(' | ');
+        const lines = ['| ' + pad(rows[0]) + ' |', '| ' + Array(cols).fill('---').join(' | ') + ' |'];
+        for (const row of rows.slice(hasHeader ? 1 : 0)) lines.push('| ' + pad(row) + ' |');
+        return '\n' + lines.join('\n') + '\n';
+    });
+}
+
 function escapeIsolatedBlockquoteMarkers(src) {
     // A bare `>` or `> ` line that is NOT adjacent to another blockquote line is a literal `>` symbol.
     // Leave blank blockquote continuation lines (adjacent to real blockquote lines) untouched so that
@@ -120,7 +140,7 @@ function escapeIsolatedBlockquoteMarkers(src) {
 }
 
 function normaliseMarkdown(markdown) {
-    const stage1 = escapeIsolatedBlockquoteMarkers(fixMultiLineCells(markdown)
+    const stage1 = escapeIsolatedBlockquoteMarkers(fixMultiLineCells(convertHtmlTables(markdown))
         .replace(/\]\((.+?\.md)\)/g, (match, target) => {
             if (/^https?:/i.test(target)) return match;
             const url = target.slice(0, -3) + '.html';
