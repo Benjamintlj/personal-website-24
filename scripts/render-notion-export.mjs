@@ -151,7 +151,8 @@ function normaliseMarkdown(markdown) {
         .replace(/`\|`/g, '`\\|`')
         .replace(/^\|.*\|$/gm, (row) => row.replace(/\|\|/g, '\\|\\|'))
         .replace(/<page\s+url="[^"]+">([\s\S]*?)<\/page>/g, '$1')
-        .replace(/<empty-block\s*\/>/g, ''));
+        .replace(/<empty-block\s*\/>/g, '')
+        .replace(/<unknown\s[^>]*\/>/g, ''));
     return normaliseIndentedParagraphs(renderInlineEquations(fixTablePipes(stage1)
         // Angle-bracket placeholders are literal note text (type params, camelCase names, etc.) — escape all except known HTML elements.
         // Code fences pass through unchanged; in text, \<Tag> needs a doubled backslash so marked's backslash-escape doesn't consume the \.
