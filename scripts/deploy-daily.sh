@@ -16,7 +16,7 @@ fi
 # Primary log location for a system service; fall back to the XDG state dir
 # if /var/log/personal-website/ is not writable (e.g. running as a non-root user).
 LOG_DIR="${LOG_DIR:-/var/log/personal-website}"
-if [[ ! -d "$LOG_DIR" ]] && ! mkdir -p "$LOG_DIR" 2>/dev/null; then
+if ! { [[ -d "$LOG_DIR" ]] || mkdir -p "$LOG_DIR" 2>/dev/null; } || ! [[ -w "$LOG_DIR" ]]; then
     LOG_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/personal-website/logs"
     mkdir -p "$LOG_DIR"
 fi
