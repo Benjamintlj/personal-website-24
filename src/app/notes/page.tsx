@@ -101,6 +101,15 @@ function isAncestorOf(node: NavNode, targetPageId: string): boolean {
     return node.children.some(c => isAncestorOf(c, targetPageId))
 }
 
+function findInTree(node: NavNode, pageId: string): NavNode | null {
+    if (node.pageId === pageId) return node
+    for (const child of node.children) {
+        const found = findInTree(child, pageId)
+        if (found) return found
+    }
+    return null
+}
+
 function NavItem({
     node,
     depth,
@@ -213,8 +222,14 @@ export default function NotesPage() {
             .then(r => r.json())
             .then((tree: NavNode) => {
                 setNavTree(tree)
+                const params = new URLSearchParams(window.location.search)
+                const pageId = params.get('page')
+                const target = pageId ? findInTree(tree, pageId) : null
+                const initialPage = target
+                    ? { pageId: target.pageId, title: target.title, urlPath: target.urlPath }
+                    : { pageId: tree.pageId, title: tree.title, urlPath: tree.urlPath }
                 setTabs(prev => prev.map((t, i) =>
-                    i === 0 ? { ...t, history: [{ pageId: tree.pageId, title: tree.title, urlPath: tree.urlPath }], historyIndex: 0 } : t
+                    i === 0 ? { ...t, history: [initialPage], historyIndex: 0 } : t
                 ))
             })
             .catch(console.error)
@@ -245,6 +260,12 @@ export default function NotesPage() {
             .slice(0, 10)
             .map(({ e }) => e)
     }, [searchQuery, searchIndex])
+
+    useEffect(() => {
+        if (activePage?.pageId) {
+            window.history.replaceState(null, '', `/notes?page=${activePage.pageId}`)
+        }
+    }, [activePage?.pageId])
 
     const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'error'>('idle')
 
