@@ -6,7 +6,7 @@ import Memoji from '@/app/ui/title-section/memoji'
 import { VanishingWords } from '@/app/ui/title-section/vanishing-words'
 import { Break } from '@/app/ui/general/break'
 import ContactButton from '@/app/ui/contact/contact-button'
-import { FaGithub, FaLinkedin, FaPython, FaAws } from 'react-icons/fa'
+import { FaGithub, FaLinkedin, FaPython, FaAws, FaBookOpen } from 'react-icons/fa'
 import { PiFileSql } from 'react-icons/pi'
 import {
     SiDocker,
@@ -441,6 +441,13 @@ export default function Home() {
                                 </span>
                             )}
                         </span>
+                    </a>
+                    <a
+                        href="/building-a-storage-network/index.html"
+                        className="mt-4 flex items-center gap-3 text-gray-400 hover:text-white transition-colors"
+                    >
+                        <FaBookOpen className="h-5 w-5 flex-shrink-0 text-sky-400" aria-hidden="true" />
+                        <span className="text-sm">Building a Storage Network</span>
                     </a>
                 </section>
 

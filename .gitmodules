@@ -1,0 +1,3 @@
+[submodule "content/building-a-storage-network"]
+	path = content/building-a-storage-network
+	url = git@github.com:Benjamintlj/building-a-storage-network.git

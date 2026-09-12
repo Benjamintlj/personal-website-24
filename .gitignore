@@ -6,6 +6,7 @@ public/notes/
 public/notes-nav.json
 public/notes-search.json
 public/notes-md/
+public/building-a-storage-network/
 .DS_Store
 .gitignore
 .gstack/

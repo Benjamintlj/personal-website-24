@@ -50,6 +50,11 @@ log "Project root: $project_root"
 log "Log file: $LOG_FILE"
 log "════════════════════════════════════════════════════════════"
 
+# Use the book revision recorded in this website checkout.
+log "Initialising book submodule"
+git -C "$project_root" submodule sync --recursive
+git -C "$project_root" submodule update --init --recursive
+
 # ── Select Notion content source ──────────────────────────────────────────────
 if [[ -z "${NOTION_API_KEY:-}" && -z "$notion_archive" ]]; then
     for candidate in "$backup_directory"/*; do

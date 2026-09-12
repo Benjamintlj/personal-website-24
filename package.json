@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/prepare-book.mjs",
     "dev": "next dev",
+    "prebuild": "node scripts/prepare-book.mjs",
     "build": "next build",
     "deploy:daily": "bash scripts/deploy-daily.sh",
     "start": "next start",
