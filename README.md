@@ -5,8 +5,9 @@ My personal website to show who i am.
 ## Building a Storage Network
 
 The button below Notes opens `/building-a-storage-network/index.html`. The book is
-included as a Git submodule in `content/building-a-storage-network`, pinned to a
-specific revision of `Benjamintlj/building-a-storage-network`.
+included as a Git submodule in `content/building-a-storage-network` from
+`Benjamintlj/building-a-storage-network`. Local builds use the checked-out revision;
+Pi deployments follow the book's `main` branch.
 
 Clone with `git clone --recurse-submodules`, or initialise an existing checkout:
 
@@ -18,11 +19,30 @@ Both `npm run dev` and `npm run build` copy the book's committed `Book/index.htm
 `Book/assets/` and `Book/companion/` into `public/building-a-storage-network/`.
 The generated copy is ignored by Git. Chapters, illustrations, interactive examples
 and companion downloads are served together; no book authoring tools are needed.
-The daily deployment initialises the submodule before building. The Pi needs Git
+Every deployment fetches the latest book from `main` before building. The Pi needs Git
 access to the private book repository as well as this website repository.
 
-To publish a newer book revision, update and commit the submodule pointer in this
-repository, push it, then pull and run the deployment on the Pi:
+The Pi checks for a new book commit every minute. Push to the book's `main` branch
+to publish an update automatically; no commit to this website repository is needed.
+After detecting a change, it rebuilds and uploads the entire site using the existing
+Notes export. The nightly job still refreshes Notes. Book-only updates preserve
+the Notes timestamp shown on the homepage.
+
+The polling command is:
+
+```bash
+bash scripts/deploy-daily.sh --book-if-changed
+```
+
+It stays quiet when the last successfully published book revision is unchanged.
+Failures are retried on the next check. A shared `flock` lock on the Pi prevents
+the nightly job, polling and manual deployments from overlapping. Polling skips a
+busy deployment; the nightly refresh waits so it is not lost at the minute boundary. Successful book
+revisions and the lock are stored in `~/.local/state/personal-website/` (or
+`DEPLOY_STATE_DIR` when set). A missing Notes export stops book-only deployment;
+run the full daily deployment once to initialise it.
+
+To update the book revision recorded for local development as well:
 
 ```bash
 git submodule update --remote content/building-a-storage-network
@@ -61,3 +81,12 @@ bash scripts/deploy-daily.sh /path/to/notion-export.zip
 Copy this repository and its sibling `notion-backup` folder to the Pi, then install the project dependencies with `npm ci`. The Pi also needs the AWS CLI configured with credentials that can list, upload, and delete objects in the `benlewisjones.com` bucket. For API-based publishing, set `NOTION_API_KEY` in the Pi job's environment and share the Computer Science page with that Notion connection. For ZIP-export fallback, install either `bsdtar` or `unzip`.
 
 The daily job only needs to run `npm run deploy:daily` from the project folder. With the API key it fetches Notion directly; otherwise it finds the newest ZIP export automatically. The script is independent of the laptop's paths and dates.
+
+The Pi also runs the following crontab entry as `ben`. `timeout` bounds a stuck
+polling run; the next minute retries once its lock is released. Keep the existing
+daily entry alongside it. Output from changed revisions and failures goes to the
+book-updates log and normal deployment logs.
+
+```cron
+* * * * * /usr/bin/timeout 30m /bin/bash /opt/personal-website-24/scripts/deploy-daily.sh --book-if-changed >> /var/log/personal-website/book-updates.log 2>&1
+```

@@ -5,11 +5,54 @@ project_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 backup_directory="$project_root/../notion-backup"
 bucket="benlewisjones.com"
 notion_archive="${1:-}"
+book_if_changed=false
+if [[ "$notion_archive" == --book-if-changed ]]; then
+    book_if_changed=true
+    notion_archive=""
+elif [[ "$notion_archive" == --* ]]; then
+    printf 'Usage: %s [--book-if-changed | notion-export.zip]\n' "$0" >&2
+    exit 1
+fi
 
 # Load credentials so the script works unattended (e.g. from cron).
 if [[ -f /etc/personal-website-24/notion.env ]]; then
     # shellcheck source=/dev/null
     source /etc/personal-website-24/notion.env
+fi
+
+# The nightly refresh and book polling must never build or sync concurrently.
+state_directory="${DEPLOY_STATE_DIR:-${XDG_STATE_HOME:-$HOME/.local/state}/personal-website}"
+mkdir -p "$state_directory"
+if command -v flock >/dev/null; then
+    exec 9>"$state_directory/deploy.lock"
+    if $book_if_changed; then
+        flock -n 9 || exit 0
+    elif ! flock -w 1800 9; then
+        printf 'Timed out waiting for the active website deployment.\n' >&2
+        exit 1
+    fi
+elif [[ "$(uname -s)" == Linux ]]; then
+    printf 'flock is required for safe unattended deployments.\n' >&2
+    exit 1
+fi
+
+# Follow main even when the parent repository still records an older book commit.
+# Fail instead of prompting for credentials in an unattended job.
+export GIT_TERMINAL_PROMPT=0
+export GIT_SSH_COMMAND="${GIT_SSH_COMMAND:-ssh -o BatchMode=yes -o ConnectTimeout=15}"
+book_path="content/building-a-storage-network"
+if [[ -e "$project_root/$book_path/.git" ]] &&
+    [[ -n "$(git -C "$project_root/$book_path" status --porcelain)" ]]; then
+    printf 'Book checkout has local edits; refusing to replace or publish them.\n' >&2
+    exit 1
+fi
+git -C "$project_root" submodule sync --quiet --recursive
+git -C "$project_root" submodule update --quiet --init --remote --recursive -- "$book_path"
+book_revision="$(git -C "$project_root/$book_path" rev-parse HEAD)"
+revision_file="$state_directory/published-book-revision"
+if $book_if_changed && [[ -f "$revision_file" ]] &&
+    [[ "$(cat "$revision_file")" == "$book_revision" ]]; then
+    exit 0
 fi
 
 # ── Logging ───────────────────────────────────────────────────────────────────
@@ -48,12 +91,8 @@ log "═════════════════════════
 log "Deploy started — host: $(hostname -f 2>/dev/null || hostname), user: $(whoami)"
 log "Project root: $project_root"
 log "Log file: $LOG_FILE"
+log "Book revision: $book_revision"
 log "════════════════════════════════════════════════════════════"
-
-# Use the book revision recorded in this website checkout.
-log "Initialising book submodule"
-git -C "$project_root" submodule sync --recursive
-git -C "$project_root" submodule update --init --recursive
 
 # ── Select Notion content source ──────────────────────────────────────────────
 if [[ -z "${NOTION_API_KEY:-}" && -z "$notion_archive" ]]; then
@@ -66,7 +105,23 @@ if [[ -z "${NOTION_API_KEY:-}" && -z "$notion_archive" ]]; then
     done
 fi
 
-if [[ -n "${NOTION_API_KEY:-}" ]]; then
+if $book_if_changed; then
+    # A full-site sync must not remove Notes when starting from a fresh checkout.
+    for required in notes-nav.json notes-search.json deployment.json; do
+        if [[ ! -s "$project_root/public/$required" ]]; then
+            error "Existing Notes export is missing. Run npm run deploy:daily once before enabling book updates."
+            exit 1
+        fi
+    done
+    for required in notes notes-md; do
+        if [[ ! -d "$project_root/public/$required" ]] ||
+            [[ -z "$(find "$project_root/public/$required" -type f -print -quit)" ]]; then
+            error "Existing Notes export is missing. Run npm run deploy:daily once before enabling book updates."
+            exit 1
+        fi
+    done
+    log "Reusing the existing Notes export for this book update"
+elif [[ -n "${NOTION_API_KEY:-}" ]]; then
     log "Fetching the Computer Science page from Notion API"
     node "$project_root/scripts/fetch-notion-notes.mjs"
     log "Notion fetch complete"
@@ -86,7 +141,9 @@ if ! command -v aws >/dev/null; then
 fi
 
 # ── Build ──────────────────────────────────────────────────────────────────────
-printf '{"updatedAt":"%s"}\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "$project_root/public/deployment.json"
+if ! $book_if_changed; then
+    printf '{"updatedAt":"%s"}\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "$project_root/public/deployment.json"
+fi
 
 log "Building static site"
 build_start=$SECONDS
@@ -101,3 +158,7 @@ log "Syncing changed files to s3://$bucket"
 sync_start=$SECONDS
 aws s3 sync "$project_root/out/" "s3://$bucket/" --delete --exact-timestamps --only-show-errors
 log "S3 sync complete in $((SECONDS - sync_start))s"
+
+# Failed builds/uploads leave the previous revision here, so the next poll retries.
+printf '%s\n' "$book_revision" > "$revision_file.tmp"
+mv "$revision_file.tmp" "$revision_file"
