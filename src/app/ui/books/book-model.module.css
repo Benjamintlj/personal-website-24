@@ -9,6 +9,8 @@
 .spine { position: absolute; top: 0; left: 0; height: 100%; width: var(--depth); transform-origin: left center; transform: translateZ(calc(-1 * var(--depth))) rotateY(-90deg); background: #e5e3de; overflow: hidden; }
 .spine::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, #0002, transparent 40%, #0003); }
 .darkSurface { background: #101111; }
+/* Cover the .2px front-face offset, with a small overlap to seal the hinge. */
+.spine.darkSurface { width: calc(var(--depth) + .5px); }
 .reverseSpine { left: auto; right: 0; transform-origin: right center; transform: translateZ(calc(-1 * var(--depth))) rotateY(90deg); }
 .paperEdge { position: absolute; left: calc(100% - 3px); top: 3px; height: calc(100% - 6px); width: calc(var(--depth) - 2px); transform-origin: left center; transform: translateZ(calc(-1 * var(--depth) + 1px)) rotateY(-90deg); background: repeating-linear-gradient(90deg, #e5e0d5 0 1px, #fbf9f1 1px 2px); }
 .reversePaperEdge { left: auto; right: calc(100% - 3px); transform-origin: right center; transform: translateZ(calc(-1 * var(--depth) + 1px)) rotateY(90deg); }
