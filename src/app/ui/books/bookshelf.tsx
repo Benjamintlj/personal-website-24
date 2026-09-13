@@ -54,15 +54,18 @@ function ShelfBook({ storage = false }: { storage?: boolean }) {
 
 export default function Bookshelf() {
     return <div className={styles.shelf}>
-        <div className={styles.lighting} aria-hidden="true" />
-        <div className={styles.backPanel} aria-hidden="true" />
-        <div className={styles.floor} aria-hidden="true" />
+        <div className={styles.cabinet} aria-hidden="true">
+            <div className={styles.backPanel} />
+            <div className={styles.floor} />
+            <div className={styles.ceiling} />
+            <div className={`${styles.side} ${styles.leftSide}`} />
+            <div className={`${styles.side} ${styles.rightSide}`} />
+            <div className={`${styles.sideCap} ${styles.leftCap}`} />
+            <div className={`${styles.sideCap} ${styles.rightCap}`} />
+            <div className={styles.topRail} />
+        </div>
         <ShelfBook />
         <ShelfBook storage />
-        <div className={`${styles.side} ${styles.leftSide}`} aria-hidden="true" />
-        <div className={`${styles.side} ${styles.rightSide}`} aria-hidden="true" />
-        <div className={`${styles.sideCap} ${styles.leftCap}`} aria-hidden="true" />
-        <div className={`${styles.sideCap} ${styles.rightCap}`} aria-hidden="true" />
         <div className={styles.plank} aria-hidden="true" />
         <div className={styles.shelfShadow} aria-hidden="true" />
     </div>

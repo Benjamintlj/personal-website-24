@@ -11,8 +11,10 @@ are unnumbered; stock blank endpapers and the two trailing blank source pages
 the preface folds directly onto the front cover, and Next opens it back to page 1.
 The shelf presents touching spines, with both covers turned fully into the shelf.
 Hovering or keyboard focus pulls a book forward and turns its cover towards the
-reader. The shelf has raised sides, a wooden back and a floor deeper than either
-book. Selecting a book lifts
+reader. The shelf is a walnut cabinet with rounded mouldings, full sides, a
+recessed back and a floor deeper than either book. Its furniture panels have a
+separate, centred perspective and share the generated walnut material documented
+in [bookshelf-material.md](bookshelf-material.md). Selecting a book lifts
 the closed book from the far left to the centre, then opens it from the spine
 into the preface in one continuous animation. The same book and page elements
 remain mounted throughout, over the dimmed website. Closing uses that same hinge
@@ -28,7 +30,9 @@ The second book, *Building a Storage Network*, has original vector artwork: a
 black cloth cover with a semicircular gold anchor and a moving foil sheen. Its
 author, title and anchor are spaced down the front, with the title and Ben
 Lewis-Jones's name also on the spine. It is slightly shorter and thicker than the
-first book. It uses the same flight and return geometry, including the current
+first book. The spine preserves its artwork's aspect ratio, with the title and
+author centred together, so the lettering is never stretched to fill its width.
+It uses the same flight and return geometry, including the current
 pull-out angle, stopping at the closed front cover. The cover and the solid blue
 Continue to site button both link to `/building-a-storage-network/index.html`.
 The button sits halfway between the cover and the viewport bottom, aligned with

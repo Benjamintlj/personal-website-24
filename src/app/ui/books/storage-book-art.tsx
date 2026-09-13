@@ -21,12 +21,11 @@ function Anchor({ stroke }: { stroke: string }) {
 function StorageCover({ side }: { side: 'front' | 'back' | 'spine' }) {
     const id = useId().replace(/:/g, '')
     const gold = '#c6a15b'
-    if (side === 'spine') return <svg className={styles.art} viewBox="0 0 28 594" preserveAspectRatio="none" aria-hidden="true">
-        <path fill="#101111" d="M0 0h28v594H0z" />
-        <path d="M4 14h20M4 580h20" stroke={gold} strokeWidth=".7" />
-        <g transform="translate(14 35) rotate(90)" fill={gold} fontFamily="Georgia, 'Times New Roman', serif" fontSize="14">
-            <text x="0" y="0" dominantBaseline="middle">Building a Storage Network</text>
-            <text x="521" y="0" dominantBaseline="middle" textAnchor="end" fontSize="12">Ben Lewis-Jones</text>
+    if (side === 'spine') return <svg className={styles.art} style={{ background: '#101111' }} viewBox="0 0 44 548" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <path fill="#101111" d="M0 0h44v548H0z" />
+        <path d="M10 18h24M10 530h24" stroke={gold} strokeWidth=".7" />
+        <g transform="translate(22 274) rotate(90)" fill={gold} fontFamily="Georgia, 'Times New Roman', serif" fontSize="16" fontWeight="400">
+            <text textAnchor="middle" dominantBaseline="central"><tspan>Building a Storage Network</tspan><tspan dx="28" fontSize="12">Ben Lewis-Jones</tspan></text>
         </g>
     </svg>
     return <svg className={styles.art} viewBox="0 0 430 560" preserveAspectRatio="none" role="img" aria-label={side === 'front' ? 'Building a Storage Network — Ben Lewis-Jones. Black cover with a gold anchor.' : 'Black back cover with a gold anchor'}>

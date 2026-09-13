@@ -1,28 +1,98 @@
-.shelf { --shelf-depth: 240px; --shelf-floor: 55px; position: relative; min-height: 420px; margin: 1.5rem 0 2.8rem; isolation: isolate; perspective: 1200px; perspective-origin: 48px calc(100% - 203px); }
-.lighting { position: absolute; inset: 0 0 40px; background: radial-gradient(ellipse at 31% 62%, #35312a52, transparent 65%); pointer-events: none; }
-.backPanel { position: absolute; bottom: var(--shelf-floor); left: 8px; right: 8px; height: 345px; transform: translateZ(calc(-1 * var(--shelf-depth))); background: repeating-linear-gradient(90deg, #201a15 0 2px, #231c16 3px 5px, #211b16 6px 11px); box-shadow: inset 0 0 70px #000a, inset 0 2px 0 #71563c50; border: 1px solid #423225; border-radius: 3px 3px 0 0; z-index: 0; }
-.floor { position: absolute; bottom: var(--shelf-floor); left: 8px; right: 8px; height: var(--shelf-depth); transform-origin: center bottom; transform: rotateX(90deg); background: repeating-linear-gradient(0deg, #4b3828 0 2px, #513d2b 3px 5px, #493525 6px 10px); box-shadow: inset 0 30px 50px #0008; z-index: 1; }
-.side { position: absolute; bottom: var(--shelf-floor); height: 52px; width: var(--shelf-depth); background: repeating-linear-gradient(0deg, #58412d 0 2px, #513c2a 3px 6px); border-top: 5px solid #7d5d3f; box-shadow: inset 0 -20px 25px #0005; z-index: 4; }
-.leftSide { left: 8px; transform-origin: left center; transform: rotateY(90deg); }
-.rightSide { right: 8px; transform-origin: right center; transform: rotateY(-90deg); }
-.sideCap { position: absolute; bottom: var(--shelf-floor); width: 9px; height: 52px; background: linear-gradient(90deg, #513b29, #765538 50%, #463223); border-radius: 2px 2px 0 0; z-index: 5; }
-.leftCap { left: 0; }.rightCap { right: 0; }
-.bookButton { --book-depth: 14px; --book-width: 215px; --book-height: 297px; --rest-angle: 90; --pull-depth: 245px; position: absolute; bottom: var(--shelf-floor); left: 32px; width: var(--book-depth); height: var(--book-height); perspective: 1200px; cursor: pointer; z-index: 3; -webkit-tap-highlight-color: transparent; filter: drop-shadow(9px 5px 7px #0009); transition: filter .7s; }
-.secondBook { --book-depth: 22px; --book-width: 210px; --book-height: 274px; left: 46px; }
+.shelf {
+    --shelf-depth: 240px;
+    --shelf-floor: 55px;
+    --wood: url('/books/materials/walnut.jpg');
+    position: relative;
+    min-height: 420px;
+    margin: 1.5rem 0 2.8rem;
+    isolation: isolate;
+}
+
+/* A straight-on walnut cabinet. Its camera is independent of each book's hinge. */
+.cabinet {
+    position: absolute;
+    inset: 24px 0 var(--shelf-floor);
+    perspective: 4800px;
+    perspective-origin: 50% -180px;
+    border-radius: 8px 8px 0 0;
+    background: #2c1c13;
+    box-shadow: 0 20px 42px #0009, 0 0 0 1px #e4b68a0e;
+    pointer-events: none;
+}
+.backPanel {
+    position: absolute;
+    inset: 0;
+    transform: translateZ(calc(-1 * var(--shelf-depth)));
+    background: linear-gradient(#160b0799, #26120938 44%, #1c100968), var(--wood) center / 900px 600px;
+    box-shadow: inset 0 20px 32px #140b0bc9, inset 24px 0 35px #11080555, inset -24px 0 35px #11080555, inset 0 -5px 10px #10080580;
+}
+.floor, .ceiling {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: var(--shelf-depth);
+    background: linear-gradient(#26130950, #ffffff06), var(--wood) center / 800px 540px;
+}
+.floor { bottom: 0; transform-origin: center bottom; transform: rotateX(90deg); box-shadow: inset 0 40px 70px #190c0999; }
+.ceiling { top: 0; transform-origin: center top; transform: rotateX(-90deg); background-image: linear-gradient(#26120866, #120907bb), var(--wood); }
+.side {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: var(--shelf-depth);
+    background: linear-gradient(90deg, #2a140d88, #7e563108), var(--wood) 10% center / 800px 540px;
+    box-shadow: inset 0 1px #e9bb8640;
+}
+.leftSide { left: 0; transform-origin: left center; transform: rotateY(90deg); }
+.rightSide { right: 0; transform-origin: right center; transform: rotateY(-90deg); background-image: linear-gradient(270deg, #2a140d88, #7e563108), var(--wood); }
+.sideCap {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 12px;
+    background: linear-gradient(90deg, #ffffff13, #0002), var(--wood) 28% center / 600px 900px;
+    box-shadow: inset 1px 0 #ecc49a50, inset -1px 0 #1b10095c, 2px 0 4px #160c0940;
+    z-index: 1;
+}
+.leftCap { left: 0; border-radius: 7px 0 0 0; }
+.rightCap { right: 0; border-radius: 0 7px 0 0; }
+.topRail {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 12px;
+    border-radius: 7px 7px 2px 2px;
+    background: linear-gradient(#ffe0b32b, #00000016 45%, #29140855), var(--wood) center 15% / 900px 600px;
+    box-shadow: inset 0 1px #f9d6a647, 0 2px 3px #1c0f0750;
+    z-index: 2;
+}
+.bookButton { --book-depth: 14px; --book-width: 215px; --book-height: 297px; --rest-angle: 90; --pull-depth: 245px; position: absolute; bottom: var(--shelf-floor); left: 40px; width: var(--book-depth); height: var(--book-height); perspective: 1200px; cursor: pointer; z-index: 3; -webkit-tap-highlight-color: transparent; filter: drop-shadow(7px 3px 5px #180b08b3); transition: filter .7s; }
+.secondBook { --book-depth: 22px; --book-width: 210px; --book-height: 274px; left: 54px; }
 .bookButton:focus-visible { outline: 1px solid #eee8dc; outline-offset: 5px; border-radius: 2px; }
 .book { --depth: var(--book-depth); position: relative; display: block; left: var(--book-depth); width: var(--book-width); height: 100%; transform-origin: left center; transform-style: preserve-3d; transform: rotateY(90deg); transition: transform .85s cubic-bezier(.22,.7,.22,1); }
 .bookButton.pulled { z-index: 10; filter: drop-shadow(10px 20px 16px #000b); }
 .bookButton.pulled .book { transform: translate3d(8px,-8px,var(--pull-depth)) rotateY(8deg); }
 .bookButton.away { opacity: 0; pointer-events: none; }
 .bookButton.away .book { transform: rotateY(90deg); }
-.plank { position: absolute; bottom: calc(var(--shelf-floor) - 20px); left: 0; right: 0; height: 20px; background: linear-gradient(#795c3e 0, #5c422c 3px, #39291c 4px, #302219 95%, #1b140f); box-shadow: 0 2px 0 #000, inset 0 1px #aa866244; border-radius: 2px; z-index: 5; }
-.plank::after { content: ''; position: absolute; inset: 5px 0 1px; opacity: .18; background: repeating-linear-gradient(0deg, transparent 0 3px, #a07b50 3px 4px, transparent 4px 6px); }
-.shelfShadow { position: absolute; left: 2%; right: 2%; bottom: 3px; height: 45px; background: #000a; filter: blur(15px); z-index: -1; }
+.plank {
+    position: absolute;
+    bottom: calc(var(--shelf-floor) - 22px);
+    left: -2px;
+    right: -2px;
+    height: 23px;
+    border-radius: 3px 3px 6px 6px;
+    background: linear-gradient(#ffe0ae54, #ffffff05 3px, #391b0c1a 7px, #31170860 20px, #1a0b076b), var(--wood) center 72% / 900px 600px;
+    box-shadow: inset 0 1px #fce3bb80, inset 0 -1px #d7a5752e, 0 3px 3px #0006;
+    z-index: 5;
+}
+.shelfShadow { position: absolute; left: 1%; right: 1%; bottom: 8px; height: 32px; background: #000b; filter: blur(15px); z-index: -1; }
 @media (max-width: 600px) {
-    .shelf { --shelf-depth: 215px; --shelf-floor: 50px; min-height: 375px; margin-top: 1.4rem; perspective-origin: 40px calc(100% - 181px); }
-    .backPanel { height: 305px; }
-    .bookButton { --book-depth: 12.4px; --book-width: 190px; --book-height: 263px; --pull-depth: 215px; left: 24px; }
-    .secondBook { --book-depth: 20px; --book-width: 188px; --book-height: 245px; left: 36.4px; }
-    .side, .sideCap { height: 40px; }
+    .shelf { --shelf-depth: 215px; --shelf-floor: 50px; min-height: 375px; margin-top: 1.4rem; }
+    .cabinet { top: 23px; perspective: 2400px; perspective-origin: 50% -90px; }
+    .sideCap { width: 10px; }
+    .topRail { height: 10px; }
+    .bookButton { --book-depth: 12.4px; --book-width: 190px; --book-height: 263px; --pull-depth: 215px; left: 28px; }
+    .secondBook { --book-depth: 20px; --book-width: 188px; --book-height: 245px; left: 40.4px; }
 }
 @media (prefers-reduced-motion: reduce) { .book, .bookButton { transition: none; } }
