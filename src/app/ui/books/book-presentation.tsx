@@ -8,7 +8,7 @@ import styles from './book-reader.module.css'
 export type BookPhase = 'arriving' | 'reading' | 'closing-cover' | 'front-cover' | 'back-cover' | 'opening-cover' | 'returning'
 type Flight = {
     x: number; y: number; z: number; scaleX: number; scaleY: number; closedX: number
-    cameraX: number; cameraY: number; centerX: number; centerY: number; depth: number
+    cameraX: number; cameraY: number; centerX: number; centerY: number; depth: number; rotation: number
 }
 
 /** The same cover, hinge and book assembly handle opening, closing and returning. */
@@ -39,7 +39,7 @@ export default function BookPresentation({ origin, getShelfOrigin, narrow, reduc
             const shelf = getShelfOrigin()
             const hinge = narrow ? (backCover ? bounds.width : 0) : bounds.width / 2
             const pageWidth = narrow ? bounds.width : bounds.width / 2
-            const angle = 86 * Math.PI / 180
+            const angle = shelf.restRotation * Math.PI / 180
             // The reverse cover pivots about the other edge of the spine.
             const next: Flight = {
                 x: shelf.left - bounds.left - hinge - (backCover ? shelf.depth * Math.sin(angle) : 0),
@@ -50,11 +50,13 @@ export default function BookPresentation({ origin, getShelfOrigin, narrow, reduc
                 cameraX: shelf.cameraX - bounds.left, cameraY: shelf.cameraY - bounds.top,
                 centerX: bounds.width / 2, centerY: bounds.height / 2,
                 depth: pageWidth * shelf.depth / shelf.width,
+                rotation: shelf.restRotation - (backCover ? 180 : 0),
             }
             if (!initialized.current) {
-                x.set(origin.left - bounds.left - hinge)
+                x.set(origin.left - bounds.left - hinge + origin.liftX)
                 y.set(origin.top - bounds.top + (origin.height - bounds.height) / 2 + origin.liftY)
                 z.set(origin.liftZ)
+                rotation.set(origin.rotation)
                 scaleX.set(origin.width / pageWidth); scaleY.set(origin.height / bounds.height)
                 cameraX.set(origin.cameraX - bounds.left); cameraY.set(origin.cameraY - bounds.top)
                 initialized.current = true
@@ -65,7 +67,7 @@ export default function BookPresentation({ origin, getShelfOrigin, narrow, reduc
         const resize = new ResizeObserver(measure)
         resize.observe(mount.current!)
         return () => resize.disconnect()
-    }, [origin, getShelfOrigin, narrow, backCover, returning, x, y, z, scaleX, scaleY, cameraX, cameraY])
+    }, [origin, getShelfOrigin, narrow, backCover, returning, x, y, z, scaleX, scaleY, cameraX, cameraY, rotation])
 
     useEffect(() => {
         if (!flight) return
@@ -95,7 +97,7 @@ export default function BookPresentation({ origin, getShelfOrigin, narrow, reduc
         } else if (phase === 'returning') {
             animations.push(animate(x, flight.x, transition), animate(y, flight.y, transition), animate(z, flight.z, transition),
                 animate(scaleX, flight.scaleX, transition), animate(scaleY, flight.scaleY, transition),
-                animate(rotation, backCover ? -94 : 86, transition), animate(openness, 0, transition),
+                animate(rotation, flight.rotation, transition), animate(openness, 0, transition),
                 animate(cameraX, flight.cameraX, transition), animate(cameraY, flight.cameraY, transition), animate(perspective, 1200, transition))
         } else {
             x.set(flight.closedX); y.set(0); z.set(0); scaleX.set(1); scaleY.set(1); rotation.set(0); openness.set(0)

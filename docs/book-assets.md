@@ -9,7 +9,10 @@ The reader numbers the 226 interior pages from the preface (page 1). Both covers
 are unnumbered; stock blank endpapers and the two trailing blank source pages
 (227 and 228) are omitted from navigation. Previous from
 the preface folds directly onto the front cover, and Next opens it back to page 1.
-The shelf presents the spine with a small glimpse of the front. Selecting it lifts
+The shelf presents touching spines, with both covers turned fully into the shelf.
+Hovering or keyboard focus pulls a book forward and turns its cover towards the
+reader. The shelf has raised sides, a wooden back and a floor deeper than either
+book. Selecting a book lifts
 the closed book from the far left to the centre, then opens it from the spine
 into the preface in one continuous animation. The same book and page elements
 remain mounted throughout, over the dimmed website. Closing uses that same hinge
@@ -22,10 +25,14 @@ perspective, spine pivot, width, height and depth before the shelf book reappear
 The inside front cover stays plain.
 
 The second book, *Building a Storage Network*, has original vector artwork: a
-black cloth cover with a gold anchor, a moving foil highlight, and a title and
-Ben Lewis-Jones's name on the spine. It uses the same flight and return geometry,
-stopping at the closed front cover. The cover and the blue-outlined Open Site
-button both link to `/building-a-storage-network/index.html`. The Contact link
+black cloth cover with a semicircular gold anchor and a moving foil sheen. Its
+author, title and anchor are spaced down the front, with the title and Ben
+Lewis-Jones's name also on the spine. It is slightly shorter and thicker than the
+first book. It uses the same flight and return geometry, including the current
+pull-out angle, stopping at the closed front cover. The cover and the solid blue
+Continue to site button both link to `/building-a-storage-network/index.html`.
+The button sits halfway between the cover and the viewport bottom, aligned with
+the floating contact icon. The Contact link
 has been removed. `scripts/prepare-book.mjs` copies the portfolio's B favicon into
 the generated standalone book site without changing the source submodule.
 

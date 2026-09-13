@@ -61,14 +61,14 @@ export default function StorageBookPreview({ origin, getShelfOrigin, onClose }: 
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
             </button>
         </header>
-        <div className={styles.viewport} onClick={event => { if (event.target === event.currentTarget) close() }}>
-            <div className={`${styles.stage} ${styles.single}`} style={{ '--zoom': 1 } as CSSProperties}>
+        <div className={`${styles.viewport} ${coverStyles.previewViewport}`} onClick={event => { if (event.target === event.currentTarget) close() }}>
+            <div className={`${styles.stage} ${styles.single} ${coverStyles.previewStage}`} style={{ '--zoom': 1 } as CSSProperties}>
                 <BookPresentation origin={origin} getShelfOrigin={getShelfOrigin} narrow reducedMotion={reducedMotion} phase={phase} backCover={false}
                     onComplete={completed} artwork={storageBookArtwork()} siteHref={STORAGE_BOOK.href} />
             </div>
         </div>
         <footer className={coverStyles.siteToolbar} style={{ visibility: phase === 'front-cover' ? 'visible' : 'hidden' }}>
-            <a className={coverStyles.openSite} href={STORAGE_BOOK.href}>Open Site</a>
+            <a className={coverStyles.openSite} href={STORAGE_BOOK.href}>Continue to site</a>
         </footer>
     </motion.div>, document.body)
 }
