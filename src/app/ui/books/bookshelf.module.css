@@ -1,18 +1,19 @@
 .shelf { --shelf-floor: 55px; position: relative; min-height: 390px; margin: 1.5rem 0 2.8rem; isolation: isolate; }
-.bookButton { --book-depth: 14px; --book-width: 215px; --book-height: 297px; --rest-angle: 90; --pull-depth: 245px; position: absolute; bottom: var(--shelf-floor); left: 40px; width: var(--book-depth); height: var(--book-height); perspective: 1200px; cursor: pointer; z-index: 3; -webkit-tap-highlight-color: transparent; filter: drop-shadow(7px 3px 5px #0006); transition: filter .7s; }
-.secondBook { --book-depth: 22px; --book-width: 210px; --book-height: 274px; left: 54px; }
+.bookButton { --book-depth: 14px; --book-width: 215px; --book-height: 297px; --rest-angle: 86; --pull-depth: 245px; position: absolute; bottom: var(--shelf-floor); left: 64px; width: var(--book-depth); height: var(--book-height); perspective: 1200px; cursor: pointer; z-index: 3; -webkit-tap-highlight-color: transparent; filter: drop-shadow(7px 3px 5px #0006); transition: filter .7s; }
+.secondBook { --book-depth: 22px; --book-width: 210px; --book-height: 274px; left: 78.1px; }
 .bookButton:focus-visible { outline: 1px solid #eee8dc; outline-offset: 5px; border-radius: 2px; }
-.book { --depth: var(--book-depth); position: relative; display: block; left: var(--book-depth); width: var(--book-width); height: 100%; transform-origin: left center; transform-style: preserve-3d; transform: rotateY(90deg); }
+.book { --depth: var(--book-depth); position: relative; display: block; left: var(--book-depth); width: var(--book-width); height: 100%; transform-origin: left center; transform-style: preserve-3d; transform: rotateY(86deg); }
 .bookButton.raised { filter: drop-shadow(10px 16px 14px #0009); }
 .bookButton.away { opacity: 0; pointer-events: none; }
-.plank { position: absolute; bottom: calc(var(--shelf-floor) - 18px); left: 0; right: 0; height: 50px; border-radius: 22px; border: 1px solid #dbeaff2e; background: linear-gradient(160deg, #e8f2ff26, #9eafc514 55%, #c6d8ef1f); backdrop-filter: blur(20px) saturate(120%); -webkit-backdrop-filter: blur(20px) saturate(120%); box-shadow: inset 0 1px #ffffff33, inset 0 -1px #ffffff12, 0 18px 28px #0005; z-index: 1; pointer-events: none; }
-.plank::before { content: ''; position: absolute; inset: 0 0 17px; border-radius: 22px 22px 12px 12px; background: linear-gradient(180deg, #ffffff0b, #ffffff03); border-bottom: 1px solid #d8e5f226; }
-.shelfShadow { position: absolute; left: 2%; right: 2%; bottom: 10px; height: 24px; background: #0008; filter: blur(16px); z-index: -1; }
+/* The rounded top and refracting cut edge share the same centred projection. */
+.glassShelf { position: absolute; left: 0; right: 0; bottom: calc(var(--shelf-floor) - 48px); height: 80px; z-index: 1; pointer-events: none; }
+.glassFrost { position: absolute; inset: 0; background: #b6cbd008; backdrop-filter: blur(9px) saturate(110%); -webkit-backdrop-filter: blur(9px) saturate(110%); }
+.glassSlab { position: absolute; inset: 0; overflow: visible; filter: drop-shadow(0 7px 5px #0008); }
+.bookContact { position: absolute; bottom: -5px; left: -4px; width: calc(100% + 14px); height: 12px; border-radius: 50%; background: #000b; filter: blur(3px); pointer-events: none; }
+.shelfShadow { position: absolute; left: 1%; right: 1%; bottom: 11px; height: 18px; border-radius: 50%; background: #000a; filter: blur(12px); z-index: -1; }
 @media (max-width: 600px) {
     .shelf { --shelf-floor: 50px; min-height: 355px; margin-top: 1.4rem; }
     .bookButton { --book-depth: 12.4px; --book-width: 190px; --book-height: 263px; --pull-depth: 215px; left: 28px; }
-    .secondBook { --book-depth: 20px; --book-width: 188px; --book-height: 245px; left: 40.4px; }
-    .plank { border-radius: 18px; }
-    .plank::before { border-radius: 18px 18px 10px 10px; }
+    .secondBook { --book-depth: 20px; --book-width: 188px; --book-height: 245px; left: 40.5px; }
 }
 @media (prefers-reduced-motion: reduce) { .bookButton { transition: none; } }

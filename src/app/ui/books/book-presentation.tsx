@@ -3,7 +3,7 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import { animate, motion, useMotionTemplate, useMotionValue, useMotionValueEvent, useTransform, type AnimationPlaybackControls, type MotionStyle } from 'framer-motion'
 import { BookFaces, type BookArtwork, type ShelfOrigin } from './book-model'
-import { SHELF_PERSPECTIVE, shelfPose } from './book-motion'
+import { bookRotation, coverNormal, SHELF_PERSPECTIVE, SHELF_REST_ANGLE, shelfPose } from './book-motion'
 import styles from './book-reader.module.css'
 
 export type BookPhase = 'arriving' | 'reading' | 'closing-cover' | 'front-cover' | 'back-cover' | 'opening-cover' | 'returning'
@@ -28,7 +28,8 @@ export default function BookPresentation({ origin, getShelfOrigin, narrow, reduc
     const rotation = useMotionValue(90), pitch = useMotionValue(0), openness = useMotionValue(0)
     const cameraX = useMotionValue(0), cameraY = useMotionValue(0), perspective = useMotionValue(1200)
     // Scale depth as well as the two visible dimensions, then project only once.
-    const transform = useMotionTemplate`translate3d(${x}px, ${y}px, ${z}px) rotateX(${pitch}deg) rotateY(${rotation}deg) scale3d(${scaleX}, ${scaleY}, ${scaleX})`
+    const orientation = useTransform([rotation, pitch], values => bookRotation(values[0] as number, values[1] as number))
+    const transform = useMotionTemplate`translate3d(${x}px, ${y}px, ${z}px) ${orientation} scale3d(${scaleX}, ${scaleY}, ${scaleX})`
     const perspectiveOrigin = useMotionTemplate`${cameraX}px ${cameraY}px`
     const coverAngle = useTransform(openness, [0, 1], [0, backCover ? 180 : -180])
     const paperOpacity = useTransform(openness, [0, .005], [0, 1])
@@ -87,12 +88,13 @@ export default function BookPresentation({ origin, getShelfOrigin, narrow, reduc
         let cancelled = false
         const shelfPosition = (progress: number) => {
             const pose = shelfPose(progress, flight.shelfHeight, flight.clearance, flight.withdrawFirst)
-            const yaw = pose.rotation * Math.PI / 180, tilt = pose.pitch * Math.PI / 180
+            const normal = coverNormal(pose.rotation, pose.pitch)
+            const restNormal = coverNormal(SHELF_REST_ANGLE, 0)
             // The back-cover assembly pivots at the opposite edge of the spine.
             return {
-                x: flight.x + pose.x + (backCover ? flight.shelfDepth * (1 - Math.sin(yaw)) : 0),
-                y: flight.y + pose.y + (backCover ? flight.shelfDepth * Math.sin(tilt) * Math.cos(yaw) : 0),
-                z: flight.z + pose.z - (backCover ? flight.shelfDepth * Math.cos(tilt) * Math.cos(yaw) : 0),
+                x: flight.x + pose.x + (backCover ? flight.shelfDepth * (restNormal.x - normal.x) : 0),
+                y: flight.y + pose.y - (backCover ? flight.shelfDepth * normal.y : 0),
+                z: flight.z + pose.z + (backCover ? flight.shelfDepth * (restNormal.z - normal.z) : 0),
                 rotation: pose.rotation - (backCover ? 180 : 0), pitch: pose.pitch,
             }
         }

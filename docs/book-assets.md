@@ -13,19 +13,30 @@ The cover hinges and page elements remain mounted throughout those transitions.
 
 ## Glass ledge and motion
 
-The books rest with touching spines on a rounded, frosted-glass ledge. The wooden
-cabinet, back and walls have been removed. Both books tip forward from their
+The books rest at an 86-degree angle with touching spines on a rounded glass
+shelf. Its top and cut edge are projected from the same centred camera, with
+symmetric depth, softly rounded corners, frosted transmission, a refracting edge
+and book contact shadows. There is no decorative divider across the glass and
+no cabinet, back or walls. The depth accommodates the whole book footprint.
+Both books tip forward from their
 bottom edge as though pulled from the top, lift clear, and turn towards the
 reader. The left book clears its neighbour before turning; the right can turn
 earlier. A shared reversible path handles hover, focus, early clicks and return
 from either reader cover.
 
+Each cover has a solid board, inner lining and top, bottom and fore-edge faces,
+with the pages inset between them. The white and black bindings remain visible
+at grazing angles instead of exposing a page block with missing covers. The
+original matte artwork is unchanged.
+
+The pickup follows the angled book's own slot and pivots about its bottom edge.
 The path compensates for perspective so the book's projected bottom stays above
 the ledge. Drawing order follows each book's depth, including when switching
 between books during a return, and stays raised until the return finishes.
 The modal keeps the original camera, pivot, dimensions, depth, pitch and current
 pickup progress for a continuous handoff. The back cover uses the opposite edge
-of the spine and the corresponding rotated depth offset. Reduced-motion settings
+of the spine and the corresponding rotated depth offset. Fractional shelf
+coordinates are retained for the mobile handoff. Reduced-motion settings
 skip the flight. Escape, the close button and clicking outside close the book.
 
 ## Building a Storage Network
