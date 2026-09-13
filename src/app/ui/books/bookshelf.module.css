@@ -4,6 +4,8 @@
 .bookButton:focus-visible { outline: 1px solid #eee8dc; outline-offset: 18px; border-radius: 2px; }
 .book { --depth: 14px; position: relative; display: block; left: 16px; width: 215px; height: 100%; transform-origin: left center; transform-style: preserve-3d; transform: rotateY(86deg); transition: transform .6s cubic-bezier(.2,.8,.2,1); }
 .bookButton:hover .book, .bookButton:focus-visible .book { transform: translateY(-6px) translateZ(35px) rotateY(86deg); }
+.bookButton.away { opacity: 0; pointer-events: none; }
+.bookButton.away .book { transform: rotateY(86deg); }
 .plank { position: absolute; bottom: 35px; left: 0; right: 0; height: 20px; background: linear-gradient(#71583d 0, #513c2a 3px, #38291d 4px, #302219 95%, #1b140f); box-shadow: 0 2px 0 #000, inset 0 1px #aa866244; border-radius: 2px; z-index: 2; }
 .plank::before { content: ''; position: absolute; left: 0; right: 0; top: -9px; height: 10px; transform: perspective(300px) rotateX(28deg); transform-origin: bottom; background: repeating-linear-gradient(1deg, #55402d 0 1px, #604831 2px 3px, #4c3929 5px 6px); box-shadow: inset 0 5px 8px #0004; }
 .plank::after { content: ''; position: absolute; inset: 5px 0 1px; opacity: .18; background: repeating-linear-gradient(0deg, transparent 0 3px, #a07b50 3px 4px, transparent 4px 6px); }

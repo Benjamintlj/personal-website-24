@@ -1,8 +1,8 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import BookReader from './book-reader'
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 import { BOOK } from './book-pages.mjs'
 import { BookFaces, type ShelfOrigin } from './book-model'
 import styles from './bookshelf.module.css'
@@ -11,26 +11,34 @@ export default function Bookshelf() {
     const [open, setOpen] = useState(false)
     const trigger = useRef<HTMLButtonElement>(null)
     const book = useRef<HTMLSpanElement>(null)
-    const [origin, setOrigin] = useState<ShelfOrigin>({ left: 0, top: 0, height: 297 })
-    const reducedMotion = useReducedMotion()
+    const [origin, setOrigin] = useState<ShelfOrigin | null>(null)
+    const getShelfOrigin = useCallback((): ShelfOrigin => {
+        const bounds = trigger.current!.getBoundingClientRect()
+        const style = getComputedStyle(book.current!)
+        const transform = new DOMMatrixReadOnly(style.transform)
+        return {
+            left: bounds.left + book.current!.offsetLeft, top: bounds.top,
+            width: parseFloat(style.width), height: parseFloat(style.height), depth: parseFloat(style.getPropertyValue('--depth')),
+            cameraX: bounds.left + bounds.width / 2, cameraY: bounds.top + bounds.height / 2,
+            liftY: transform.m42, liftZ: transform.m43,
+        }
+    }, [])
     return <>
         <div className={styles.shelf}>
             <div className={styles.lighting} aria-hidden="true" />
-            <motion.button ref={trigger} type="button" className={styles.bookButton}
+            <button ref={trigger} type="button" className={`${styles.bookButton} ${open ? styles.away : ''}`}
                 aria-label={`Open ${BOOK.title}`} aria-haspopup="dialog"
                 onClick={() => {
-                    const bounds = book.current!.getBoundingClientRect()
-                    setOrigin({ left: bounds.left, top: bounds.top, height: bounds.height })
+                    setOrigin(getShelfOrigin())
                     setOpen(true)
-                }} animate={{ opacity: open ? 0 : 1 }}
-                transition={{ duration: reducedMotion || open ? 0 : .25 }}>
+                }}>
                 <span ref={book} className={styles.book}><BookFaces /></span>
-            </motion.button>
+            </button>
             <div className={styles.plank} aria-hidden="true" />
             <div className={styles.shelfShadow} aria-hidden="true" />
         </div>
         <AnimatePresence onExitComplete={() => trigger.current?.focus({ preventScroll: true })}>
-            {open && <BookReader origin={origin} onClose={() => setOpen(false)} />}
+            {open && origin && <BookReader origin={origin} getShelfOrigin={getShelfOrigin} onClose={() => setOpen(false)} />}
         </AnimatePresence>
     </>
 }

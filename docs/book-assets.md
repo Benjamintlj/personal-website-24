@@ -17,7 +17,9 @@ in reverse, then moves the closed book back to its shelf position. The back cove
 uses a mirrored hinge: Next from the final interior page closes it, and Previous
 or clicking the back cover reopens that page. Both covers retain the same spread
 geometry throughout; returning from the back turns the book towards its original
-shelf orientation. The inside front cover stays plain. No storage-network book
+shelf orientation. The return measures the shelf's current layout and matches its
+perspective, spine pivot, width, height and depth before the shelf book reappears.
+The inside front cover stays plain. No storage-network book
 has been added to this shelf.
 
 `python3 scripts/prepare-fyp-book.py /path/to/proof.pdf` regenerates the web assets.

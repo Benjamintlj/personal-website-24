@@ -3,7 +3,10 @@ import type { ReactNode } from 'react'
 import { BOOK } from './book-pages.mjs'
 import styles from './book-model.module.css'
 
-export type ShelfOrigin = { left: number; top: number; height: number }
+export type ShelfOrigin = {
+    left: number; top: number; width: number; height: number; depth: number
+    cameraX: number; cameraY: number; liftY: number; liftZ: number
+}
 
 /** The cover is at z=0; the pages and spine sit behind it. */
 export function BookFaces({ opening = false, inside, backCover = false }: { opening?: boolean; inside?: ReactNode; backCover?: boolean }) {
