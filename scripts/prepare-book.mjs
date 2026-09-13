@@ -1,4 +1,4 @@
-import { access, cp, mkdir, rm } from 'node:fs/promises';
+import { access, cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 
 const source = new URL('../content/building-a-storage-network/Book/', import.meta.url);
 const destination = new URL('../public/building-a-storage-network/', import.meta.url);
@@ -16,5 +16,12 @@ await mkdir(destination, { recursive: true });
 for (const entry of entries) {
     await cp(new URL(entry, source), new URL(entry, destination), { recursive: true });
 }
+
+// Keep the standalone book's tab icon consistent with the portfolio.
+const index = new URL('index.html', destination);
+const html = await readFile(index, 'utf8');
+await writeFile(index, html.replace(/<link\b(?=[^>]*\brel=["'](?:shortcut )?icon["'])[^>]*>/gi, '')
+    .replace('</head>', '<link rel="icon" type="image/svg+xml" href="favicon.svg"></head>'));
+await cp(new URL('../src/app/icon.svg', import.meta.url), new URL('favicon.svg', destination));
 
 console.log('Prepared Building a Storage Network in public/building-a-storage-network/');

@@ -1,0 +1,9 @@
+.art { display: block; width: 100%; height: 100%; }
+.gloss { transform: translateX(-100%); }
+:global([data-book-cover]:hover) .gloss, :global([data-book-cover]:focus-within) .gloss { animation: foil-sheen 1.4s ease-in-out both; }
+@keyframes foil-sheen { from { transform: translateX(-55%); } to { transform: translateX(85%); } }
+.siteToolbar { align-self: center; flex-shrink: 0; margin: .7rem 1rem 1.5rem; min-height: 52px; }
+.openSite { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: .65rem 1.8rem; color: #d9ecff; border: 1px solid #6fb3f6; border-radius: 999px; background: #16385b55; font-size: .9rem; transition: background .2s, border-color .2s; }
+.openSite:hover { background: #245d9655; border-color: #acd6ff; }
+.openSite:focus-visible { outline: 2px solid #c5e2ff; outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) { .gloss { animation: none !important; } }

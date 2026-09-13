@@ -19,8 +19,15 @@ or clicking the back cover reopens that page. Both covers retain the same spread
 geometry throughout; returning from the back turns the book towards its original
 shelf orientation. The return measures the shelf's current layout and matches its
 perspective, spine pivot, width, height and depth before the shelf book reappears.
-The inside front cover stays plain. No storage-network book
-has been added to this shelf.
+The inside front cover stays plain.
+
+The second book, *Building a Storage Network*, has original vector artwork: a
+black cloth cover with a gold anchor, a moving foil highlight, and a title and
+Ben Lewis-Jones's name on the spine. It uses the same flight and return geometry,
+stopping at the closed front cover. The cover and the blue-outlined Open Site
+button both link to `/building-a-storage-network/index.html`. The Contact link
+has been removed. `scripts/prepare-book.mjs` copies the portfolio's B favicon into
+the generated standalone book site without changing the source submodule.
 
 `python3 scripts/prepare-fyp-book.py /path/to/proof.pdf` regenerates the web assets.
 The renderer uses the PDF TrimBox to remove production marks and separates the

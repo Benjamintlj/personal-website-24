@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import { animate, motion, useMotionTemplate, useMotionValue, useMotionValueEvent, useTransform, type AnimationPlaybackControls, type MotionStyle } from 'framer-motion'
-import { BookFaces, type ShelfOrigin } from './book-model'
+import { BookFaces, type BookArtwork, type ShelfOrigin } from './book-model'
 import styles from './book-reader.module.css'
 
 export type BookPhase = 'arriving' | 'reading' | 'closing-cover' | 'front-cover' | 'back-cover' | 'opening-cover' | 'returning'
@@ -12,9 +12,10 @@ type Flight = {
 }
 
 /** The same cover, hinge and book assembly handle opening, closing and returning. */
-export default function BookPresentation({ origin, getShelfOrigin, narrow, reducedMotion, phase, backCover, onComplete, onOpen, inside, children }: {
+export default function BookPresentation({ origin, getShelfOrigin, narrow, reducedMotion, phase, backCover, onComplete, onOpen, inside, children, artwork, siteHref }: {
     origin: ShelfOrigin; getShelfOrigin: () => ShelfOrigin; narrow: boolean; reducedMotion: boolean; phase: BookPhase; backCover: boolean
-    onComplete: (phase: BookPhase) => void; onOpen: () => void; inside: ReactNode; children: ReactNode
+    onComplete: (phase: BookPhase) => void; onOpen?: () => void; inside?: ReactNode; children?: ReactNode
+    artwork?: BookArtwork; siteHref?: string
 }) {
     const mount = useRef<HTMLDivElement>(null)
     const [flight, setFlight] = useState<Flight | null>(null)
@@ -74,10 +75,14 @@ export default function BookPresentation({ origin, getShelfOrigin, narrow, reduc
             return
         }
         const ease = [.3, .05, .3, 1] as [number, number, number, number]
-        const duration = reducedMotion ? 0 : phase === 'arriving' ? 1.65 : phase === 'returning' ? 1 : .8
+        const duration = reducedMotion ? 0 : phase === 'arriving' ? (siteHref ? 1 : 1.65) : phase === 'returning' ? 1 : .8
         const transition = { duration, ease }
         const animations: AnimationPlaybackControls[] = []
-        if (phase === 'arriving') {
+        if (phase === 'arriving' && siteHref) {
+            animations.push(animate(x, flight.closedX, transition), animate(y, 0, transition), animate(z, 0, transition),
+                animate(scaleX, 1, transition), animate(scaleY, 1, transition), animate(rotation, 0, transition),
+                animate(cameraX, flight.centerX, transition), animate(cameraY, flight.centerY, transition), animate(perspective, 2200, transition))
+        } else if (phase === 'arriving') {
             const timeline = { ...transition, times: [0, .48, 1] }
             animations.push(animate(x, [x.get(), flight.closedX, 0], timeline), animate(y, [y.get(), 0, 0], timeline), animate(z, 0, transition),
                 animate(scaleX, [scaleX.get(), 1, 1], timeline), animate(scaleY, [scaleY.get(), 1, 1], timeline),
@@ -99,7 +104,7 @@ export default function BookPresentation({ origin, getShelfOrigin, narrow, reduc
         let cancelled = false
         Promise.all(animations).then(() => { if (!cancelled) onComplete(phase) })
         return () => { cancelled = true; animations.forEach(animation => animation.stop()) }
-    }, [flight, phase, backCover, reducedMotion, onComplete, x, y, z, scaleX, scaleY, rotation, openness, cameraX, cameraY, perspective])
+    }, [flight, phase, backCover, reducedMotion, onComplete, siteHref, x, y, z, scaleX, scaleY, rotation, openness, cameraX, cameraY, perspective])
 
     const covering = phase !== 'reading'
     const closed = phase === 'front-cover' || phase === 'back-cover'
@@ -108,10 +113,10 @@ export default function BookPresentation({ origin, getShelfOrigin, narrow, reduc
             style={{ transformOrigin: narrow ? (backCover ? 'right center' : 'left center') : 'center center', transform }}>
             {/* Keep page textures composited during 3D turns to avoid blank pages in WebKit. */}
             <motion.div className={styles.readerPages} style={{ opacity: covering ? paperOpacity : 1 }} aria-hidden={phase === 'front-cover' || phase === 'back-cover' || phase === 'returning' || undefined}>{children}</motion.div>
-            <motion.div className={`${styles.presentationCover} ${backCover ? styles.backCover : ''} ${narrow ? styles.mobileCover : ''}`}
+            <motion.div data-book-cover className={`${styles.presentationCover} ${backCover ? styles.backCover : ''} ${narrow ? styles.mobileCover : ''}`}
                 style={{ '--depth': `${flight.depth}px`, rotateY: coverAngle, opacity: covering ? 1 : 0, pointerEvents: closed ? 'auto' : 'none' } as MotionStyle} aria-hidden={!closed || undefined}>
-                <BookFaces opening={hinged} inside={inside} backCover={backCover} />
-                {closed && <button type="button" className={styles.closedCoverOpen} onClick={onOpen} aria-label={`Open ${backCover ? 'back' : 'front'} cover`} />}
+                <BookFaces opening={hinged} inside={inside} backCover={backCover} artwork={artwork} />
+                {closed && (siteHref ? <a className={styles.closedCoverOpen} href={siteHref} aria-label="Open Building a Storage Network site" /> : <button type="button" className={styles.closedCoverOpen} onClick={onOpen} aria-label={`Open ${backCover ? 'back' : 'front'} cover`} />)}
             </motion.div>
         </motion.div>}
     </motion.div>

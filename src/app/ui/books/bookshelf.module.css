@@ -1,6 +1,7 @@
 .shelf { position: relative; min-height: 410px; margin: 1.5rem 0 2.8rem; isolation: isolate; perspective: 1200px; }
 .lighting { position: absolute; inset: 0 0 40px; background: radial-gradient(ellipse at 31% 62%, #35312a52, transparent 65%); pointer-events: none; }
 .bookButton { position: absolute; bottom: 53px; left: 0; width: 48px; height: 297px; perspective: 1200px; cursor: pointer; z-index: 3; -webkit-tap-highlight-color: transparent; filter: drop-shadow(14px 10px 9px #0009); transition: filter .6s; }
+.secondBook { left: 40px; }
 .bookButton:focus-visible { outline: 1px solid #eee8dc; outline-offset: 18px; border-radius: 2px; }
 .book { --depth: 14px; position: relative; display: block; left: 16px; width: 215px; height: 100%; transform-origin: left center; transform-style: preserve-3d; transform: rotateY(86deg); transition: transform .6s cubic-bezier(.2,.8,.2,1); }
 .bookButton:hover .book, .bookButton:focus-visible .book { transform: translateY(-6px) translateZ(35px) rotateY(86deg); }
@@ -10,7 +11,7 @@
 .plank::before { content: ''; position: absolute; left: 0; right: 0; top: -9px; height: 10px; transform: perspective(300px) rotateX(28deg); transform-origin: bottom; background: repeating-linear-gradient(1deg, #55402d 0 1px, #604831 2px 3px, #4c3929 5px 6px); box-shadow: inset 0 5px 8px #0004; }
 .plank::after { content: ''; position: absolute; inset: 5px 0 1px; opacity: .18; background: repeating-linear-gradient(0deg, transparent 0 3px, #a07b50 3px 4px, transparent 4px 6px); }
 .shelfShadow { position: absolute; left: 2%; right: 2%; bottom: 3px; height: 45px; background: #000a; filter: blur(15px); z-index: -1; }
-@media (max-width: 600px) { .shelf { min-height: 355px; margin-top: 1.4rem; }.bookButton { width: 44px; height: 263px; bottom: 50px; }.book { --depth: 12.4px; width: 190px; }.plank { bottom: 32px; } }
+@media (max-width: 600px) { .shelf { min-height: 355px; margin-top: 1.4rem; }.bookButton { width: 44px; height: 263px; bottom: 50px; }.secondBook { left: 36px; }.book { --depth: 12.4px; width: 190px; }.plank { bottom: 32px; } }
 @media (prefers-reduced-motion: reduce) { .book { transition: none; }.bookButton:hover .book, .bookButton:focus-visible .book { transform: rotateY(86deg); } }
 
 .bookButton:hover, .bookButton:focus-visible { filter: drop-shadow(18px 22px 15px #000b); }
