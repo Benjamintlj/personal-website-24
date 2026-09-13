@@ -61,7 +61,7 @@ export default function GlassShelf() {
                     <stop offset="1" stopColor="#eefeff" stopOpacity="0" />
                 </radialGradient>
             </defs>
-            <path d={edge} fill="#b8d1d5" fillOpacity=".2" />
+            <path d={edge} fill="#d8f2f4" fillOpacity=".3" />
             <path d={top} fill={`url(#${id}-surface)`} />
             <path d={top} fill={`url(#${id}-light)`} />
         </svg>

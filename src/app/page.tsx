@@ -230,7 +230,7 @@ export default function Home() {
                             </div>
 
                             <p className="text-neutral-500 text-sm leading-relaxed max-w-md">
-                                Now a Software Developer at <span className="text-white font-semibold">bet365</span>. {yearsInIndustry} years of shipping production software, from high-volume payments at <span className="text-white font-semibold">AccessPay</span> to embedded and cloud development at <span className="text-white font-semibold">Dyson</span>, with a particular interest in designing large-scale systems.
+                                {yearsInIndustry} years of shipping production software: high-volume bets at <span className="text-white font-semibold">bet365</span>, reliable payments at <span className="text-white font-semibold">AccessPay</span>, and embedded and cloud development at <span className="text-white font-semibold">Dyson</span>.
                             </p>
 
                         </div>
@@ -257,7 +257,7 @@ export default function Home() {
                     <h2 className="header2 text-3xl mb-4">Work Experience</h2>
                     <Break />
                     <p className="text-gray-400 text-base mt-6 mb-8">
-                        Over the past <span className="text-white font-semibold">{yearsInIndustry.toLowerCase()} years</span>, I have worked across embedded software, cloud services and high-throughput payments. I enjoy understanding how the pieces fit together and helping design systems that work at scale. My next chapter is at <span className="text-white font-semibold">bet365</span>.
+                        Over the past <span className="text-white font-semibold">{yearsInIndustry.toLowerCase()} years</span>, I have shipped production software for high-volume bets at <span className="text-white font-semibold">bet365</span>, reliable payments at <span className="text-white font-semibold">AccessPay</span>, and embedded and cloud development at <span className="text-white font-semibold">Dyson</span>. I enjoy understanding how the pieces fit together and helping design systems that work at scale.
                     </p>
                     <Timeline scrollContainer={mainRef} data={[
                         {

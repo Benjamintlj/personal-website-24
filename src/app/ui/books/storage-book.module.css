@@ -3,6 +3,6 @@
 .previewViewport { position: absolute; inset: 80px 24px 144px; padding: 0; align-items: flex-end; }
 .previewStage { --base-page: min(calc(100vw - 64px), calc((100dvh - 224px) * 430 / 560), 500px); height: calc(var(--page-width) * 560 / 430); }
 .siteToolbar { position: absolute; left: 50%; bottom: 48px; transform: translateX(-50%); }
-.openSite { display: inline-flex; align-items: center; justify-content: center; min-width: 208px; min-height: 48px; padding: .75rem 1.8rem; color: #fff; border: 1px solid #367dd4; border-radius: 999px; background: #286dcc; font-size: .95rem; font-weight: 500; white-space: nowrap; box-shadow: 0 5px 20px #0003; transition: background .2s, box-shadow .2s; }
-.openSite:hover { background: #347ee2; box-shadow: 0 5px 24px #1b569340; }
+.openSite { display: inline-flex; align-items: center; justify-content: center; min-width: 208px; min-height: 48px; padding: .75rem 1.8rem; color: #fff; border: 1px solid #4797ff; border-radius: 999px; background: #086bff; font-size: .95rem; font-weight: 500; white-space: nowrap; box-shadow: 0 5px 22px #006bff30; transition: background .2s, box-shadow .2s; }
+.openSite:hover { background: #0062ed; box-shadow: 0 5px 26px #006bff45; }
 .openSite:focus-visible { outline: 2px solid #c5e2ff; outline-offset: 4px; }
