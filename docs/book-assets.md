@@ -34,9 +34,13 @@ at grazing angles instead of exposing a page block with missing covers. The
 original matte artwork is unchanged.
 
 The pickup follows the angled book's own slot and pivots about its bottom edge.
-The path compensates for perspective so the book's projected bottom stays above
-the ledge. Drawing order follows each book's depth, including when switching
-between books during a return, and stays raised until the return finishes.
+The path compensates for the shared camera height so each book's projected bottom
+stays above the ledge. Both shelf books inhabit one preserved 3D scene: their
+surfaces occlude one another according to depth, including during interrupted
+hover returns and when switching books. No whole-book z-index swap is used.
+After the reader flies back to the withdrawn shelf pose, its visible book hands
+over to that same shelf scene for insertion. The white cover then slides behind
+the black book progressively instead of remaining above it until the last frame.
 The modal keeps the original camera, pivot, dimensions, depth, pitch and current
 pickup progress for a continuous handoff. The back cover uses the opposite edge
 of the spine and the corresponding rotated depth offset. Fractional shelf

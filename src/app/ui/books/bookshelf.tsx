@@ -14,17 +14,18 @@ import styles from './bookshelf.module.css'
 function ShelfBook({ storage = false }: { storage?: boolean }) {
     const [open, setOpen] = useState(false)
     const [pulled, setPulled] = useState(false)
+    const [returningOnShelf, setReturningOnShelf] = useState(false)
     const reducedMotion = useReducedMotion()
-    // Keep both the pose and drawing order continuous throughout an interrupted return.
+    // Both books share one 3D scene so their actual surfaces determine occlusion.
     const travel = useMotionValue(0)
     const bookHeight = useMotionValue(297)
     const clearance = useMotionValue(245)
-    const pose = useTransform([travel, bookHeight, clearance], values => {
-        const [progress, height, distance] = values as number[]
-        return shelfPose(progress, height, distance, !storage)
+    const cameraHeight = useMotionValue(148.5)
+    const pose = useTransform([travel, bookHeight, clearance, cameraHeight], values => {
+        const [progress, height, distance, elevation] = values as number[]
+        return shelfPose(progress, height, distance, !storage, elevation)
     })
     const transform = useTransform(pose, value => `translate3d(${value.x}px, ${value.y}px, ${value.z}px) ${bookRotation(value.rotation, value.pitch)}`)
-    const layer = useTransform(pose, value => value.z > .001 ? 10 + Math.round(value.z) : 3)
     useEffect(() => {
         const target = pulled && !open ? 1 : 0
         if (open || reducedMotion) { travel.set(target); return }
@@ -40,22 +41,28 @@ function ShelfBook({ storage = false }: { storage?: boolean }) {
             const style = getComputedStyle(book.current!)
             bookHeight.set(parseFloat(style.height))
             clearance.set(parseFloat(style.getPropertyValue('--pull-depth')))
+            cameraHeight.set(parseFloat(style.getPropertyValue('--camera-height')))
         }
         measure()
         const resize = new ResizeObserver(measure)
         resize.observe(book.current!)
         return () => resize.disconnect()
-    }, [bookHeight, clearance])
+    }, [bookHeight, clearance, cameraHeight])
     const getShelfOrigin = useCallback((): ShelfOrigin => {
         const bounds = trigger.current!.getBoundingClientRect()
         const style = getComputedStyle(book.current!)
+        const scene = trigger.current!.closest<HTMLElement>('[data-book-scene]')!
+        const sceneBounds = scene.getBoundingClientRect()
+        const [cameraX, cameraY] = getComputedStyle(scene).perspectiveOrigin.split(' ').map(parseFloat)
+        const elevation = bounds.bottom - sceneBounds.top - cameraY
         const transform = new DOMMatrixReadOnly(style.transform)
         const progress = parseFloat(style.getPropertyValue('--pickup-progress')) || 0
-        const renderedPose = shelfPose(progress, parseFloat(style.height), parseFloat(style.getPropertyValue('--pull-depth')), !storage)
+        const renderedPose = shelfPose(progress, parseFloat(style.height), parseFloat(style.getPropertyValue('--pull-depth')), !storage, elevation)
         return {
             left: bounds.left + parseFloat(style.left), top: bounds.top,
             width: parseFloat(style.width), height: parseFloat(style.height), depth: parseFloat(style.getPropertyValue('--depth')),
-            cameraX: bounds.left + bounds.width / 2, cameraY: bounds.top + bounds.height / 2,
+            cameraX: sceneBounds.left + cameraX, cameraY: sceneBounds.top + cameraY,
+            cameraHeight: elevation,
             liftX: transform.m41, liftY: transform.m42, liftZ: transform.m43,
             rotation: renderedPose.rotation,
             pitch: renderedPose.pitch,
@@ -67,9 +74,13 @@ function ShelfBook({ storage = false }: { storage?: boolean }) {
     }, [storage])
     const title = storage ? STORAGE_BOOK.title : BOOK.title
     const Preview = storage ? StorageBookPreview : BookReader
-    const close = () => { returningFocus.current = true; setPulled(false); setOpen(false) }
+    const onShelfReturn = useCallback((progress: number) => {
+        travel.set(progress)
+        setReturningOnShelf(true)
+    }, [travel])
+    const close = () => { returningFocus.current = true; setPulled(false); setOpen(false); setReturningOnShelf(false) }
     return <>
-        <motion.button ref={trigger} type="button" style={{ zIndex: layer }} className={`${styles.bookButton} ${storage ? styles.secondBook : ''} ${open ? styles.away : ''}`}
+        <motion.button ref={trigger} type="button" className={`${styles.bookButton} ${storage ? styles.secondBook : ''} ${open && !returningOnShelf ? styles.away : ''}`}
             aria-label={`Open ${title}`} aria-haspopup="dialog"
             onPointerEnter={event => { if (event.pointerType !== 'touch' && !open) { returningFocus.current = false; setPulled(true) } }}
             onPointerLeave={() => setPulled(false)}
@@ -77,21 +88,26 @@ function ShelfBook({ storage = false }: { storage?: boolean }) {
             onBlur={() => { returningFocus.current = false; setPulled(false) }}
             onClick={() => {
                 setOrigin(getShelfOrigin())
+                setReturningOnShelf(false)
                 setPulled(false)
                 setOpen(true)
             }}>
             <motion.span ref={book} className={styles.book} style={{ transform, '--pickup-progress': travel } as MotionStyle} data-book-cover><BookFaces artwork={storage ? storageBookArtwork() : undefined} /></motion.span>
         </motion.button>
         <AnimatePresence onExitComplete={() => trigger.current?.focus({ preventScroll: true })}>
-            {open && origin && <Preview origin={origin} getShelfOrigin={getShelfOrigin} onClose={close} />}
+            {open && origin && <Preview origin={origin} getShelfOrigin={getShelfOrigin} onShelfReturn={onShelfReturn} onClose={close} />}
         </AnimatePresence>
     </>
 }
 
 export default function Bookshelf() {
     return <div className={styles.shelf}>
-        <ShelfBook />
-        <ShelfBook storage />
+        <div className={styles.bookScene} data-book-scene>
+            <div className={styles.bookSpace}>
+                <ShelfBook />
+                <ShelfBook storage />
+            </div>
+        </div>
         <GlassShelf />
     </div>
 }

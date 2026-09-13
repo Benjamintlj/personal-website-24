@@ -1,5 +1,7 @@
-.shelf { --shelf-floor: 55px; position: relative; min-height: 390px; margin: 1.5rem 0 2.8rem; isolation: isolate; }
-.bookButton { --book-depth: 14px; --book-width: 215px; --book-height: 297px; --rest-angle: 86; --pull-depth: 245px; position: absolute; bottom: var(--shelf-floor); left: 64px; width: var(--book-depth); height: var(--book-height); perspective: 1200px; cursor: pointer; z-index: 3; -webkit-tap-highlight-color: transparent; }
+.shelf { --shelf-floor: 55px; --camera-height: 148.5px; --camera-x: 71px; position: relative; min-height: 390px; margin: 1.5rem 0 2.8rem; isolation: isolate; }
+.bookButton { --book-depth: 14px; --book-width: 215px; --book-height: 297px; --rest-angle: 86; --pull-depth: 245px; position: absolute; bottom: var(--shelf-floor); left: 64px; width: var(--book-depth); height: var(--book-height); transform-style: preserve-3d; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.bookScene { position: absolute; inset: 0; perspective: 1200px; perspective-origin: var(--camera-x) calc(100% - var(--shelf-floor) - var(--camera-height)); z-index: 3; }
+.bookSpace { position: absolute; inset: 0; transform-style: preserve-3d; }
 .secondBook { --book-depth: 22px; --book-width: 210px; --book-height: 274px; left: 78.1px; }
 .bookButton:focus-visible { outline: 1px solid #eee8dc; outline-offset: 5px; border-radius: 2px; }
 .book { --depth: var(--book-depth); position: relative; display: block; left: var(--book-depth); width: var(--book-width); height: 100%; transform-origin: left center; transform-style: preserve-3d; transform: rotateY(86deg); }
@@ -9,7 +11,7 @@
 .glassFrost { position: absolute; inset: 0; background: #b6cbd008; backdrop-filter: blur(9px) saturate(110%); -webkit-backdrop-filter: blur(9px) saturate(110%); }
 .glassSlab { position: absolute; inset: 0; overflow: visible; }
 @media (max-width: 600px) {
-    .shelf { --shelf-floor: 50px; min-height: 355px; margin-top: 1.4rem; }
+    .shelf { --shelf-floor: 50px; --camera-height: 131.5px; --camera-x: 34.2px; min-height: 355px; margin-top: 1.4rem; }
     .bookButton { --book-depth: 12.4px; --book-width: 190px; --book-height: 263px; --pull-depth: 215px; left: 28px; }
     .secondBook { --book-depth: 20px; --book-width: 188px; --book-height: 245px; left: 40.5px; }
 }

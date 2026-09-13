@@ -24,7 +24,7 @@ const smooth = (value: number) => {
 }
 
 /** A top-first pickup, shared by hover and the reader's flight back to the shelf. */
-export function shelfPose(progress: number, height: number, clearance: number, withdrawFirst: boolean) {
+export function shelfPose(progress: number, height: number, clearance: number, withdrawFirst: boolean, cameraHeight = height / 2) {
     const withdrawal = smooth((progress - .08) / .56)
     const turn = smooth((progress - (withdrawFirst ? .6 : .28)) / (withdrawFirst ? .4 : .72))
     const pitch = -12 * smooth(progress / .18) * (1 - smooth((progress - .4) / .6))
@@ -37,7 +37,7 @@ export function shelfPose(progress: number, height: number, clearance: number, w
     return {
         x: across * Math.cos(axis) + towards * Math.sin(axis),
         // Pivot at the bottom edge and keep its projected position above the ledge.
-        y: height / 2 * (1 - Math.cos(radians)) - height / 2 * bottomForward / SHELF_PERSPECTIVE - lift * (1 - bottomForward / SHELF_PERSPECTIVE),
+        y: height / 2 * (1 - Math.cos(radians)) - cameraHeight * bottomForward / SHELF_PERSPECTIVE - lift * (1 - bottomForward / SHELF_PERSPECTIVE),
         z: -across * Math.sin(axis) + towards * Math.cos(axis),
         pitch,
         rotation: SHELF_REST_ANGLE + (8 - SHELF_REST_ANGLE) * turn,

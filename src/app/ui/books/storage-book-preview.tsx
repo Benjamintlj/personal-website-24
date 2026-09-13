@@ -9,8 +9,8 @@ import { STORAGE_BOOK, storageBookArtwork } from './storage-book-art'
 import styles from './book-reader.module.css'
 import coverStyles from './storage-book.module.css'
 
-export default function StorageBookPreview({ origin, getShelfOrigin, onClose }: {
-    origin: ShelfOrigin; getShelfOrigin: () => ShelfOrigin; onClose: () => void
+export default function StorageBookPreview({ origin, getShelfOrigin, onClose, onShelfReturn }: {
+    origin: ShelfOrigin; getShelfOrigin: () => ShelfOrigin; onClose: () => void; onShelfReturn: (progress: number) => void
 }) {
     const [phase, setPhase] = useState<BookPhase>('arriving')
     const reducedMotion = !!useReducedMotion()
@@ -63,7 +63,7 @@ export default function StorageBookPreview({ origin, getShelfOrigin, onClose }: 
         </header>
         <div className={`${styles.viewport} ${coverStyles.previewViewport}`} onClick={event => { if (event.target === event.currentTarget) close() }}>
             <div className={`${styles.stage} ${styles.single} ${coverStyles.previewStage}`} style={{ '--zoom': 1 } as CSSProperties}>
-                <BookPresentation origin={origin} getShelfOrigin={getShelfOrigin} narrow reducedMotion={reducedMotion} phase={phase} backCover={false}
+                <BookPresentation origin={origin} getShelfOrigin={getShelfOrigin} onShelfReturn={onShelfReturn} narrow reducedMotion={reducedMotion} phase={phase} backCover={false}
                     onComplete={completed} artwork={storageBookArtwork()} siteHref={STORAGE_BOOK.href} />
             </div>
         </div>

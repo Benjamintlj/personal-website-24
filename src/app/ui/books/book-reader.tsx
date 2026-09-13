@@ -33,7 +33,7 @@ function Arrow({ direction }: { direction: 'left' | 'right' }) {
     return <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d={direction === 'left' ? 'M15 5l-7 7 7 7' : 'M9 5l7 7-7 7'} /></svg>
 }
 
-export default function BookReader({ origin, getShelfOrigin, onClose }: { origin: ShelfOrigin; getShelfOrigin: () => ShelfOrigin; onClose: () => void }) {
+export default function BookReader({ origin, getShelfOrigin, onClose, onShelfReturn }: { origin: ShelfOrigin; getShelfOrigin: () => ShelfOrigin; onClose: () => void; onShelfReturn: (progress: number) => void }) {
     const reducedMotion = !!useReducedMotion()
     const [narrow, setNarrow] = useState(() => window.matchMedia('(max-width: 760px)').matches)
     const [page, setPage] = useState(BOOK.firstContentPage)
@@ -201,7 +201,7 @@ export default function BookReader({ origin, getShelfOrigin, onClose }: { origin
                     touch.current = null
                     if (start && Math.abs(event.clientX - start.x) > 45 && Math.abs(event.clientY - start.y) < 80) turn(event.clientX < start.x ? 1 : -1)
                 }}>
-                <BookPresentation origin={origin} getShelfOrigin={getShelfOrigin} narrow={single} reducedMotion={reducedMotion} phase={phase} backCover={backCover} onComplete={completed}
+                <BookPresentation origin={origin} getShelfOrigin={getShelfOrigin} onShelfReturn={onShelfReturn} narrow={single} reducedMotion={reducedMotion} phase={phase} backCover={backCover} onComplete={completed}
                     inside={<Page index={single ? null : current[backCover ? 1 : 0]} decorative />} onOpen={() => turn(backCover ? -1 : 1)}>
                     <div className={styles.spread}>
                         {base.map((index, side) => <div key={side} className={`${styles.pageSlot} ${side === 0 ? styles.left : styles.right}`}><Page index={index} /></div>)}

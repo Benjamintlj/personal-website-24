@@ -10,19 +10,22 @@ export type BookPhase = 'arriving' | 'reading' | 'closing-cover' | 'front-cover'
 type Flight = {
     x: number; y: number; z: number; scaleX: number; scaleY: number; closedX: number
     cameraX: number; cameraY: number; centerX: number; centerY: number; depth: number; rotation: number
-    shelfHeight: number; shelfDepth: number; clearance: number; withdrawFirst: boolean
+    shelfHeight: number; shelfDepth: number; clearance: number; withdrawFirst: boolean; cameraHeight: number
 }
 
 /** The same cover, hinge and book assembly handle opening, closing and returning. */
-export default function BookPresentation({ origin, getShelfOrigin, narrow, reducedMotion, phase, backCover, onComplete, onOpen, inside, children, artwork, siteHref }: {
+export default function BookPresentation({ origin, getShelfOrigin, narrow, reducedMotion, phase, backCover, onComplete, onOpen, inside, children, artwork, siteHref, onShelfReturn }: {
     origin: ShelfOrigin; getShelfOrigin: () => ShelfOrigin; narrow: boolean; reducedMotion: boolean; phase: BookPhase; backCover: boolean
     onComplete: (phase: BookPhase) => void; onOpen?: () => void; inside?: ReactNode; children?: ReactNode
     artwork?: BookArtwork; siteHref?: string
+    onShelfReturn: (progress: number) => void
 }) {
     const mount = useRef<HTMLDivElement>(null)
     const [flight, setFlight] = useState<Flight | null>(null)
     const initialized = useRef(false)
     const [hinged, setHinged] = useState(false)
+    const [onShelf, setOnShelf] = useState(false)
+    const shelfReturnStarted = useRef(false)
     const x = useMotionValue(0), y = useMotionValue(0), z = useMotionValue(0)
     const scaleX = useMotionValue(1), scaleY = useMotionValue(1)
     const rotation = useMotionValue(90), pitch = useMotionValue(0), openness = useMotionValue(0)
@@ -55,6 +58,7 @@ export default function BookPresentation({ origin, getShelfOrigin, narrow, reduc
                 depth: pageWidth * shelf.depth / shelf.width,
                 rotation: shelf.restRotation - (backCover ? 180 : 0),
                 shelfHeight: shelf.height, shelfDepth: shelf.depth, clearance: shelf.clearance, withdrawFirst: shelf.withdrawFirst,
+                cameraHeight: shelf.cameraHeight,
             }
             if (!initialized.current) {
                 x.set(origin.left - bounds.left - hinge + origin.liftX)
@@ -87,7 +91,7 @@ export default function BookPresentation({ origin, getShelfOrigin, narrow, reduc
         const animations: AnimationPlaybackControls[] = []
         let cancelled = false
         const shelfPosition = (progress: number) => {
-            const pose = shelfPose(progress, flight.shelfHeight, flight.clearance, flight.withdrawFirst)
+            const pose = shelfPose(progress, flight.shelfHeight, flight.clearance, flight.withdrawFirst, flight.cameraHeight)
             const normal = coverNormal(pose.rotation, pose.pitch)
             const restNormal = coverNormal(SHELF_REST_ANGLE, 0)
             // The back-cover assembly pivots at the opposite edge of the spine.
@@ -102,6 +106,7 @@ export default function BookPresentation({ origin, getShelfOrigin, narrow, reduc
             const animation = animate(from, to, {
                 duration: reducedMotion ? 0 : 1.15 * Math.abs(to - from), ease: 'linear',
                 onUpdate: progress => {
+                    if (phase === 'returning') onShelfReturn(progress)
                     const pose = shelfPosition(progress)
                     x.set(pose.x); y.set(pose.y); z.set(pose.z); rotation.set(pose.rotation); pitch.set(pose.pitch)
                     scaleX.set(flight.scaleX); scaleY.set(flight.scaleY)
@@ -133,6 +138,13 @@ export default function BookPresentation({ origin, getShelfOrigin, narrow, reduc
                 animations.push(animate(x, closing ? flight.closedX : 0, transition), animate(y, 0, transition), animate(z, 0, transition),
                     animate(scaleX, 1, transition), animate(scaleY, 1, transition), animate(rotation, 0, transition), animate(pitch, 0, transition), animate(openness, closing ? 0 : 1, transition))
             } else if (phase === 'returning') {
+                // If the viewport changes during insertion, continue from the live
+                // shelf pose instead of restarting the flight in front of the books.
+                if (shelfReturnStarted.current) {
+                    await traceShelfPath(getShelfOrigin().progress, 0)
+                    if (!cancelled) onComplete(phase)
+                    return
+                }
                 const outside = shelfPosition(1)
                 animations.push(animate(x, outside.x, transition), animate(y, outside.y, transition), animate(z, outside.z, transition),
                     animate(scaleX, flight.scaleX, transition), animate(scaleY, flight.scaleY, transition),
@@ -140,7 +152,11 @@ export default function BookPresentation({ origin, getShelfOrigin, narrow, reduc
                     animate(cameraX, flight.cameraX, transition), animate(cameraY, flight.cameraY, transition), animate(perspective, SHELF_PERSPECTIVE, transition))
                 await Promise.all(animations.slice(stageStart))
                 if (cancelled) return
-                // Reverse the exact pickup path, staying raised until the book is home.
+                // Finish inside the shared shelf scene, where the neighbouring book
+                // can progressively hide the returning cover using real depth.
+                shelfReturnStarted.current = true
+                onShelfReturn(1)
+                setOnShelf(true)
                 await traceShelfPath(1, 0)
                 if (!cancelled) onComplete(phase)
                 return
@@ -153,13 +169,13 @@ export default function BookPresentation({ origin, getShelfOrigin, narrow, reduc
         }
         void run()
         return () => { cancelled = true; animations.forEach(animation => animation.stop()) }
-    }, [flight, phase, backCover, reducedMotion, onComplete, siteHref, origin, x, y, z, scaleX, scaleY, rotation, pitch, openness, cameraX, cameraY, perspective])
+    }, [flight, phase, backCover, reducedMotion, onComplete, onShelfReturn, getShelfOrigin, siteHref, origin, x, y, z, scaleX, scaleY, rotation, pitch, openness, cameraX, cameraY, perspective])
 
     const covering = phase !== 'reading'
     const closed = phase === 'front-cover' || phase === 'back-cover'
     return <motion.div ref={mount} className={styles.presentationMount} data-book-state={phase} style={{ perspective, perspectiveOrigin }}>
         {flight && <motion.div className={`${styles.presentationAssembly} ${covering ? styles.introAssembly : ''} ${backCover ? styles.backAssembly : ''}`}
-            style={{ transformOrigin: narrow ? (backCover ? 'right center' : 'left center') : 'center center', transform }}>
+            style={{ transformOrigin: narrow ? (backCover ? 'right center' : 'left center') : 'center center', transform, visibility: onShelf ? 'hidden' : 'visible' }}>
             {/* Keep page textures composited during 3D turns to avoid blank pages in WebKit. */}
             <motion.div className={styles.readerPages} style={{ opacity: covering ? paperOpacity : 1 }} aria-hidden={phase === 'front-cover' || phase === 'back-cover' || phase === 'returning' || undefined}>{children}</motion.div>
             <motion.div data-book-cover className={`${styles.presentationCover} ${backCover ? styles.backCover : ''} ${narrow ? styles.mobileCover : ''}`}
