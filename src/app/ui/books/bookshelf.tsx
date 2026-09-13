@@ -1,40 +1,52 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import BookReader from './book-reader'
 import StorageBookPreview from './storage-book-preview'
 import { STORAGE_BOOK, storageBookArtwork } from './storage-book-art'
-import { AnimatePresence, animate, motion, useMotionTemplate, useMotionValue, useReducedMotion, useTransform } from 'framer-motion'
+import { AnimatePresence, animate, motion, useMotionValue, useMotionValueEvent, useReducedMotion, useTransform, type MotionStyle } from 'framer-motion'
 import { BOOK } from './book-pages.mjs'
 import { BookFaces, type ShelfOrigin } from './book-model'
+import { shelfPose } from './book-motion'
 import styles from './bookshelf.module.css'
-
-const easeSegment = (value: number) => {
-    const t = Math.max(0, Math.min(1, value))
-    return t * t * (3 - 2 * t)
-}
 
 function ShelfBook({ storage = false }: { storage?: boolean }) {
     const [open, setOpen] = useState(false)
     const [pulled, setPulled] = useState(false)
     const reducedMotion = useReducedMotion()
-    // One reversible path keeps the left book clear even when hover is interrupted.
+    const [raised, setRaised] = useState(false)
+    // Keep both the pose and drawing order continuous throughout an interrupted return.
     const travel = useMotionValue(0)
-    const withdrawal = useTransform(travel, value => easeSegment(value / .55))
-    const turn = useTransform(travel, value => easeSegment((value - .55) / .45))
-    const angle = useTransform(turn, [0, 1], [90, 8])
-    const leftTransform = useMotionTemplate`translate3d(calc(8px * ${turn}), calc(-8px * ${withdrawal}), calc(var(--pull-depth) * ${withdrawal})) rotateY(${angle}deg)`
+    const bookHeight = useMotionValue(297)
+    const clearance = useMotionValue(245)
+    const pose = useTransform([travel, bookHeight, clearance], values => {
+        const [progress, height, distance] = values as number[]
+        return shelfPose(progress, height, distance, !storage)
+    })
+    const transform = useTransform(pose, value => `translate3d(${value.x}px, ${value.y}px, ${value.z}px) rotateX(${value.pitch}deg) rotateY(${value.rotation}deg)`)
+    const layer = useTransform(pose, value => value.z > .001 ? 10 + Math.round(value.z) : 3)
+    useMotionValueEvent(travel, 'change', value => setRaised(value > .00001))
     useEffect(() => {
-        if (storage) return
         const target = pulled && !open ? 1 : 0
         if (open || reducedMotion) { travel.set(target); return }
-        const animation = animate(travel, target, { duration: 1.05 * Math.abs(target - travel.get()), ease: 'linear' })
+        const animation = animate(travel, target, { duration: 1.15 * Math.abs(target - travel.get()), ease: 'linear' })
         return () => animation.stop()
     }, [storage, pulled, open, reducedMotion, travel])
     const returningFocus = useRef(false)
     const trigger = useRef<HTMLButtonElement>(null)
     const book = useRef<HTMLSpanElement>(null)
     const [origin, setOrigin] = useState<ShelfOrigin | null>(null)
+    useLayoutEffect(() => {
+        const measure = () => {
+            const style = getComputedStyle(book.current!)
+            bookHeight.set(parseFloat(style.height))
+            clearance.set(parseFloat(style.getPropertyValue('--pull-depth')))
+        }
+        measure()
+        const resize = new ResizeObserver(measure)
+        resize.observe(book.current!)
+        return () => resize.disconnect()
+    }, [bookHeight, clearance])
     const getShelfOrigin = useCallback((): ShelfOrigin => {
         const bounds = trigger.current!.getBoundingClientRect()
         const style = getComputedStyle(book.current!)
@@ -44,16 +56,19 @@ function ShelfBook({ storage = false }: { storage?: boolean }) {
             width: parseFloat(style.width), height: parseFloat(style.height), depth: parseFloat(style.getPropertyValue('--depth')),
             cameraX: bounds.left + bounds.width / 2, cameraY: bounds.top + bounds.height / 2,
             liftX: transform.m41, liftY: transform.m42, liftZ: transform.m43,
-            rotation: Math.atan2(-transform.m13, transform.m11) * 180 / Math.PI,
+            rotation: Math.atan2(transform.m31, transform.m11) * 180 / Math.PI,
+            pitch: Math.atan2(transform.m23, transform.m22) * 180 / Math.PI,
+            progress: parseFloat(style.getPropertyValue('--pickup-progress')) || 0,
             restRotation: parseFloat(style.getPropertyValue('--rest-angle')),
-            clearance: storage ? 0 : parseFloat(style.getPropertyValue('--pull-depth')),
+            clearance: parseFloat(style.getPropertyValue('--pull-depth')),
+            withdrawFirst: !storage,
         }
     }, [storage])
     const title = storage ? STORAGE_BOOK.title : BOOK.title
     const Preview = storage ? StorageBookPreview : BookReader
     const close = () => { returningFocus.current = true; setPulled(false); setOpen(false) }
     return <>
-        <button ref={trigger} type="button" className={`${styles.bookButton} ${storage ? styles.secondBook : styles.firstBook} ${pulled ? styles.pulled : ''} ${open ? styles.away : ''}`}
+        <motion.button ref={trigger} type="button" style={{ zIndex: layer }} className={`${styles.bookButton} ${storage ? styles.secondBook : ''} ${raised || pulled ? styles.raised : ''} ${open ? styles.away : ''}`}
             aria-label={`Open ${title}`} aria-haspopup="dialog"
             onPointerEnter={event => { if (event.pointerType !== 'touch' && !open) { returningFocus.current = false; setPulled(true) } }}
             onPointerLeave={() => setPulled(false)}
@@ -64,8 +79,8 @@ function ShelfBook({ storage = false }: { storage?: boolean }) {
                 setPulled(false)
                 setOpen(true)
             }}>
-            <motion.span ref={book} className={styles.book} style={storage ? undefined : { transform: leftTransform }} data-book-cover><BookFaces artwork={storage ? storageBookArtwork() : undefined} /></motion.span>
-        </button>
+            <motion.span ref={book} className={styles.book} style={{ transform, '--pickup-progress': travel } as MotionStyle} data-book-cover><BookFaces artwork={storage ? storageBookArtwork() : undefined} /></motion.span>
+        </motion.button>
         <AnimatePresence onExitComplete={() => trigger.current?.focus({ preventScroll: true })}>
             {open && origin && <Preview origin={origin} getShelfOrigin={getShelfOrigin} onClose={close} />}
         </AnimatePresence>
@@ -74,16 +89,6 @@ function ShelfBook({ storage = false }: { storage?: boolean }) {
 
 export default function Bookshelf() {
     return <div className={styles.shelf}>
-        <div className={styles.cabinet} aria-hidden="true">
-            <div className={styles.backPanel} />
-            <div className={styles.floor} />
-            <div className={styles.ceiling} />
-            <div className={`${styles.side} ${styles.leftSide}`} />
-            <div className={`${styles.side} ${styles.rightSide}`} />
-            <div className={`${styles.sideCap} ${styles.leftCap}`} />
-            <div className={`${styles.sideCap} ${styles.rightCap}`} />
-            <div className={styles.topRail} />
-        </div>
         <ShelfBook />
         <ShelfBook storage />
         <div className={styles.plank} aria-hidden="true" />

@@ -8,6 +8,7 @@ export type ShelfOrigin = {
     cameraX: number; cameraY: number; liftX: number; liftY: number; liftZ: number
     rotation: number; restRotation: number
     clearance: number
+    pitch: number; progress: number; withdrawFirst: boolean
 }
 export type BookArtwork = { front: ReactNode; back: ReactNode; spine: ReactNode }
 
