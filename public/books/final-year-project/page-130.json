@@ -1,0 +1,1 @@
+{"text": "104 \n \nFigure 42 Update Spaced Repetition Back-end Sequence Diagram \n \nTable 23 Update Spaced Repetition API \nEndpoint Request body Response body \nPUT \nspaced-\nrepetition \n{ \n    \"s3_url\": \"biology/topic/subtopic/lesson/”, \n    \"username\": \"ben\", \n    \"percentage\": 20 \n} \nNone"}

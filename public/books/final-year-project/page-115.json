@@ -1,0 +1,1 @@
+{"text": "89 \n \nFigure 31 Verify Email Front-end Sequence Diagram \nFigure 31 highlights the use case error highlighted in Figure 6, where a user \ncreates an account but fails to verify it. Here it is critical that the user \nremembers their email and username, or they will lose access to their account."}

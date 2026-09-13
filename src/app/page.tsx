@@ -6,6 +6,7 @@ import Memoji from '@/app/ui/title-section/memoji'
 import { VanishingWords } from '@/app/ui/title-section/vanishing-words'
 import { Break } from '@/app/ui/general/break'
 import ContactButton from '@/app/ui/contact/contact-button'
+import Bookshelf from '@/app/ui/books/bookshelf'
 import { FaGithub, FaLinkedin, FaPython, FaAws, FaBookOpen } from 'react-icons/fa'
 import { PiFileSql } from 'react-icons/pi'
 import {
@@ -367,9 +368,10 @@ export default function Home() {
                 </section>
 
                 {/*Books*/}
-                <section id="books" aria-labelledby="books-title" className="w-4/5 max-w-[1100px] snap-start mx-auto min-h-40 desktop:mt-20">
+                <section id="books" aria-labelledby="books-title" className="w-4/5 max-w-[1100px] snap-start mx-auto desktop:mt-20">
                     <h2 id="books-title" className="header2 text-3xl mb-4">Books</h2>
                     <Break />
+                    <Bookshelf />
                 </section>
 
                 {/*Contact*/}

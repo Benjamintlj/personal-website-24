@@ -1,0 +1,1 @@
+{"text": "96 \n4.7.4 Lesson Architecture \n \nFigure 37 Subject Structure Front-end Class Diagram \nFigure 37 Shows how subjects are stored locally, the critical aspect to recognise \nhere is the multiplicities between the classes; and that the LessonModel stores \nan s3Url, with the URL pointing to the actual content of the lesson. In this way,"}

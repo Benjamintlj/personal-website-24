@@ -1,0 +1,1 @@
+{"text": "107 \n4.7.5 Leader Board Architecture \n \nFigure 44 Leader Board Front-end Class Diagram \nThe LeaderboardModel acts as a single user within the leaderboard. Worth \nnoting that the list within the LeaderboardActivity is sorted by the score, with \nindex 0 being first place."}
