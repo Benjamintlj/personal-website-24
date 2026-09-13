@@ -3,7 +3,7 @@
 import { useId, useLayoutEffect, useRef, useState } from 'react'
 import styles from './bookshelf.module.css'
 
-/** A single glass surface, projected from the centre of the shelf. */
+/** A glass surface with a shallow front lip. */
 export default function GlassShelf() {
     const element = useRef<HTMLDivElement>(null)
     const [width, setWidth] = useState(1100)
@@ -21,6 +21,7 @@ export default function GlassShelf() {
     const elevation = mobile ? 230 : 320
     const radius = mobile ? 18 : 26
     const front = 46
+    const lip = mobile ? 3 : 4
     const point = (x: number, z: number) => `${width / 2 + (x - width / 2) * camera / (camera + z)},${front - elevation * z / (camera + z)}`
     const p = point
     const k = .55228475 * radius
@@ -45,6 +46,7 @@ export default function GlassShelf() {
                     <stop offset="1" stopColor="#eefeff" stopOpacity="0" />
                 </radialGradient>
             </defs>
+            <path d={`M${radius},${front} H${width - radius} V${front + lip - 1} q0,1 -1,1 H${radius + 1} q-1,0 -1,-1 Z`} fill="#b8d1d5" fillOpacity=".18" />
             <path d={top} fill={`url(#${id}-surface)`} />
             <path d={top} fill={`url(#${id}-light)`} />
             <path d={top} fill="none" stroke={`url(#${id}-rim)`} strokeWidth=".75" />
