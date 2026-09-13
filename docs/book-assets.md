@@ -8,8 +8,9 @@ included in this repository.
 The reader preserves the 228 interior pages and the six stock-white endpaper
 positions shown by the print preview, plus both covers (236 physical page faces).
 The shelf presents the spine with a small glimpse of the front. Selecting it lifts
-the closed book to the centre, pauses on its front cover, then opens it from the
-spine into the preface. The inside cover stays plain. Earlier endpapers and both
+the closed book from the far left to the centre, then opens it from the spine
+into the preface in one continuous animation. The same book and page elements
+remain mounted throughout, over the dimmed website. The inside cover stays plain. Earlier endpapers and both
 covers remain reachable using page navigation. No storage-network book has been
 added to this shelf.
 

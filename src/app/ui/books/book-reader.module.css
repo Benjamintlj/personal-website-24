@@ -1,5 +1,6 @@
-.reader { position: fixed; inset: 0; z-index: 250; display: flex; flex-direction: column; background: #090a0be8; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); color: #eeeae3; overscroll-behavior: contain; }
-.header { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.25rem 2rem .7rem; }
+.reader { position: fixed; inset: 0; z-index: 250; display: flex; flex-direction: column; isolation: isolate; color: #eeeae3; overscroll-behavior: contain; }
+.backdrop { position: absolute; inset: 0; z-index: -1; background: #090a0bb8; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); pointer-events: none; }
+.header { flex-shrink: 0; display: flex; align-items: center; justify-content: flex-end; gap: 1rem; padding: 1.25rem 2rem .7rem; }
 .header h2 { font-size: .9rem; font-weight: 400; letter-spacing: .025em; color: #bcb8b1; }
 .close { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; color: #e7e3dd; }
 .close:hover { background: #ffffff12; }
@@ -8,11 +9,14 @@
 .single { width: var(--page-width); }
 .presenting .viewport { overflow: hidden; }
 .presenting .toolbar { visibility: hidden; }
+.presentationMount, .readerPages { position: absolute; inset: 0; transform-style: preserve-3d; }
 .presentationAssembly { position: absolute; inset: 0; transform-style: preserve-3d; }
+.introAssembly .spread { background: transparent; box-shadow: none; }
+.introAssembly .spread > .left, .introAssembly .gutter { opacity: 0; }
+.introAssembly .right { box-shadow: 0 0 0 3px #ddd9cf, 0 2px 0 4px #8c8880, 0 4px 0 4px #c6c2b9, 0 18px 22px #0008; }
+.single .introAssembly .spread > .left { opacity: 1; box-shadow: 0 0 0 3px #ddd9cf, 0 2px 0 4px #8c8880, 0 4px 0 4px #c6c2b9, 0 18px 22px #0008; }
 .presentationCover { --depth: calc(var(--page-width) * 14 / 215); position: absolute; left: 50%; top: 0; width: 50%; height: 100%; transform-origin: left center; transform-style: preserve-3d; }
-.closedPages { position: absolute; left: 50%; top: 0; width: 50%; height: 100%; background: white; box-shadow: 0 2px 0 2px #d8d4cb, 0 4px 0 3px #99958b, 0 18px 22px #0008; }
 .mobileCover { left: 0; width: 100%; }
-.coverOpen { position: absolute; inset: 0; width: 100%; height: 100%; transform: translateZ(1px); cursor: pointer; background: transparent; }
 .closedControls { display: block; width: 120px; height: 38px; }
 .spread { position: absolute; inset: 0; display: flex; background: #f9f8f3; border-radius: 2px 5px 5px 2px; box-shadow: 0 0 0 3px #ddd9cf, 0 2px 0 4px #8c8880, 0 4px 0 4px #c6c2b9, 0 18px 22px #0008; }
 .pageSlot { position: relative; flex: 1; min-width: 0; height: 100%; }

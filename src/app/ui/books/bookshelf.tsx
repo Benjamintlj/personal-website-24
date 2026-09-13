@@ -1,13 +1,11 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import dynamic from 'next/dynamic'
+import BookReader from './book-reader'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { BOOK } from './book-pages.mjs'
 import { BookFaces, type ShelfOrigin } from './book-model'
 import styles from './bookshelf.module.css'
-
-const BookReader = dynamic(() => import('./book-reader'), { ssr: false })
 
 export default function Bookshelf() {
     const [open, setOpen] = useState(false)
@@ -25,7 +23,7 @@ export default function Bookshelf() {
                     setOrigin({ left: bounds.left, top: bounds.top, height: bounds.height })
                     setOpen(true)
                 }} animate={{ opacity: open ? 0 : 1 }}
-                transition={{ duration: reducedMotion ? 0 : .35 }}>
+                transition={{ duration: reducedMotion || open ? 0 : .25 }}>
                 <span ref={book} className={styles.book}><BookFaces /></span>
             </motion.button>
             <div className={styles.plank} aria-hidden="true" />

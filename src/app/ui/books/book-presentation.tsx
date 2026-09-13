@@ -1,42 +1,51 @@
 'use client'
 
-import { useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import { useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import { motion } from 'framer-motion'
 import { BookFaces, type ShelfOrigin } from './book-model'
 import styles from './book-reader.module.css'
 
-type Flight = { x: number; y: number; scale: number; rotateY: number }
+type Flight = { x: number; y: number; scale: number; closedX: number }
 
-export default function BookPresentation({ origin, narrow, reducedMotion, opening, onArrived, onOpened, onOpen, children }: {
-    origin: ShelfOrigin; narrow: boolean; reducedMotion: boolean; opening: boolean
-    onArrived: () => void; onOpened: () => void; onOpen: () => void; children: ReactNode
+/** One book assembly stays mounted from the shelf flight through normal reading. */
+export default function BookPresentation({ origin, narrow, reducedMotion, active, onOpened, children }: {
+    origin: ShelfOrigin; narrow: boolean; reducedMotion: boolean; active: boolean
+    onOpened: () => void; children: ReactNode
 }) {
-    const stage = useRef<HTMLDivElement>(null)
+    const mount = useRef<HTMLDivElement>(null)
     const [flight, setFlight] = useState<Flight | null>(null)
-    const [arrived, setArrived] = useState(reducedMotion)
-    useLayoutEffect(() => { if (reducedMotion) onArrived() }, [reducedMotion, onArrived])
+    const [opening, setOpening] = useState(false)
     useLayoutEffect(() => {
-        const bounds = stage.current!.getBoundingClientRect()
-        const coverLeft = bounds.left + (narrow ? 0 : bounds.width / 4)
-        setFlight({ x: origin.left - coverLeft, y: origin.top - bounds.top + (origin.height - bounds.height) / 2, scale: origin.height / bounds.height, rotateY: 86 })
+        const bounds = mount.current!.getBoundingClientRect()
+        const hinge = narrow ? 0 : bounds.width / 2
+        setFlight({
+            x: origin.left - bounds.left - hinge,
+            y: origin.top - bounds.top + (origin.height - bounds.height) / 2,
+            scale: origin.height / bounds.height,
+            closedX: narrow ? 0 : -bounds.width / 4,
+        })
     }, [origin, narrow])
+    useLayoutEffect(() => { if (reducedMotion && active) onOpened() }, [reducedMotion, active, onOpened])
 
-    const duration = reducedMotion ? 0 : opening ? 1.1 : .85
-    return <div ref={stage} className={`${styles.stage} ${narrow ? styles.single : ''}`} style={{ '--zoom': 1 } as CSSProperties} data-book-state={opening ? 'opening' : arrived ? 'closed' : 'arriving'}>
-        <motion.div className={styles.presentationAssembly}
-            initial={false} animate={{ x: narrow || opening ? '0%' : '-25%' }}
-            transition={{ duration, ease: [.35, .05, .3, 1] }}>
-            {opening && <div className={`${styles.closedPages} ${narrow ? styles.mobileCover : ''}`}>{children}</div>}
-            {flight && <motion.div className={`${styles.presentationCover} ${narrow ? styles.mobileCover : ''}`}
-                initial={reducedMotion ? false : flight} animate={{ x: 0, y: 0, scale: 1, rotateY: opening ? -180 : 0 }}
-                transition={{ duration, ease: [.35, .05, .3, 1] }}
-                onAnimationComplete={() => {
-                    if (opening) onOpened()
-                    else if (!arrived) { setArrived(true); onArrived() }
-                }}>
+    // Both the lift and the hinge use the same uninterrupted timeline.
+    const transition = { duration: reducedMotion ? 0 : 1.65, times: [0, .48, 1], ease: [.3, .05, .3, 1] as [number, number, number, number] }
+    return <div ref={mount} className={styles.presentationMount} data-book-state={active ? opening ? 'opening' : 'arriving' : 'reading'}>
+        {flight && <motion.div className={`${styles.presentationAssembly} ${active ? styles.introAssembly : ''}`}
+            style={{ transformOrigin: narrow ? 'left center' : 'center center' }}
+            initial={reducedMotion ? false : { x: flight.x, y: flight.y, scale: flight.scale, rotateY: 86 }}
+            animate={active ? {
+                x: [flight.x, flight.closedX, 0], y: [flight.y, 0, 0],
+                scale: [flight.scale, 1, 1], rotateY: [86, 0, 0],
+            } : { x: 0, y: 0, scale: 1, rotateY: 0 }}
+            transition={transition}>
+            {/* Opacity keeps page textures ready during 3D turns; visibility can leave them blank in WebKit. */}
+            <div className={styles.readerPages} style={{ opacity: active && !opening ? 0 : 1 }}>{children}</div>
+            {active && <motion.div className={`${styles.presentationCover} ${narrow ? styles.mobileCover : ''}`}
+                initial={{ rotateY: 0 }} animate={{ rotateY: [0, 0, -180] }} transition={transition}
+                onUpdate={latest => { if (!opening && Number(latest.rotateY) < -.1) setOpening(true) }}
+                onAnimationComplete={onOpened}>
                 <BookFaces opening={opening} />
-                {arrived && !opening && <button className={styles.coverOpen} type="button" aria-label="Open front cover" onClick={onOpen} />}
             </motion.div>}
-        </motion.div>
+        </motion.div>}
     </div>
 }
