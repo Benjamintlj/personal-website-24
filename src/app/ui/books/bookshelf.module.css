@@ -71,6 +71,7 @@
 .secondBook { --book-depth: 22px; --book-width: 210px; --book-height: 274px; left: 54px; }
 .bookButton:focus-visible { outline: 1px solid #eee8dc; outline-offset: 5px; border-radius: 2px; }
 .book { --depth: var(--book-depth); position: relative; display: block; left: var(--book-depth); width: var(--book-width); height: 100%; transform-origin: left center; transform-style: preserve-3d; transform: rotateY(90deg); transition: transform .85s cubic-bezier(.22,.7,.22,1); }
+.firstBook .book { transition: none; }
 .bookButton.pulled { z-index: 10; filter: drop-shadow(10px 20px 16px #000b); }
 .bookButton.pulled .book { transform: translate3d(8px,-8px,var(--pull-depth)) rotateY(8deg); }
 .bookButton.away { opacity: 0; pointer-events: none; }

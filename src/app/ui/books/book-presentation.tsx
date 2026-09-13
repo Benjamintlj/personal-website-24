@@ -85,15 +85,28 @@ export default function BookPresentation({ origin, getShelfOrigin, narrow, reduc
                 animate(scaleX, 1, transition), animate(scaleY, 1, transition), animate(rotation, 0, transition),
                 animate(cameraX, flight.centerX, transition), animate(cameraY, flight.centerY, transition), animate(perspective, 2200, transition))
         } else if (phase === 'arriving') {
-            const timeline = { ...transition, times: [0, .48, 1] }
-            animations.push(animate(x, [x.get(), flight.closedX, 0], timeline), animate(y, [y.get(), 0, 0], timeline), animate(z, 0, transition),
+            // A click can arrive before the shelf hover has finished withdrawing.
+            const withdrawalTime = reducedMotion || !origin.clearance ? 0 : .5 * Math.max(0, 1 - origin.liftZ / origin.clearance)
+            const movement = { ...transition, delay: withdrawalTime }
+            const timeline = { ...movement, times: [0, .48, 1] }
+            animations.push(animate(x, [x.get(), flight.closedX, 0], timeline), animate(y, [y.get(), 0, 0], timeline),
+                withdrawalTime ? animate(z, [z.get(), origin.clearance, 0], { ...transition, duration: duration + withdrawalTime, times: [0, withdrawalTime / (duration + withdrawalTime), 1] }) : animate(z, 0, transition),
                 animate(scaleX, [scaleX.get(), 1, 1], timeline), animate(scaleY, [scaleY.get(), 1, 1], timeline),
                 animate(rotation, [rotation.get(), 0, 0], timeline), animate(openness, [0, 0, 1], timeline),
-                animate(cameraX, flight.centerX, transition), animate(cameraY, flight.centerY, transition), animate(perspective, 2200, transition))
+                animate(cameraX, flight.centerX, movement), animate(cameraY, flight.centerY, movement), animate(perspective, 2200, movement))
         } else if (phase === 'closing-cover' || phase === 'opening-cover') {
             const closing = phase === 'closing-cover'
             animations.push(animate(x, closing ? flight.closedX : 0, transition), animate(y, 0, transition), animate(z, 0, transition),
                 animate(scaleX, 1, transition), animate(scaleY, 1, transition), animate(rotation, 0, transition), animate(openness, closing ? 0 : 1, transition))
+        } else if (phase === 'returning' && origin.clearance) {
+            // Turn beside the shelf, then slide the aligned spine back into its slot.
+            const timeline = { duration: reducedMotion ? 0 : 1.4, ease, times: [0, .64, 1] }
+            animations.push(animate(x, [x.get(), flight.x, flight.x], timeline), animate(y, [y.get(), flight.y, flight.y], timeline),
+                animate(z, [z.get(), flight.z + origin.clearance, flight.z], timeline),
+                animate(scaleX, [scaleX.get(), flight.scaleX, flight.scaleX], timeline), animate(scaleY, [scaleY.get(), flight.scaleY, flight.scaleY], timeline),
+                animate(rotation, [rotation.get(), flight.rotation, flight.rotation], timeline), animate(openness, 0, transition),
+                animate(cameraX, [cameraX.get(), flight.cameraX, flight.cameraX], timeline), animate(cameraY, [cameraY.get(), flight.cameraY, flight.cameraY], timeline),
+                animate(perspective, [perspective.get(), 1200, 1200], timeline))
         } else if (phase === 'returning') {
             animations.push(animate(x, flight.x, transition), animate(y, flight.y, transition), animate(z, flight.z, transition),
                 animate(scaleX, flight.scaleX, transition), animate(scaleY, flight.scaleY, transition),
@@ -106,7 +119,7 @@ export default function BookPresentation({ origin, getShelfOrigin, narrow, reduc
         let cancelled = false
         Promise.all(animations).then(() => { if (!cancelled) onComplete(phase) })
         return () => { cancelled = true; animations.forEach(animation => animation.stop()) }
-    }, [flight, phase, backCover, reducedMotion, onComplete, siteHref, x, y, z, scaleX, scaleY, rotation, openness, cameraX, cameraY, perspective])
+    }, [flight, phase, backCover, reducedMotion, onComplete, siteHref, origin, x, y, z, scaleX, scaleY, rotation, openness, cameraX, cameraY, perspective])
 
     const covering = phase !== 'reading'
     const closed = phase === 'front-cover' || phase === 'back-cover'

@@ -11,7 +11,12 @@ are unnumbered; stock blank endpapers and the two trailing blank source pages
 the preface folds directly onto the front cover, and Next opens it back to page 1.
 The shelf presents touching spines, with both covers turned fully into the shelf.
 Hovering or keyboard focus pulls a book forward and turns its cover towards the
-reader. The shelf is a walnut cabinet with rounded mouldings, full sides, a
+reader. The left book withdraws completely before rotating, and reverses that
+same path when hover or focus leaves, including interrupted motions. Clicking it
+before withdrawal finishes completes the slide before the reader's turn begins.
+Returning from either cover aligns the closed book outside the shelf before
+sliding it back. The right book retains its simultaneous pull-and-turn motion.
+The shelf is a walnut cabinet with rounded mouldings, full sides, a
 recessed back and a floor deeper than either book. Its furniture panels have a
 separate, centred perspective and share the generated walnut material documented
 in [bookshelf-material.md](bookshelf-material.md). Selecting a book lifts
