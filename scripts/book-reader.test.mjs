@@ -14,7 +14,7 @@ test('the preface is page 1 and Previous goes straight to the unnumbered front c
     assert.deepEqual(spreadPages(1, false), [null, 1])
 })
 
-test('forward and backward navigation reaches all 228 numbered pages without stock endpapers', () => {
+test('forward and backward navigation reaches all 226 numbered pages without blank endpapers', () => {
     for (const narrow of [false, true]) {
         const visited = new Set()
         let cursor = 0
@@ -42,7 +42,11 @@ test('page jumps preserve facing-page pairs and the last interior page', () => {
         assert.ok(adjacentPage(page, 1, false) > Math.max(...spread.filter(value => value !== null)))
         assert.ok(adjacentPage(page, -1, false) < spread[0])
     }
-    assert.deepEqual(spreadPages(228, false), [228, null])
-    assert.equal(bookPage(228).image, `${BOOK.assetRoot}/page-228.webp`)
-    assert.equal(bookPage(229).label, 'Back cover')
+    assert.deepEqual(spreadPages(226, false), [226, null])
+    assert.equal(bookPage(226).image, `${BOOK.assetRoot}/page-226.webp`)
+    assert.equal(bookPage(227).label, 'Back cover')
+    for (const narrow of [false, true]) {
+        assert.equal(adjacentPage(226, 1, narrow), BOOK.lastPage)
+        assert.equal(adjacentPage(BOOK.lastPage, -1, narrow), 226)
+    }
 })

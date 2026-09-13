@@ -1,10 +1,10 @@
 export const BOOK = {
     title: 'Final Year Project — NTU',
     author: 'Benjamin Lewis-Jones',
-    pageCount: 228,
+    pageCount: 226,
     firstContentPage: 1,
-    lastContentPage: 228,
-    lastPage: 229,
+    lastContentPage: 226,
+    lastPage: 227,
     assetRoot: '/books/final-year-project',
 }
 

@@ -5,8 +5,9 @@ back cover, preface and project report from his supplied print proof. The source
 order was inspected read-only. The original proof and order details are not
 included in this repository.
 
-The reader numbers the 228 interior pages from the preface (page 1). Both covers
-are unnumbered; stock blank endpapers are omitted from navigation. Previous from
+The reader numbers the 226 interior pages from the preface (page 1). Both covers
+are unnumbered; stock blank endpapers and the two trailing blank source pages
+(227 and 228) are omitted from navigation. Previous from
 the preface folds directly onto the front cover, and Next opens it back to page 1.
 The shelf presents the spine with a small glimpse of the front. Selecting it lifts
 the closed book from the far left to the centre, then opens it from the spine
