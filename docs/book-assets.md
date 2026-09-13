@@ -16,7 +16,9 @@ The cover hinges and page elements remain mounted throughout those transitions.
 The books rest at an 86-degree angle with touching spines on a rounded glass
 shelf. The single top surface is projected from a centred camera, with symmetric
 depth, softly rounded corners and frosted transmission. A small front lip extends
-4 px down from the surface (3 px on narrow shelves). There are no side or rear
+4 px down from the surface (3 px on narrow shelves), following the same front
+curves all the way to both tips. The surface has no perimeter outline, and the
+filled faces overlap slightly to avoid an antialiasing seam. There are no side or rear
 layers, cast shadows, decorative dividers, cabinet, back or walls.
 The surface accommodates the whole book footprint.
 Both books tip forward from their
