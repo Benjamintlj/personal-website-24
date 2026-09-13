@@ -1,0 +1,38 @@
+.featuredGrid {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
+    gap: 1rem;
+    margin-top: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.featuredGrid > div { min-width: 0; height: 21rem; }
+
+.withings {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+.withings { background: #141414; color: #fff; }
+.withingsHeading { position: relative; z-index: 2; padding: 1.7rem; }
+.withingsHeading h3 { font-size: clamp(1.15rem, 2vw, 1.6rem); font-weight: 650; letter-spacing: -.04em; line-height: 1.2; }
+.scale { position: absolute; width: 115%; aspect-ratio: 1; top: 8.6rem; left: -7.5%; overflow: hidden; border-radius: 1.5rem; transform: rotate(-8deg) translateY(10px); transition: transform .55s cubic-bezier(.2,.8,.2,1); box-shadow: 0 20px 45px #0006; }
+.scale img { position: absolute; width: 131.5%; max-width: none; height: 131.5%; top: -15.75%; left: -15.75%; }
+:global([role='button']):hover .scale, :global([role='button']):focus-visible .scale { transform: rotate(-5deg) translateY(-14px); }
+
+@media (max-width: 899px) {
+    .featuredGrid { grid-template-columns: minmax(0, 1fr); }
+    .featuredGrid > div { height: 19rem; }
+    .withingsHeading h3 { font-size: 1.6rem; }
+    .scale { width: 20rem; top: 8rem; left: auto; right: -1.5rem; }
+}
+@media (max-width: 479px) {
+    .withingsHeading { padding: 1.7rem 1.4rem; }
+    .scale { width: 19rem; top: 8.6rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .scale { transition: none; }
+}

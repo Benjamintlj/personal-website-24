@@ -63,6 +63,7 @@ export const BentoGridItem = ({
     gitHub,
     youtube,
     visibleOnMobile = true,
+    interactive = false,
 }: {
     title: string
     description: string
@@ -70,10 +71,11 @@ export const BentoGridItem = ({
     descriptionImage?: string
     className?: string
     skills?: Skills[]
-    children: React.ReactNode
+    children: React.ReactNode | ((openDetails: () => void) => React.ReactNode)
     gitHub?: string
     youtube?: string
     visibleOnMobile?: boolean
+    interactive?: boolean
 }) => {
     const [active, setActive] = useState<boolean | null>(null)
     const ref = useRef<HTMLDivElement>(null)
@@ -82,11 +84,37 @@ export const BentoGridItem = ({
     useOutsideClick(ref, () => setActive(null))
 
     useEffect(() => {
+        if (!active) return
+        const previousFocus = document.activeElement as HTMLElement | null
+        const dialog = ref.current
+        const focusableElements = () => Array.from(
+            dialog?.querySelectorAll<HTMLElement>('button, a[href], [tabindex="0"]') ?? []
+        ).filter((element) => element.getClientRects().length > 0)
+
+        ;(focusableElements()[0] ?? dialog)?.focus({ preventScroll: true })
         const onKey = (e: KeyboardEvent) => {
             if (e.key === 'Escape') setActive(null)
+            if (e.key === 'Tab') {
+                const elements = focusableElements()
+                const first = elements[0]
+                const last = elements[elements.length - 1]
+                if (!first) {
+                    e.preventDefault()
+                    dialog?.focus()
+                } else if (e.shiftKey && (document.activeElement === first || !dialog?.contains(document.activeElement))) {
+                    e.preventDefault()
+                    last.focus()
+                } else if (!e.shiftKey && (document.activeElement === last || !dialog?.contains(document.activeElement))) {
+                    e.preventDefault()
+                    first.focus()
+                }
+            }
         }
-        if (active) window.addEventListener('keydown', onKey)
-        return () => window.removeEventListener('keydown', onKey)
+        window.addEventListener('keydown', onKey)
+        return () => {
+            window.removeEventListener('keydown', onKey)
+            previousFocus?.focus({ preventScroll: true })
+        }
     }, [active])
 
     let visibility: string = ''
@@ -97,9 +125,20 @@ export const BentoGridItem = ({
             <motion.div
                 layoutId={`card-${id}`}
                 key={`card-${id}`}
-                onClick={() => setActive(true)}
+                onClick={interactive ? undefined : () => setActive(true)}
+                role={interactive ? undefined : 'button'}
+                tabIndex={interactive ? undefined : 0}
+                aria-label={interactive ? undefined : `Read about ${title}`}
+                aria-haspopup={interactive ? undefined : 'dialog'}
+                onKeyDown={(event) => {
+                    if (interactive) return
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault()
+                        setActive(true)
+                    }
+                }}
                 className={clsx(
-                    `rounded-xl card-bg h-full cursor-pointer w-full`
+                    `rounded-xl card-bg h-full ${interactive ? '' : 'cursor-pointer'} w-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white`
                 )}
             >
                 <div
@@ -110,7 +149,7 @@ export const BentoGridItem = ({
                             : 'none',
                     }}
                 >
-                    {children}
+                    {typeof children === 'function' ? children(() => setActive(true)) : children}
                 </div>
             </motion.div>
             <AnimatePresence>
@@ -130,6 +169,10 @@ export const BentoGridItem = ({
                             <motion.div
                                 layoutId={`card-${id}`}
                                 ref={ref}
+                                role="dialog"
+                                tabIndex={-1}
+                                aria-modal="true"
+                                aria-labelledby={`project-title-${id}`}
                                 className={`relative w-full max-w-[700px] h-[calc(100vh-56px)] lg:[@media(min-height:900px)]:h-[50vh] lg:[@media(max-height:899px)]:h-[70vh] flex flex-col ${descriptionImage ? 'lg:flex-row' : ''} bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden z-[101] pb-[100px] desktop:pb-0`}
                             >
                                 <CloseButton
@@ -164,7 +207,7 @@ export const BentoGridItem = ({
                                 <div
                                     className={`w-full ${descriptionImage ? 'lg:w-1/2' : 'w-full'} h-full p-5 flex flex-col justify-start`}
                                 >
-                                    <h3 className="header3 mb-3">{title}</h3>
+                                    <h3 id={`project-title-${id}`} className="header3 mb-3">{title}</h3>
                                     <Break />
                                     <p className="text-sm text-neutral-600 dark:text-neutral-400 mt-4 overflow-y-auto scrollbar-hide">
                                         {description}
@@ -177,8 +220,7 @@ export const BentoGridItem = ({
                                             transition={{ type: 'tween' }}
                                             className="bg-white dark:bg-neutral-900 rounded-t-lg"
                                         >
-                                            {/*TODO: remove the break if no skills*/}
-                                            <Break className={`mb-4`} />
+                                            {!!skills?.length && <Break className={`mb-4`} />}
                                             <div className="flex flex-wrap justify-start">
                                                 {skills &&
                                                     Object.entries(skills).map(

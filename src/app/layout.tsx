@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
     title: 'Ben Lewis-Jones | Software Engineer',
     description:
-        'Ben Lewis-Jones is a mid-level software engineer specialising in high-throughput payment systems at AccessPay and previously embedded and cloud development at Dyson.',
+        'Ben Lewis-Jones is a Software Developer at bet365, with experience designing large-scale payment systems at AccessPay and embedded and cloud software at Dyson.',
     metadataBase: new URL('https://benlewisjones.com'),
     keywords: [
         'Ben Lewis-Jones',
@@ -16,6 +16,7 @@ export const metadata: Metadata = {
         'Software Developer',
         'Full Stack Developer',
         'AccessPay',
+        'bet365',
         'Dyson',
         '.NET',
         'TypeScript',
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: 'Ben Lewis-Jones | Software Engineer',
         description:
-            'Mid-level software engineer with experience in high-throughput payment systems and embedded to cloud development.',
+            'Software Developer at bet365, with experience in large-scale payment systems and embedded and cloud development.',
         url: 'https://benlewisjones.com',
         siteName: 'Ben Lewis-Jones',
         images: [
@@ -49,7 +50,7 @@ export const metadata: Metadata = {
         card: 'summary_large_image',
         title: 'Ben Lewis-Jones | Software Engineer',
         description:
-            'Mid-level software engineer with experience in high-throughput payment systems and embedded to cloud development.',
+            'Software Developer at bet365, with experience in large-scale payment systems and embedded and cloud development.',
         images: ['/images/meta/selfie.png'],
     },
 }
@@ -60,10 +61,10 @@ const jsonLd = {
     name: 'Ben Lewis-Jones',
     url: 'https://benlewisjones.com',
     email: 'ben@benlewisjones.com',
-    jobTitle: 'Software Engineer',
+    jobTitle: 'Software Developer',
     worksFor: {
         '@type': 'Organization',
-        name: 'AccessPay',
+        name: 'bet365',
     },
     sameAs: [
         'https://github.com/Benjamintlj',
@@ -77,6 +78,11 @@ const jsonLd = {
         'Docker',
         'AWS',
         'Azure DevOps',
+        'Go',
+        'Kafka',
+        'GCP',
+        'Linux',
+        'Microsoft SQL Server',
     ],
 }
 

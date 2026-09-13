@@ -1,0 +1,48 @@
+.arcade { overflow: hidden; border-radius: .75rem; background: #141414; color: #fff; }
+.header { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding: 1.6rem 2rem .8rem; }
+.logoButton { padding: .3rem 0; cursor: pointer; }
+.logo { width: 11rem; height: auto; }
+.label { display: block; margin-bottom: .5rem; font: bold .65rem 'Courier New', monospace; letter-spacing: .16em; text-transform: uppercase; color: #8c9186; }
+.balance .label { text-align: right; }
+.money { display: flex; gap: .22em; align-items: center; padding: .25em .32em; border: 2px solid #30322d; box-shadow: inset 0 2px 8px #000; background: #0b0c0a; font: bold 1.65rem 'Courier New', monospace; color: #e9dfac; }
+.currency { font-size: .8em; color: #a4a383; }
+.number { display: flex; gap: 2px; align-items: center; }
+.digit { display: inline-block; position: relative; width: .7em; height: 1em; overflow: hidden; background: linear-gradient(#151711, #2b2d20 50%, #151711); }
+.digit::after { content: ''; position: absolute; inset: 0; background: linear-gradient(#0007, transparent 30%, transparent 70%, #0007); border-top: 1px solid #343529; pointer-events: none; }
+.reel { display: flex; flex-direction: column; will-change: transform; }
+.reel[data-rolling='true'] { transition: transform .85s cubic-bezier(.2,.6,.25,1); }
+.reel > span { flex-shrink: 0; height: 1em; line-height: 1em; text-align: center; }
+.decimal { align-self: flex-end; line-height: .85; }
+.preview { display: block; width: 100%; cursor: pointer; }
+.scene { display: block; width: 100%; height: 235px; }
+.silhouette { opacity: 1; }
+.silhouette path, .silhouette rect { fill: #080b09; }
+.controls { position: relative; display: flex; align-items: flex-end; gap: 2rem; padding: .7rem 2rem 1.2rem; background: linear-gradient(#20221e, #191b17); border-top: 2px solid #34372e; box-shadow: inset 0 2px 0 #111; }
+.stakeControls { display: flex; gap: .35rem; height: 2.6rem; align-items: stretch; }
+.stakeControls button { width: 2rem; background: #34382e; border-bottom: 3px solid #090b08; box-shadow: inset 0 2px 0 #61664f; color: #d4d7bb; font: bold 1.2rem 'Courier New', monospace; }
+.stakeInput { display: flex; align-items: center; justify-content: center; width: 9rem; padding: 0 .55rem; background: #0a0c09; border: 2px solid #3b4032; color: #e5dfb1; font: bold 1rem 'Courier New', monospace; white-space: nowrap; }
+.picks { display: flex; flex: 1; justify-content: flex-end; gap: .85rem; }
+.pick { display: flex; align-items: center; justify-content: center; gap: .9rem; width: 7.5rem; height: 3.4rem; position: relative; background: #32382d; color: var(--silk); border: 4px solid #090c08; border-top-color: #657051; border-left-color: #4e5840; box-shadow: 4px 0 #0b0d09, -4px 0 #0b0d09, 0 4px #080a06; image-rendering: pixelated; }
+.pick strong { font: bold 1.6rem 'Courier New', monospace; text-shadow: 2px 2px #111; }
+.buttonHorse { display: block; width: 3rem; height: 2.2rem; }.buttonHorse svg { width: 100%; height: 100%; }
+.pick:hover:not(:disabled) { background: #454e37; }.pick:active:not(:disabled), .pick[aria-pressed='true'] { transform: translateY(3px); box-shadow: 4px 0 #0b0d09, -4px 0 #0b0d09, 0 1px #080a06; border-top-color: #353e2a; }
+.pick[data-winner='true'] { border-top-color: var(--silk); box-shadow: 4px 0 #0b0d09, -4px 0 #0b0d09, 0 3px #080a06, inset 0 0 15px #bbc27b28; }
+.pick:disabled { cursor: default; }.pick:disabled:not([aria-pressed='true']):not([data-winner='true']) { opacity: .5; }
+.stakeControls button:disabled { opacity: .35; cursor: default; }.stakeControls button:active:not(:disabled) { border-bottom-width: 1px; transform: translateY(2px); }
+.arcade button:focus-visible { outline: 2px solid #e5df9c; outline-offset: 4px; }
+@media (max-width: 899px) {
+    .header { padding: 1.4rem 1.5rem .8rem; }.logo { width: 9rem; }
+    .controls { padding: .7rem 1.5rem 1.2rem; gap: 1.2rem; }
+    .picks { gap: .7rem; }.pick { width: 5rem; gap: .5rem; }.buttonHorse { width: 2rem; }
+}
+@media (max-width: 600px) {
+    .header { padding: 1.3rem 1.4rem .2rem; gap: 1rem; }.logo { width: 7rem; }
+    .money { font-size: 1.2rem; }.label { font-size: .6rem; }
+    .scene { height: 215px; }
+    .controls { flex-wrap: wrap; gap: 1.1rem; padding: .7rem 1.4rem 1.2rem; }
+    .stake { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: .7rem; }.stake .label { margin: 0; }
+    .stakeControls { height: 2.2rem; }.stakeInput { width: 8rem; font-size: .9rem; }
+    .picks { width: 100%; justify-content: space-between; gap: .8rem; }.pick { flex: 1; height: 3.2rem; }.pick strong { font-size: 1.3rem; }
+}
+@media (max-width: 360px) { .header { gap: .5rem; }.logo { width: 5.5rem; }.money { font-size: 1rem; }.buttonHorse { display: none; }.stake { flex-direction: column; align-items: stretch; }.stakeControls { width: 100%; }.stakeInput { flex: 1; } }
+@media (prefers-reduced-motion: reduce) { .reel[data-rolling='true'] { transition: none; } }

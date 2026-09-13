@@ -22,6 +22,7 @@ import {
     SiGooglecloud,
     SiWindows,
     SiMarkdown,
+    SiApachekafka,
 } from 'react-icons/si'
 import { GiKite } from 'react-icons/gi'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -57,18 +58,30 @@ export default function Home() {
         { label: 'Home', href: '#hero' },
         { label: 'Experience', href: '#experience' },
         { label: 'Projects', href: '#projects' },
+        { label: 'Books', href: '#books' },
         { label: 'Contact', href: '#contact' },
     ]
 
+    const bet365Tools = [
+        // Languages and frameworks, cloud, data and messaging, operating systems.
+        { name: '.NET Framework', icon: <SiDotnet className="text-purple-500 text-xs" /> },
+        { name: 'Go', icon: <SiGo className="text-cyan-400 text-xs" /> },
+        { name: 'GCP', icon: <SiGooglecloud className="text-blue-400 text-xs" /> },
+        { name: 'Microsoft SQL Server', icon: <SiMicrosoftsqlserver className="text-red-400 text-xs" /> },
+        { name: 'Kafka', icon: <SiApachekafka className="text-white text-xs" /> },
+        { name: 'Linux', icon: <SiLinux className="text-white text-xs" /> },
+    ]
+
     const accessPayTools = [
+        // Languages and frameworks, cloud, data and messaging, DevOps, operating systems.
         { name: '.NET Framework / Core', icon: <SiDotnet className="text-purple-500 text-xs" /> },
+        { name: 'AWS', icon: <FaAws className="text-orange-400 text-xs" /> },
+        { name: 'GCP', icon: <SiGooglecloud className="text-blue-400 text-xs" /> },
         { name: 'Postgres', icon: <SiPostgresql className="text-sky-400 text-xs" /> },
         { name: 'Microsoft SQL', icon: <SiMicrosoftsqlserver className="text-red-400 text-xs" /> },
         { name: 'RabbitMQ', icon: <SiRabbitmq className="text-orange-500 text-xs" /> },
         { name: 'Docker', icon: <SiDocker className="text-blue-400 text-xs" /> },
         { name: 'Azure DevOps Pipelines', icon: <SiAzuredevops className="text-blue-600 text-xs" /> },
-        { name: 'AWS', icon: <FaAws className="text-orange-400 text-xs" /> },
-        { name: 'GCP', icon: <SiGooglecloud className="text-blue-400 text-xs" /> },
         { name: 'Linux', icon: <SiLinux className="text-white text-xs" /> },
         { name: 'Windows Servers', icon: <SiWindows className="text-sky-400 text-xs" /> },
     ]
@@ -216,7 +229,7 @@ export default function Home() {
                             </div>
 
                             <p className="text-neutral-500 text-sm leading-relaxed max-w-md">
-                                {yearsInIndustry} years of shipping production software, including high-volume payment systems at <span className="text-white font-semibold">AccessPay</span> and embedded to cloud development at <span className="text-white font-semibold">Dyson</span>.
+                                Now a Software Developer at <span className="text-white font-semibold">bet365</span>. {yearsInIndustry} years of shipping production software, from high-volume payments at <span className="text-white font-semibold">AccessPay</span> to embedded and cloud development at <span className="text-white font-semibold">Dyson</span>, with a particular interest in designing large-scale systems.
                             </p>
 
                         </div>
@@ -243,21 +256,33 @@ export default function Home() {
                     <h2 className="header2 text-3xl mb-4">Work Experience</h2>
                     <Break />
                     <p className="text-gray-400 text-base mt-6 mb-8">
-                        Over the past <span className="text-white font-semibold">{yearsInIndustry.toLowerCase()} years</span>, I have had the opportunity to work with some of the most amazing people, on some amazing projects, affecting millions of people and at the time of writing <span className="text-white font-semibold">1 in 20 payments in the UK</span>.
+                        Over the past <span className="text-white font-semibold">{yearsInIndustry.toLowerCase()} years</span>, I have worked across embedded software, cloud services and high-throughput payments. I enjoy understanding how the pieces fit together and helping design systems that work at scale. My next chapter is at <span className="text-white font-semibold">bet365</span>.
                     </p>
                     <Timeline scrollContainer={mainRef} data={[
                         {
-                            title: 'Sep 2024 - Present',
+                            title: 'Aug 2026 - Present',
+                            content: (
+                                <div>
+                                    <p className="text-white font-bold text-xl mb-4">bet365</p>
+                                    <p className="text-gray-300 font-semibold text-sm mb-1">Software Developer</p>
+                                    <p className="text-gray-500 text-xs mb-3">Aug 2026 – Present</p>
+                                    <ToolLogos tools={bet365Tools} />
+                                    <p className="text-gray-400 text-sm mb-4">I&apos;ve just started a role. Let&apos;s see what the future holds.</p>
+                                </div>
+                            ),
+                        },
+                        {
+                            title: 'Sep 2024 - Jul 2026',
                             content: (
                                 <div>
                                     <p className="text-white font-bold text-xl mb-4">AccessPay</p>
 
                                     <p className="text-gray-300 font-semibold text-sm mb-1">Mid-Level Software Engineer</p>
-                                    <p className="text-gray-500 text-xs mb-3">Mar 2026 – Present</p>
+                                    <p className="text-gray-500 text-xs mb-3">Mar 2026 – Jul 2026</p>
                                     <ToolLogos tools={accessPayTools} />
-                                    <p className="text-gray-400 text-sm mb-4">I have recently been promoted to Mid-Level Engineer. Let&apos;s see what the future holds!</p>
+                                    <p className="text-gray-400 text-sm mb-4">After progressing to mid-level engineer, I helped design large-scale projects across AccessPay&apos;s payments and cash management platform. I worked through how services, data and message flows fit together, while continuing to deliver features and support production systems.</p>
                                     <ul className="space-y-1 mb-8">
-                                        {[].map((a) => (
+                                        {['Contributed to system design for large-scale projects', 'Delivered across legacy and modern .NET services', 'Investigated payment-routing failures across logs, SQL data and message flows'].map((a) => (
                                             <li key={a} className="flex items-start gap-2 text-sm text-gray-400">
                                                 <svg className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
                                                 {a}
@@ -289,15 +314,15 @@ export default function Home() {
                                     <p className="text-gray-300 font-semibold text-sm mb-1">Cloud Engineering • Internship</p>
                                     <p className="text-gray-500 text-xs mb-3">Apr 2023 – Sep 2023</p>
                                     <ToolLogos tools={[
-                                        { name: 'AWS', icon: <FaAws className="text-orange-400 text-xs" /> },
                                         { name: 'TypeScript', icon: <SiTypescript className="text-blue-400 text-xs" /> },
                                         { name: 'Python', icon: <FaPython className="text-yellow-400 text-xs" /> },
                                         { name: '.NET Core', icon: <SiDotnet className="text-purple-500 text-xs" /> },
+                                        { name: 'AWS', icon: <FaAws className="text-orange-400 text-xs" /> },
                                         { name: 'SQL', icon: <PiFileSql className="text-sky-300 text-xs" /> },
                                         { name: 'Docker', icon: <SiDocker className="text-blue-400 text-xs" /> },
                                         { name: 'Azure DevOps', icon: <SiAzuredevops className="text-blue-600 text-xs" /> },
                                     ]} />
-                                    <p className="text-gray-400 text-sm mb-4">I joined Dyson's Cloud Robot team and shipped live backend services for the 360VisNav, across a diverse stack, delivering analytics and DevOps improvements across AWS. My work earned a recommendation to return.</p>
+                                    <p className="text-gray-400 text-sm mb-4">I joined Dyson&apos;s Cloud Robot team and shipped live backend services for the 360VisNav, across a diverse stack, delivering analytics and DevOps improvements across AWS. My work earned a recommendation to return.</p>
                                     <ul className="space-y-1 mb-8">
                                         {['Shipped live services', 'Earned return recommendation', 'Enhanced AWS pipelines'].map((a) => (
                                             <li key={a} className="flex items-start gap-2 text-sm text-gray-400">
@@ -339,6 +364,12 @@ export default function Home() {
                     <Suspense fallback={<div>Loading All Projects...</div>}>
                         <AllProjects />
                     </Suspense>
+                </section>
+
+                {/*Books*/}
+                <section id="books" aria-labelledby="books-title" className="w-4/5 max-w-[1100px] snap-start mx-auto min-h-40 desktop:mt-20">
+                    <h2 id="books-title" className="header2 text-3xl mb-4">Books</h2>
+                    <Break />
                 </section>
 
                 {/*Contact*/}

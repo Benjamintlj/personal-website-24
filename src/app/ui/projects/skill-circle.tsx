@@ -37,6 +37,7 @@ import {
     SiRabbitmq,
     SiGooglecloud,
     SiWindows,
+    SiGo,
 } from 'react-icons/si'
 
 import { GiKite } from 'react-icons/gi'
@@ -92,6 +93,7 @@ export enum Skills {
     RabbitMQ = 'RabbitMQ',
     GCP = 'GCP',
     WindowsServer = 'Windows Server',
+    Go = 'Go',
 }
 
 export const skillCategoryMap: { [key in Skills]: Categories } = {
@@ -109,6 +111,7 @@ export const skillCategoryMap: { [key in Skills]: Categories } = {
     [Skills.Route53]: Categories.Cloud,
     // Languages (violet)
     [Skills.Java]: Categories.Languages,
+    [Skills.Go]: Categories.Languages,
     [Skills.C]: Categories.Languages,
     [Skills.Python]: Categories.Languages,
     [Skills.TypeScript]: Categories.Languages,
@@ -153,6 +156,7 @@ const skillIcons = {
     [Skills.SES]: <SiAmazonsimpleemailservice />,
     [Skills.Route53]: <SiAmazonroute53 />,
     [Skills.Java]: <FaJava />,
+    [Skills.Go]: <SiGo />,
     [Skills.C]: <p className="text-2xl">C</p>,
     [Skills.Python]: <FaPython />,
     [Skills.TypeScript]: <SiTypescript className="text-2xl" />,

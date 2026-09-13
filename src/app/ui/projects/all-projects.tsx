@@ -7,6 +7,10 @@ import { LinesGradientShader } from '@/app/ui/projects/lines-gradient-shader'
 import AiCard from '@/app/ui/projects/ai-card'
 import AutoFinCard from '@/app/ui/projects/autofin-card'
 import AccessPayCard from '@/app/ui/projects/accesspay-card'
+import Bet365Card from '@/app/ui/projects/bet365-card'
+import WithingsCard from '@/app/ui/projects/withings-card'
+import StorageNetworkCard from '@/app/ui/projects/storage-network-card'
+import featuredStyles from './featured-projects.module.css'
 import { useEffect, useRef, useState } from 'react'
 
 const AllProjects = () => {
@@ -390,7 +394,7 @@ const AllProjects = () => {
             // 10
             title: 'AccessPay',
             description:
-                'AccessPay is where I have grown from junior to mid-level engineer, delivering across a high-throughput payments and cash management platform that powers 1 in 20 UK payments. Along the way I have handled time-sensitive production work, shipped across multiple products, and picked up the company Go-Getter award.',
+                'At AccessPay, I grew from junior to mid-level engineer, working on a high-throughput payments and cash management platform. I helped design large-scale projects, delivered features across legacy and modern .NET services, and investigated payment-routing failures across logs, SQL data and message flows. Along the way, I won the company Go-Getter award. I finished my time at AccessPay in July 2026.',
             descriptionImage: '/images/accesspay/go-getter-award.webp',
             skills: [
                 // Languages (violet)
@@ -429,6 +433,30 @@ const AllProjects = () => {
 
     return (
         <main>
+            <BentoGridItem
+                title="bet365"
+                description="I've just started a role. Let's see what the future holds."
+                className="mt-5"
+                interactive
+            >
+                {(openDetails) => <Bet365Card onOpen={openDetails} />}
+            </BentoGridItem>
+            <div className={featuredStyles.featuredGrid}>
+                <BentoGridItem
+                    title="Peer-to-peer storage"
+                    description="I'm building a peer-to-peer storage project around a Go service. It backs up selected Mac folders and iPhone photos across my own devices over Tailscale. Files are encrypted before being shared, each user keeps their own recovery key, and surviving peers repair missing copies when a node goes offline. I'm using it to explore encrypted storage, replication and recovery in a small distributed system."
+                    skills={[Skills.Go, Skills.Linux]}
+                >
+                    <StorageNetworkCard />
+                </BentoGridItem>
+                <BentoGridItem
+                    title="Withings Scales — My Apple Health updater"
+                    description="A personal Go project connecting my Withings scales to Apple Health. A small service handles Withings authentication, refreshes access tokens and retrieves weigh-ins, which an iPhone Shortcut can add to Apple Health. Built to make daily syncing less manual."
+                    skills={[Skills.Go, Skills.Linux]}
+                >
+                    <WithingsCard />
+                </BentoGridItem>
+            </div>
             {isDesktop ? (
                 // desktop view
                 <div className="flex flex-col gap-4 mt-5">
