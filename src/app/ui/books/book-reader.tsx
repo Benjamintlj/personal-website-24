@@ -5,9 +5,11 @@ import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import { motion, useReducedMotion } from 'framer-motion'
 import { BOOK, adjacentPage, bookPage, spreadPages } from './book-pages.mjs'
+import BookPresentation from './book-presentation'
+import type { ShelfOrigin } from './book-model'
 import styles from './book-reader.module.css'
 
-type Flip = { from: number; to: number; direction: number; opening?: boolean }
+type Flip = { from: number; to: number; direction: number }
 
 function Page({ index, decorative = false }: { index: number | null; decorative?: boolean }) {
     const page = index === null ? { image: null, text: null, label: 'White endpaper' } : bookPage(index)
@@ -31,12 +33,13 @@ function Arrow({ direction }: { direction: 'left' | 'right' }) {
     return <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d={direction === 'left' ? 'M15 5l-7 7 7 7' : 'M9 5l7 7-7 7'} /></svg>
 }
 
-export default function BookReader({ onClose }: { onClose: () => void }) {
+export default function BookReader({ origin, onClose }: { origin: ShelfOrigin; onClose: () => void }) {
     const reducedMotion = !!useReducedMotion()
     const [narrow, setNarrow] = useState(() => window.matchMedia('(max-width: 760px)').matches)
     const [page, setPage] = useState(BOOK.firstContentPage)
     const [draft, setDraft] = useState(String(BOOK.firstContentPage + 1))
-    const [flip, setFlip] = useState<Flip | null>({ from: 0, to: BOOK.firstContentPage, direction: 1, opening: true })
+    const [flip, setFlip] = useState<Flip | null>(null)
+    const [presentation, setPresentation] = useState<'arriving' | 'closed' | 'opening' | 'reading'>('arriving')
     const [zoomed, setZoomed] = useState(false)
     const [closing, setClosing] = useState(false)
     const dialog = useRef<HTMLDivElement>(null)
@@ -49,10 +52,25 @@ export default function BookReader({ onClose }: { onClose: () => void }) {
     const close = useCallback(() => {
         if (closing) return
         busy.current = true
+        setClosing(true)
         setFlip(null)
-        if (reducedMotion) closeCallback.current()
-        else setClosing(true)
-    }, [closing, reducedMotion])
+        if (reducedMotion || presentation !== 'reading') closeCallback.current()
+    }, [closing, reducedMotion, presentation])
+
+    const arrived = useCallback(() => setPresentation('closed'), [])
+    const opened = useCallback(() => { setPresentation('reading'); busy.current = false }, [])
+    const openBook = useCallback(() => {
+        if (presentation !== 'closed') return
+        if (reducedMotion) opened()
+        else setPresentation('opening')
+    }, [presentation, reducedMotion, opened])
+
+    // Let the closed front cover settle before opening it, all from one shelf click.
+    useEffect(() => {
+        if (presentation !== 'closed' || closing) return
+        const pause = window.setTimeout(openBook, reducedMotion ? 0 : 650)
+        return () => window.clearTimeout(pause)
+    }, [presentation, reducedMotion, openBook, closing])
 
     const goTo = useCallback((target: number) => {
         if (busy.current || closing) return
@@ -129,7 +147,6 @@ export default function BookReader({ onClose }: { onClose: () => void }) {
     let base: (number | null)[] = current
     if (flip) {
         if (narrow) base = to
-        else if (flip.opening) base = to
         else if (forward) base = [from.length === 2 ? from[0] : null, to.length === 2 ? to[1] : null]
         else base = [to.length === 2 ? to[0] : null, from.length === 2 ? from[1] : null]
     }
@@ -138,7 +155,7 @@ export default function BookReader({ onClose }: { onClose: () => void }) {
     const backIndex = flip ? (forward ? to[0] : to[to.length - 1]) : null
 
     return createPortal(<motion.div ref={dialog} role="dialog" aria-modal="true" aria-labelledby="fyp-reader-title"
-        className={`${styles.reader} ${zoomed ? styles.zoomed : ''}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reducedMotion ? 0 : .25 }}
+        className={`${styles.reader} ${zoomed ? styles.zoomed : ''} ${presentation !== 'reading' ? styles.presenting : ''}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: reducedMotion ? 0 : .25 }}
         onClick={event => { if (event.target === event.currentTarget) close() }}>
         <header className={styles.header}>
             <h2 id="fyp-reader-title">{BOOK.title}</h2>
@@ -147,9 +164,12 @@ export default function BookReader({ onClose }: { onClose: () => void }) {
             </button>
         </header>
         <div className={styles.viewport} onClick={event => { if (event.target === event.currentTarget) close() }}>
-            <motion.div layout className={`${styles.stage} ${single ? styles.single : ''}`}
+            {presentation !== 'reading' ? <BookPresentation origin={origin} narrow={narrow} reducedMotion={reducedMotion}
+                opening={presentation === 'opening'} onArrived={arrived} onOpened={opened} onOpen={openBook}>
+                <Page index={BOOK.firstContentPage} />
+            </BookPresentation> : <motion.div layout className={`${styles.stage} ${single ? styles.single : ''}`}
                 style={{ '--zoom': zoomed ? 1.8 : 1 } as CSSProperties}
-                initial={{ y: reducedMotion ? 0 : 65, scale: reducedMotion ? 1 : .65, rotateX: reducedMotion ? 0 : 12 }}
+                initial={false}
                 animate={{ y: 0, scale: 1, rotateX: 0 }} exit={{ y: reducedMotion ? 0 : 65, scale: reducedMotion ? 1 : .65, opacity: 0 }}
                 transition={{ duration: reducedMotion ? 0 : .45, ease: [.2, .8, .2, 1] }}
                 onPointerDown={event => { if (!zoomed && event.pointerType !== 'mouse') touch.current = { x: event.clientX, y: event.clientY } }}
@@ -164,7 +184,7 @@ export default function BookReader({ onClose }: { onClose: () => void }) {
                 {!single && <div className={styles.gutter} aria-hidden="true" />}
                 {flip && <motion.div key={`${flip.from}-${flip.to}`} className={`${styles.turnSheet} ${forward ? styles.forward : styles.backward} ${narrow ? styles.wholeSheet : ''}`}
                     initial={{ rotateY: 0 }} animate={{ rotateY: forward ? -180 : 180 }}
-                    transition={{ duration: reducedMotion ? 0 : flip.opening ? .95 : .65, delay: reducedMotion ? 0 : flip.opening ? .25 : 0, ease: [.35, .05, .3, 1] }}
+                    transition={{ duration: reducedMotion ? 0 : .65, ease: [.35, .05, .3, 1] }}
                     onAnimationComplete={() => { setPage(flip.to); setFlip(null); busy.current = false }}>
                     <div className={styles.sheetFront}><Page index={frontIndex} decorative /></div>
                     <div className={styles.sheetBack}><Page index={backIndex} decorative /></div>
@@ -178,9 +198,10 @@ export default function BookReader({ onClose }: { onClose: () => void }) {
                     <button className={`${styles.pageEdge} ${styles.previousEdge}`} tabIndex={-1} aria-hidden="true" disabled={page === 0} onClick={() => turn(-1)} />
                     <button className={`${styles.pageEdge} ${styles.nextEdge}`} tabIndex={-1} aria-hidden="true" disabled={page === BOOK.lastPage} onClick={() => turn(1)} />
                 </>}
-            </motion.div>
+            </motion.div>}
         </div>
         <footer className={styles.toolbar}>
+            {presentation !== 'reading' ? <span className={styles.closedControls} aria-hidden="true" /> : <>
             <button type="button" onClick={() => turn(-1)} disabled={page === 0 || !!flip || closing} aria-label="Previous page"><Arrow direction="left" /></button>
             <label className={styles.pageCounter}><span>Page</span><input aria-label="Go to page" type="number" inputMode="numeric" min="1" max={BOOK.pageCount} value={draft} onChange={event => setDraft(event.target.value)} onBlur={commitDraft} onKeyDown={event => { if (event.key === 'Enter') { commitDraft(); event.currentTarget.blur() } }} disabled={!!flip || closing} /><span>of {BOOK.pageCount}</span></label>
             <button type="button" onClick={() => turn(1)} disabled={page === BOOK.lastPage || !!flip || closing} aria-label="Next page"><Arrow direction="right" /></button>
@@ -188,7 +209,8 @@ export default function BookReader({ onClose }: { onClose: () => void }) {
             <button type="button" onClick={() => setZoomed(value => !value)} disabled={!!flip || closing} aria-label={zoomed ? 'Fit book to screen' : 'Zoom into book'} aria-pressed={zoomed}>
                 <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><circle cx="10" cy="10" r="6.5" /><path d="M15 15l6 6M7 10h6" />{!zoomed && <path d="M10 7v6" />}</svg>
             </button>
+            </>}
         </footer>
-        <p className="sr-only" aria-live="polite">{bookPage(page).label}. Page {page + 1} of {BOOK.pageCount}.</p>
+        <p className="sr-only" aria-live="polite">{presentation === 'reading' ? `${bookPage(page).label}. Page ${page + 1} of ${BOOK.pageCount}.` : 'Front cover. Open the book to read.'}</p>
     </motion.div>, document.body)
 }
