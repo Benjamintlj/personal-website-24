@@ -9,6 +9,9 @@
 .single { width: var(--page-width); }
 .presenting .viewport { overflow: hidden; }
 .presenting .toolbar { visibility: hidden; }
+.returning .header { opacity: 0; pointer-events: none; transition: opacity .2s; }
+.closedCoverOpen { position: absolute; inset: 0; transform: translateZ(1px); cursor: pointer; background: transparent; }
+.coverLabel { min-width: 120px; text-align: center; color: #b8b5ad; font-size: .75rem; }
 .presentationMount, .readerPages { position: absolute; inset: 0; transform-style: preserve-3d; }
 .presentationAssembly { position: absolute; inset: 0; transform-style: preserve-3d; }
 .introAssembly .spread { background: transparent; box-shadow: none; }
