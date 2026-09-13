@@ -12,8 +12,12 @@ The shelf presents the spine with a small glimpse of the front. Selecting it lif
 the closed book from the far left to the centre, then opens it from the spine
 into the preface in one continuous animation. The same book and page elements
 remain mounted throughout, over the dimmed website. Closing uses that same hinge
-in reverse, then moves the closed book back to its shelf position. The inside
-front cover stays plain. No storage-network book has been added to this shelf.
+in reverse, then moves the closed book back to its shelf position. The back cover
+uses a mirrored hinge: Next from the final interior page closes it, and Previous
+or clicking the back cover reopens that page. Both covers retain the same spread
+geometry throughout; returning from the back turns the book towards its original
+shelf orientation. The inside front cover stays plain. No storage-network book
+has been added to this shelf.
 
 `python3 scripts/prepare-fyp-book.py /path/to/proof.pdf` regenerates the web assets.
 The renderer uses the PDF TrimBox to remove production marks and separates the

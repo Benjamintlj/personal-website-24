@@ -17,8 +17,11 @@
 .introAssembly .spread { background: transparent; box-shadow: none; }
 .introAssembly .spread > .left, .introAssembly .gutter { opacity: 0; }
 .introAssembly .right { box-shadow: 0 0 0 3px #ddd9cf, 0 2px 0 4px #8c8880, 0 4px 0 4px #c6c2b9, 0 18px 22px #0008; }
+.backAssembly.introAssembly .spread > .left { opacity: 1; box-shadow: 0 0 0 3px #ddd9cf, 0 2px 0 4px #8c8880, 0 4px 0 4px #c6c2b9, 0 18px 22px #0008; }
+.backAssembly.introAssembly .spread > .right { opacity: 0; }
 .single .introAssembly .spread > .left { opacity: 1; box-shadow: 0 0 0 3px #ddd9cf, 0 2px 0 4px #8c8880, 0 4px 0 4px #c6c2b9, 0 18px 22px #0008; }
 .presentationCover { --depth: calc(var(--page-width) * 14 / 215); position: absolute; left: 50%; top: 0; width: 50%; height: 100%; transform-origin: left center; transform-style: preserve-3d; }
+.backCover { left: 0; transform-origin: right center; }
 .mobileCover { left: 0; width: 100%; }
 .closedControls { display: block; width: 120px; height: 38px; }
 .spread { position: absolute; inset: 0; display: flex; background: #f9f8f3; border-radius: 2px 5px 5px 2px; box-shadow: 0 0 0 3px #ddd9cf, 0 2px 0 4px #8c8880, 0 4px 0 4px #c6c2b9, 0 18px 22px #0008; }

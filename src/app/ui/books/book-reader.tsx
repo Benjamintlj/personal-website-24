@@ -40,8 +40,10 @@ export default function BookReader({ origin, onClose }: { origin: ShelfOrigin; o
     const [draft, setDraft] = useState(String(BOOK.firstContentPage))
     const [flip, setFlip] = useState<Flip | null>(null)
     const [phase, setPhase] = useState<BookPhase>('arriving')
+    const [backCover, setBackCover] = useState(false)
     const [zoomed, setZoomed] = useState(false)
     const dismissAfterClose = useRef(false)
+    const pendingCover = useRef<number | null>(null)
     const dialog = useRef<HTMLDivElement>(null)
     const closeButton = useRef<HTMLButtonElement>(null)
     const touch = useRef<{ x: number; y: number } | null>(null)
@@ -54,42 +56,54 @@ export default function BookReader({ origin, onClose }: { origin: ShelfOrigin; o
     const close = useCallback(() => {
         if (phase === 'returning') return
         dismissAfterClose.current = true
+        pendingCover.current = null
         busy.current = true
         setZoomed(false)
         setFlip(null)
+        if (phase === 'reading') setBackCover(page === BOOK.lastContentPage)
         setPhase(phase === 'front-cover' || phase === 'back-cover' ? 'returning' : 'closing-cover')
-    }, [phase])
+    }, [phase, page])
 
     const completed = useCallback((finished: BookPhase) => {
         if (finished === 'closing-cover') {
-            setPage(0)
-            setPhase(dismissAfterClose.current ? 'returning' : 'front-cover')
+            setPage(backCover ? BOOK.lastPage : 0)
+            setPhase(dismissAfterClose.current ? 'returning' : backCover ? 'back-cover' : 'front-cover')
             busy.current = dismissAfterClose.current
         } else if (finished === 'returning') closeCallback.current()
+        else if (pendingCover.current !== null) {
+            const atBack = pendingCover.current === BOOK.lastPage
+            pendingCover.current = null
+            setPage(atBack ? BOOK.lastContentPage : BOOK.firstContentPage)
+            setBackCover(atBack)
+            setPhase('closing-cover')
+        }
         else {
             setPhase('reading')
             busy.current = false
         }
-    }, [])
+    }, [backCover])
 
     const goTo = useCallback((target: number) => {
         if (busy.current || closing) return
         const next = Math.max(0, Math.min(BOOK.lastPage, Math.round(target)))
         if (!Number.isFinite(next) || next === page) return
-        if (next === 0) {
+        const targetCover = next === 0 || next === BOOK.lastPage
+        if (page === 0 || page === BOOK.lastPage) {
             busy.current = true
             setZoomed(false)
-            setPhase('closing-cover')
-            return
-        }
-        if (page === 0) {
-            busy.current = true
-            setPage(next)
+            pendingCover.current = targetCover ? next : null
+            setPage(targetCover ? (page === 0 ? BOOK.firstContentPage : BOOK.lastContentPage) : next)
             setPhase('opening-cover')
             return
         }
-        if (reducedMotion || zoomed) { setPage(next); setPhase(next === BOOK.lastPage ? 'back-cover' : 'reading'); return }
-        if (page === BOOK.lastPage) setPhase('reading')
+        if (targetCover) {
+            busy.current = true
+            setZoomed(false)
+            setBackCover(next === BOOK.lastPage)
+            setPhase('closing-cover')
+            return
+        }
+        if (reducedMotion || zoomed) { setPage(next); return }
         busy.current = true
         setFlip({ from: page, to: next, direction: next > page ? 1 : -1 })
     }, [page, closing, reducedMotion, zoomed])
@@ -152,11 +166,12 @@ export default function BookReader({ origin, onClose }: { origin: ShelfOrigin; o
             goTo(next)
         } else setDraft(String(Math.max(1, page)))
     }
-    const current = spreadPages(page === 0 ? 1 : page, narrow)
+    // Keep the spread mounted behind either closed cover so its geometry never snaps.
+    const current = spreadPages(page === 0 ? BOOK.firstContentPage : page === BOOK.lastPage ? BOOK.lastContentPage : page, narrow)
     const from = spreadPages(flip?.from ?? page, narrow)
     const to = spreadPages(flip?.to ?? page, narrow)
     const forward = !flip || flip.direction > 0
-    const single = narrow || current.length === 1
+    const single = narrow
     let base: (number | null)[] = current
     if (flip) {
         if (narrow) base = to
@@ -186,8 +201,8 @@ export default function BookReader({ origin, onClose }: { origin: ShelfOrigin; o
                     touch.current = null
                     if (start && Math.abs(event.clientX - start.x) > 45 && Math.abs(event.clientY - start.y) < 80) turn(event.clientX < start.x ? 1 : -1)
                 }}>
-                <BookPresentation origin={origin} narrow={single} reducedMotion={reducedMotion} phase={phase} backCover={page === BOOK.lastPage} onComplete={completed}
-                    inside={<Page index={single ? null : current[0]} decorative />} onOpen={() => turn(1)}>
+                <BookPresentation origin={origin} narrow={single} reducedMotion={reducedMotion} phase={phase} backCover={backCover} onComplete={completed}
+                    inside={<Page index={single ? null : current[backCover ? 1 : 0]} decorative />} onOpen={() => turn(backCover ? -1 : 1)}>
                     <div className={styles.spread}>
                         {base.map((index, side) => <div key={side} className={`${styles.pageSlot} ${side === 0 ? styles.left : styles.right}`}><Page index={index} /></div>)}
                     </div>
@@ -195,7 +210,7 @@ export default function BookReader({ origin, onClose }: { origin: ShelfOrigin; o
                     {flip && <motion.div key={`${flip.from}-${flip.to}`} className={`${styles.turnSheet} ${forward ? styles.forward : styles.backward} ${narrow ? styles.wholeSheet : ''}`}
                         initial={{ rotateY: 0 }} animate={{ rotateY: forward ? -180 : 180 }}
                         transition={{ duration: reducedMotion ? 0 : .65, ease: [.35, .05, .3, 1] }}
-                        onAnimationComplete={() => { setPage(flip.to); setPhase(flip.to === BOOK.lastPage ? 'back-cover' : 'reading'); setFlip(null); busy.current = false }}>
+                        onAnimationComplete={() => { setPage(flip.to); setFlip(null); busy.current = false }}>
                         <div className={styles.sheetFront}><Page index={frontIndex} decorative /></div>
                         <div className={styles.sheetBack}><Page index={backIndex} decorative /></div>
                     </motion.div>}
