@@ -5,7 +5,7 @@ import BookReader from './book-reader'
 import StorageBookPreview from './storage-book-preview'
 import GlassShelf from './glass-shelf'
 import { STORAGE_BOOK, storageBookArtwork } from './storage-book-art'
-import { AnimatePresence, animate, motion, useMotionValue, useMotionValueEvent, useReducedMotion, useTransform, type MotionStyle } from 'framer-motion'
+import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion, useTransform, type MotionStyle } from 'framer-motion'
 import { BOOK } from './book-pages.mjs'
 import { BookFaces, type ShelfOrigin } from './book-model'
 import { bookRotation, SHELF_REST_ANGLE, shelfPose } from './book-motion'
@@ -15,7 +15,6 @@ function ShelfBook({ storage = false }: { storage?: boolean }) {
     const [open, setOpen] = useState(false)
     const [pulled, setPulled] = useState(false)
     const reducedMotion = useReducedMotion()
-    const [raised, setRaised] = useState(false)
     // Keep both the pose and drawing order continuous throughout an interrupted return.
     const travel = useMotionValue(0)
     const bookHeight = useMotionValue(297)
@@ -25,9 +24,7 @@ function ShelfBook({ storage = false }: { storage?: boolean }) {
         return shelfPose(progress, height, distance, !storage)
     })
     const transform = useTransform(pose, value => `translate3d(${value.x}px, ${value.y}px, ${value.z}px) ${bookRotation(value.rotation, value.pitch)}`)
-    const contactOpacity = useTransform(travel, [0, .16], [1, 0])
     const layer = useTransform(pose, value => value.z > .001 ? 10 + Math.round(value.z) : 3)
-    useMotionValueEvent(travel, 'change', value => setRaised(value > .00001))
     useEffect(() => {
         const target = pulled && !open ? 1 : 0
         if (open || reducedMotion) { travel.set(target); return }
@@ -72,7 +69,7 @@ function ShelfBook({ storage = false }: { storage?: boolean }) {
     const Preview = storage ? StorageBookPreview : BookReader
     const close = () => { returningFocus.current = true; setPulled(false); setOpen(false) }
     return <>
-        <motion.button ref={trigger} type="button" style={{ zIndex: layer }} className={`${styles.bookButton} ${storage ? styles.secondBook : ''} ${raised || pulled ? styles.raised : ''} ${open ? styles.away : ''}`}
+        <motion.button ref={trigger} type="button" style={{ zIndex: layer }} className={`${styles.bookButton} ${storage ? styles.secondBook : ''} ${open ? styles.away : ''}`}
             aria-label={`Open ${title}`} aria-haspopup="dialog"
             onPointerEnter={event => { if (event.pointerType !== 'touch' && !open) { returningFocus.current = false; setPulled(true) } }}
             onPointerLeave={() => setPulled(false)}
@@ -83,7 +80,6 @@ function ShelfBook({ storage = false }: { storage?: boolean }) {
                 setPulled(false)
                 setOpen(true)
             }}>
-            <motion.span className={styles.bookContact} style={{ opacity: contactOpacity }} aria-hidden="true" />
             <motion.span ref={book} className={styles.book} style={{ transform, '--pickup-progress': travel } as MotionStyle} data-book-cover><BookFaces artwork={storage ? storageBookArtwork() : undefined} /></motion.span>
         </motion.button>
         <AnimatePresence onExitComplete={() => trigger.current?.focus({ preventScroll: true })}>
@@ -97,6 +93,5 @@ export default function Bookshelf() {
         <ShelfBook />
         <ShelfBook storage />
         <GlassShelf />
-        <div className={styles.shelfShadow} aria-hidden="true" />
     </div>
 }

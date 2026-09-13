@@ -14,10 +14,10 @@ The cover hinges and page elements remain mounted throughout those transitions.
 ## Glass ledge and motion
 
 The books rest at an 86-degree angle with touching spines on a rounded glass
-shelf. Its top and cut edge are projected from the same centred camera, with
-symmetric depth, softly rounded corners, frosted transmission, a refracting edge
-and book contact shadows. There is no decorative divider across the glass and
-no cabinet, back or walls. The depth accommodates the whole book footprint.
+shelf. The single top surface is projected from a centred camera, with symmetric
+depth, softly rounded corners and frosted transmission. There are no extruded
+edges, undersides, cast shadows, decorative dividers, cabinet, back or walls.
+The surface accommodates the whole book footprint.
 Both books tip forward from their
 bottom edge as though pulled from the top, lift clear, and turn towards the
 reader. The left book clears its neighbour before turning; the right can turn
